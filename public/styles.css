@@ -1,0 +1,11 @@
+/* Remove browser defaults */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* prevents scrolling */
+}
+
+/* Three.js canvas */
+canvas {
+  display: block; /* removes inline spacing */
+}
