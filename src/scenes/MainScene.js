@@ -76,7 +76,7 @@ export class MainScene extends SceneBase {
 
     // Area 1: Snowy area (z=25, 100x50)
     const textureLoader = new THREE.TextureLoader();
-    const snowTexture = textureLoader.load('../models/snow.jpg');
+    const snowTexture = textureLoader.load('./models/snow.jpg');
     snowTexture.wrapS = snowTexture.wrapT = THREE.RepeatWrapping;
     snowTexture.repeat.set(100, 100);
     snowTexture.anisotropy = 16;
@@ -92,7 +92,7 @@ export class MainScene extends SceneBase {
       customInit: (group) => {
         // Igloo
         const gltfLoader = new GLTFLoader();
-        gltfLoader.load('../models/igloo.glb', (gltf) => {
+        gltfLoader.load('./models/igloo.glb', (gltf) => {
           const iceBlock = gltf.scene.clone();
           iceBlock.position.set(0, -0.009, 49);
           iceBlock.rotation.y = Math.PI;
@@ -107,7 +107,7 @@ export class MainScene extends SceneBase {
           group.add(iceBlock);
         });
         // Ice walls
-        gltfLoader.load('../models/wall_of_ice.glb', (gltf) => {
+        gltfLoader.load('./models/wall_of_ice.glb', (gltf) => {
           const wall1 = gltf.scene.clone();
           wall1.position.set(-25, -3, 25);
           wall1.rotation.y = Math.PI / 2;
@@ -128,7 +128,7 @@ export class MainScene extends SceneBase {
     const gltfLoader = new GLTFLoader();
 
     // Igloo
-    gltfLoader.load('../models/igloo.glb', (gltf) => {
+    gltfLoader.load('./models/igloo.glb', (gltf) => {
       const iceBlock = gltf.scene.clone();
       iceBlock.position.set(0, -0.009, 49);
       iceBlock.rotation.y = Math.PI;
@@ -144,7 +144,7 @@ export class MainScene extends SceneBase {
     });
 
     // Ice walls
-    gltfLoader.load('../models/wall_of_ice.glb', (gltf) => {
+    gltfLoader.load('./models/wall_of_ice.glb', (gltf) => {
       const wall1 = gltf.scene.clone();
       wall1.position.set(-25, -3, 25);
       wall1.rotation.y = Math.PI / 2;
@@ -215,8 +215,8 @@ export class MainScene extends SceneBase {
     // Load and place houses
     const loader = new GLTFLoader();
     Promise.all([
-      new Promise((resolve, reject) => loader.load('../models/oldHouse_1.glb', resolve, undefined, reject)),
-      new Promise((resolve, reject) => loader.load('../models/oldHouse_2.glb', resolve, undefined, reject))
+      new Promise((resolve, reject) => loader.load('./models/oldHouse_1.glb', resolve, undefined, reject)),
+      new Promise((resolve, reject) => loader.load('./models/oldHouse_2.glb', resolve, undefined, reject))
     ]).then(([gltf1, gltf2]) => {
       const houseModels = [gltf1.scene, gltf2.scene];
       const houseSpacing = 9;
@@ -306,7 +306,7 @@ export class MainScene extends SceneBase {
           this.treeBatches[batch] = true;
           // Generate trees for this batch
           this._treeModels.forEach((model) => {
-            this._gltfLoader.load(`../models/${model}`, (gltf) => {
+            this._gltfLoader.load(`./models/${model}`, (gltf) => {
               for (let i = 0; i < 10; i++) {
                 let x, z;
                 do {
