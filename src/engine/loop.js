@@ -9,10 +9,10 @@ export function startLoop(renderer, camera, sceneManager, controls) {
     }
 
     // Update current scene logic
-    sceneManager.update()
+    sceneManager.update(renderer)
 
     // Render active scene
-    renderer.render(sceneManager.activeScene, camera)
+    // renderer.render(sceneManager.activeScene, camera) // Now handled in sceneManager.update
   }
 
   animate()

@@ -1,35 +1,36 @@
-import { SceneOne } from '../scenes/SceneOne.js'
-import { SceneTwo } from '../scenes/SceneTwo.js'
+
+import { MainScene } from '../scenes/MainScene.js';
+import { Scene3 } from '../scenes/Scene3.js';
 
 export class SceneManager {
   constructor(camera) {
-    this.camera = camera
-
-    // Initialize scenes
-    this.scenes = {
-      one: new SceneOne(),
-      two: new SceneTwo()
-    }
-
-    // Start with scene one
-    this.activeScene = this.scenes.one
+    this.camera = camera;
+    this.mainScene = new MainScene(this.camera);
+    this.scene3 = new Scene3();
+    this.currentScene = this.mainScene;
+    this.inScene3 = false;
   }
 
-  update() {
-    // Switch scene when player crosses threshold
-    if (this.camera.position.z < -20 && this.activeScene !== this.scenes.two) {
-      this.switchTo('two')
+  async update(renderer) {
+    // Check for scene transition (z < -300 triggers Scene3)
+    if (!this.inScene3 && this.camera.position.z < -300) {
+      this.inScene3 = true;
+      if (this.currentScene.exit) this.currentScene.exit();
+      await this.scene3.enter();
+      this.currentScene = this.scene3;
+      // Optionally, set camera position for Scene3
+      this.camera.position.set(0, 10, 10);
+      this.camera.lookAt(0, 0, 0);
     }
 
-    this.activeScene.update()
-  }
-
-  switchTo(name) {
-    // Cleanup old scene
-    this.activeScene.exit()
-
-    // Activate new scene
-    this.activeScene = this.scenes[name]
-    this.activeScene.enter()
+    // Restrict camera within world boundaries if defined
+    if (this.currentScene.restrictCamera) {
+      this.currentScene.restrictCamera(this.camera);
+    }
+    // Update and render the current scene
+    if (this.currentScene.update) {
+      this.currentScene.update(this.camera.position);
+    }
+    renderer.render(this.currentScene, this.camera);
   }
 }

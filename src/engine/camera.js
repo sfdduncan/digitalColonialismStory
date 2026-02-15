@@ -10,7 +10,7 @@ export function createCamera() {
   )
 
   // Starting position
-camera.position.set(0, 0.1, 1)
+camera.position.set(0, 1.6, 1)
 
   return camera
 }

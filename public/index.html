@@ -17,6 +17,27 @@
   </script>
 </head>
 <body>
+    <!-- Hamburger menu button -->
+    <button id="timeline-hamburger" aria-label="Open timeline menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <!-- Timeline overlay -->
+    <div id="timeline-overlay">
+      <button id="timeline-close" aria-label="Close timeline">&times;</button>
+      <div id="timeline-header">Timeline Overview</div>
+      <!-- Timeline content can go here -->
+    </div>
+  <!-- Starter screen overlay -->
+  <div id="starter-screen-overlay">
+    <div id="starter-svg-container">
+      <!-- SVG will be injected here by JS for portability -->
+    </div>
+  </div>
+
+  <!-- Floating text overlay for scene messages -->
 
   <!-- Entry point -->
   <script type="module" src="../src/main.js"></script>

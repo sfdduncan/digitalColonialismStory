@@ -1,3 +1,118 @@
+/* Timeline close (X) button styles */
+#timeline-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 2.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 1400;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+/* Hamburger menu styles */
+#timeline-hamburger {
+  position: fixed;
+  top: 2.2rem;
+  right: 2.2rem;
+  width: 48px;
+  height: 48px;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+  cursor: pointer;
+  background: none;
+  transition: background 0.2s;
+}
+
+#timeline-hamburger span {
+  display: block;
+  width: 26px;
+  height: 4px;
+  margin: 3px 0;
+  background: #fff;
+  border-radius: 2px;
+  transition: 0.2s;
+}
+#timeline-hamburger {
+  display: none;
+}
+
+/* Timeline overlay styles */
+#timeline-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(20, 20, 30, 0.82);
+  z-index: 1300;
+  display: none;
+  flex-direction: column;
+  transition: opacity 0.4s;
+}
+#timeline-overlay.active {
+  display: flex;
+}
+#timeline-header {
+  color: #fff;
+  font-size: 2.3rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  font-family:'Lucida Sans', Lucida Sans Regular;
+  margin-top: 2.2rem;
+  margin-left: 2.2rem;
+  user-select: none;
+}
+/* Starter screen overlay styles */
+#starter-screen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(10, 10, 20, 0.35);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s;
+}
+
+#starter-svg-container {
+  width: 100vw;
+}
+
+#starter-svg-container svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+#starter-press-key {
+  color: #fff;
+  font-size: 2.2rem;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  text-align: center;
+  letter-spacing: 0.08em;
+  text-shadow: 0 2px 12px #000, 0 0 8px #222;
+  opacity: 0.85;
+  background: rgba(0,0,0,0.2);
+  border-radius: 1rem;
+  padding: 1rem 2.5rem;
+  margin-top: 1.5rem;
+  user-select: none;
+}
 /* Remove browser defaults */
 html, body {
   margin: 0;
