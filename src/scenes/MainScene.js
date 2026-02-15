@@ -1,5 +1,7 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.module.js';
 import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/loaders/GLTFLoader.js';
+import { FontLoader } from 'https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/loaders/FontLoader.js';
+import { TextGeometry } from 'https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/geometries/TextGeometry.js';
 import { SceneBase } from './SceneBase.js';
 import { Area } from '../world/Area.js';
 import { showSceneTextOverlay, hideSceneTextOverlay } from '../main.js';
@@ -37,6 +39,40 @@ export class MainScene extends SceneBase {
     const light1 = new THREE.DirectionalLight(0xffffff, 1);
     light1.position.set(10, 10, 10);
     this.add(light1);
+
+    // --- 3D Text: 'In the beginning' ---
+    const fontLoader = new FontLoader();
+    fontLoader.load('https://cdn.jsdelivr.net/npm/three@0.155.0/examples/fonts/helvetiker_regular.typeface.json', (font) => {
+      const textGeometry = new TextGeometry('In the beginning', {
+        font: font,
+        size: 1,
+        height: 0.05, // much flatter
+        curveSegments: 12,
+        bevelEnabled: true,
+        bevelThickness: 0.005, // very flat
+        bevelSize: 0.02, // very flat
+        bevelOffset: 0,
+        bevelSegments: 1 // very flat
+      });
+      const textMaterial = new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        roughness: 0.8,
+        metalness: 1,
+        transparent: true,
+        opacity: 0.5 // semi-transparent
+      });
+      const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+      textGeometry.computeBoundingBox();
+      if (textGeometry.boundingBox) {
+        const centerOffset = -0.5 * (textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x);
+        textMesh.position.set(centerOffset, 3, 30);
+      } else {
+        textMesh.position.set(0, 3, 45);
+      }
+      textMesh.castShadow = true;
+      textMesh.receiveShadow = true;
+      this.add(textMesh);
+    });
 
     // Area 1: Snowy area (z=25, 100x50)
     const textureLoader = new THREE.TextureLoader();
