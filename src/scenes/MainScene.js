@@ -4,7 +4,7 @@ import { FontLoader } from 'https://cdn.jsdelivr.net/npm/three@0.155.0/examples/
 import { TextGeometry } from 'https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/geometries/TextGeometry.js';
 import { SceneBase } from './SceneBase.js';
 import { Area } from '../world/Area.js';
-import { showSceneTextOverlay, hideSceneTextOverlay } from '../main.js';
+import { showSceneTextOverlay, hideSceneTextOverlay } from '../../main.js';
 
 export class MainScene extends SceneBase {
   constructor(camera) {

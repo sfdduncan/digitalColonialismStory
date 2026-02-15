@@ -15,13 +15,13 @@ export function hideSceneTextOverlay() {
 import * as THREE from 'three'
 
 // Engine
-import { createRenderer } from './engine/renderer.js'
-import { createCamera } from './engine/camera.js'
-import { createControls } from './engine/controls.js'
-import { startLoop } from './engine/loop.js'
+import { createRenderer } from './src/engine/renderer.js'
+import { createCamera } from './src/engine/camera.js'
+import { createControls } from './src/engine/controls.js'
+import { startLoop } from './src/engine/loop.js'
 
 // World
-import { SceneManager } from './world/sceneManager.js'
+import { SceneManager } from './src/world/sceneManager.js'
 
 
 
