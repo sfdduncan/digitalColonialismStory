@@ -1,5 +1,5 @@
 
-import { MainScene } from '../scenes/MainScene.js';
+import { MainScene } from '../scenes/mainScene.js';
 import { Scene3 } from '../scenes/Scene3.js';
 
 export class SceneManager {
