@@ -4,7 +4,7 @@
 // ================================
 
 import { HackScene } from '../scenes/HackScene.js';
-import { MainScene } from '../scenes/MainScene.js';
+import { MainScene } from '../scenes/mainScene.js';
 
 export class SceneManager {
   constructor(camera) {
