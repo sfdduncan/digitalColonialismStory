@@ -1,3 +1,16 @@
+    <!-- Hamburger menu button -->
+    <button id="timeline-hamburger" aria-label="Open timeline menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <!-- Timeline overlay -->
+    <div id="timeline-overlay">
+      <button id="timeline-close" aria-label="Close timeline">&times;</button>
+      <div id="timeline-header">Timeline Overview</div>
+      <!-- Timeline content can go here -->
+    </div>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,18 +37,16 @@
       <span></span>
     </button>
 
-    <!-- Timeline overlay -->
-    <div id="timeline-overlay">
-      <button id="timeline-close" aria-label="Close timeline">&times;</button>
-      <div id="timeline-header">Timeline Overview</div>
-      <!-- Timeline content can go here -->
-    </div>
+    <!-- Timeline overlay removed -->
   <!-- Starter screen overlay -->
   <div id="starter-screen-overlay">
     <div id="starter-svg-container">
       <!-- SVG will be injected here by JS for portability -->
     </div>
   </div>
+
+  <!-- Flash transition overlay -->
+  <div id="flash-transition"></div>
 
   <!-- Floating text overlay for scene messages -->
 <script type="module">
@@ -44,6 +55,7 @@
   
   <!-- Entry point -->
     <script type="module" src="main.js"></script>
+    <!-- timelineUI.js removed -->
 
 </body>
 </html>

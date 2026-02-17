@@ -1,16 +1,3 @@
-// Overlay text helper
-export function showSceneTextOverlay(text) {
-	const overlay = document.getElementById('scene-text-overlay');
-	if (overlay) {
-		overlay.innerHTML = text;
-		overlay.style.display = 'block';
-	}
-}
-
-export function hideSceneTextOverlay() {
-	const overlay = document.getElementById('scene-text-overlay');
-	if (overlay) overlay.style.display = 'none';
-}
 // Three.js via import map
 import * as THREE from 'three'
 
@@ -22,6 +9,14 @@ import { startLoop } from './src/engine/loop.js'
 
 // World
 import { SceneManager } from './src/world/sceneManager.js'
+
+// UI
+import { initializeHelpUI } from './src/ui/helpUI.js'
+import { initializeTimeline, updateTimeline, updateTimelineProgress } from './src/ui/timeline.js'
+
+// Make timeline functions globally accessible for scene manager
+window.updateTimeline = updateTimeline;
+window.updateTimelineProgress = updateTimelineProgress;
 
 
 
@@ -36,6 +31,12 @@ const camera = createCamera();
 const sceneManager = new SceneManager(camera);
 const controls = createControls(camera, renderer.domElement);
 
+// Initialize help UI
+initializeHelpUI();
+
+// Initialize timeline
+initializeTimeline();
+
 // Load SVG into the container
 fetch('imgs/starter_screen.svg')
   .then(r => r.text())
@@ -49,7 +50,7 @@ function hideStarterScreen() {
   starterOverlay.style.opacity = 0;
   setTimeout(() => {
     starterOverlay.style.display = 'none';
-    showHamburger();
+    // Don't show UI elements yet - wait until MainScene
     startGame();
   }, 500);
 }
@@ -66,11 +67,35 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
-// Show hamburger only after starter overlay is gone
-function showHamburger() {
+// Show hamburger and help button when reaching MainScene
+function showMainSceneUI() {
   const timelineHamburger = document.getElementById('timeline-hamburger');
   if (timelineHamburger) timelineHamburger.style.display = 'flex';
+  
+  const helpButton = document.getElementById('help-button');
+  if (helpButton) helpButton.style.display = 'flex';
+  
+  const sceneTimeline = document.getElementById('scene-timeline');
+  if (sceneTimeline) sceneTimeline.style.display = 'flex';
 }
+
+// Flash transition effect
+function triggerFlashTransition() {
+  const flashElement = document.getElementById('flash-transition');
+  if (!flashElement) return;
+  
+  // Add flashing class to trigger animation
+  flashElement.classList.add('flashing');
+  
+  // Remove class after animation completes
+  setTimeout(() => {
+    flashElement.classList.remove('flashing');
+  }, 800); // Match animation duration
+}
+
+// Make functions globally accessible
+window.showMainSceneUI = showMainSceneUI;
+window.triggerFlashTransition = triggerFlashTransition;
 
 // --- Timeline hamburger menu logic ---
 const timelineHamburger = document.getElementById('timeline-hamburger');

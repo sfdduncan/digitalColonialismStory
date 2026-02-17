@@ -1,164 +1,57 @@
+// ================================
+// MAIN SCENE - Contains all areas
+// Scene 1: Snowy area (z=0 to z=-100)
+// Scene 2: Forest area (z=-100 to z=-200)  
+// Scene 3: Village area (z=-200 to z=-300)
+// ================================
+
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.module.js';
 import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/loaders/GLTFLoader.js';
-import { FontLoader } from 'https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/loaders/FontLoader.js';
-import { TextGeometry } from 'https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/geometries/TextGeometry.js';
 import { SceneBase } from './SceneBase.js';
-import { Area } from '../world/Area.js';
-import { showSceneTextOverlay, hideSceneTextOverlay } from '../../main.js';
+
 
 export class MainScene extends SceneBase {
   constructor(camera) {
     super();
 
-    this.sceneTwoGenerated = false;
-    this.sceneTwoObjects = [];
+    // World configuration - consistent dimensions across all areas
+    this.areaWidth = 100;
+    this.areaLength = 100;
+    this.pathWidth = 10;
+    this.pathCenterX = 0;
+
+    // Track objects and generation state
     this.trees = [];
+    this.houses = [];
+    this.scene2Generated = false;
+    this.scene3Generated = false;
     this.treeBatches = {};
-    this.areas = [];
+    this.currentScene = 1; // Track which scene the user is in
 
-    // SceneTwo Z region
-    this.sceneTwoStartZ = -10;      // front edge of SceneTwo
-    this.sceneTwoOverlap = 20;      // overlap distance for fading SceneOne objects
+    // Scene appearance
+    this.background = new THREE.Color(0xe4faff);
+    this.fog = new THREE.Fog(0x87ceeb, 2, 120);
 
-    // Set initial camera position
-    camera.position.set(0, 10, 75);
-    camera.lookAt(0, 0, 0);
+    // Set camera start position at the igloo (Scene 1)
+    camera.position.set(0, 10, 10);
+    camera.lookAt(0, 0, -20);
 
-    // Restrict camera movement within world boundaries
+    // Restrict camera movement
     this.restrictCamera = (camera) => {
       const boundary = 50;
       camera.position.x = Math.max(-boundary, Math.min(boundary, camera.position.x));
-      // Allow z to go much further negative to reach all areas
-      camera.position.z = Math.max(-550, Math.min(boundary, camera.position.z));
+      camera.position.z = Math.max(-350, Math.min(50, camera.position.z));
     };
 
-    // --- SceneOne region (z=50 to z=0) ---
-    this.background = new THREE.Color(0xe4faff);
-    this.fog = new THREE.Fog(0x87ceeb, 2, 80);
+    // Global lighting
+    const light = new THREE.DirectionalLight(0xffffff, 1);
+    light.position.set(10, 10, 10);
+    this.add(light);
 
-    const light1 = new THREE.DirectionalLight(0xffffff, 1);
-    light1.position.set(10, 10, 10);
-    this.add(light1);
+    const ambient = new THREE.AmbientLight(0xffffff, 0.7);
+    this.add(ambient);
 
-    // --- 3D Text: 'In the beginning' ---
-    const fontLoader = new FontLoader();
-    fontLoader.load('https://cdn.jsdelivr.net/npm/three@0.155.0/examples/fonts/helvetiker_regular.typeface.json', (font) => {
-      const textGeometry = new TextGeometry('In the beginning', {
-        font: font,
-        size: 1,
-        height: 0.05, // much flatter
-        curveSegments: 12,
-        bevelEnabled: true,
-        bevelThickness: 0.005, // very flat
-        bevelSize: 0.02, // very flat
-        bevelOffset: 0,
-        bevelSegments: 1 // very flat
-      });
-      const textMaterial = new THREE.MeshStandardMaterial({
-        color: 0xffffff,
-        roughness: 0.8,
-        metalness: 1,
-        transparent: true,
-        opacity: 0.5 // semi-transparent
-      });
-      const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-      textGeometry.computeBoundingBox();
-      if (textGeometry.boundingBox) {
-        const centerOffset = -0.5 * (textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x);
-        textMesh.position.set(centerOffset, 3, 30);
-      } else {
-        textMesh.position.set(0, 3, 45);
-      }
-      textMesh.castShadow = true;
-      textMesh.receiveShadow = true;
-      this.add(textMesh);
-    });
-
-    // Area 1: Snowy area (z=25, 100x50)
-    const textureLoader = new THREE.TextureLoader();
-    const snowTexture = textureLoader.load('./models/snow.jpg');
-    snowTexture.wrapS = snowTexture.wrapT = THREE.RepeatWrapping;
-    snowTexture.repeat.set(100, 100);
-    snowTexture.anisotropy = 16;
-    const area1 = new Area({
-      positionZ: 25,
-      width: 100,
-      length: 100,
-      material: new THREE.MeshStandardMaterial({
-        map: snowTexture,
-        emissive: new THREE.Color(0xe0f7fa),
-        emissiveIntensity: 0.75
-      }),
-      customInit: (group) => {
-        // Igloo
-        const gltfLoader = new GLTFLoader();
-        gltfLoader.load('./models/igloo.glb', (gltf) => {
-          const iceBlock = gltf.scene.clone();
-          iceBlock.position.set(0, -0.009, 49);
-          iceBlock.rotation.y = Math.PI;
-          iceBlock.scale.set(4, 4, 4);
-          iceBlock.traverse((child) => {
-            if (child.isMesh && child.material) {
-              child.material.emissive.set(0xe0f7fa);
-              child.material.emissiveIntensity = 0.8;
-              child.material.needsUpdate = true;
-            }
-          });
-          group.add(iceBlock);
-        });
-        // Ice walls
-        gltfLoader.load('./models/wall_of_ice.glb', (gltf) => {
-          const wall1 = gltf.scene.clone();
-          wall1.position.set(-25, -3, 25);
-          wall1.rotation.y = Math.PI / 2;
-          wall1.scale.set(3, 2, 5);
-          group.add(wall1);
-          const wall2 = gltf.scene.clone();
-          wall2.position.set(25, -3, 25);
-          wall2.rotation.y = -Math.PI / 2;
-          wall2.scale.set(3, 2, 5);
-          group.add(wall2);
-        });
-      }
-    });
-    this.areas.push(area1);
-    this.add(area1.getObject3D());
-
-    // GLTF loader for static SceneOne objects
-    const gltfLoader = new GLTFLoader();
-
-    // Igloo
-    gltfLoader.load('./models/igloo.glb', (gltf) => {
-      const iceBlock = gltf.scene.clone();
-      iceBlock.position.set(0, -0.009, 49);
-      iceBlock.rotation.y = Math.PI;
-      iceBlock.scale.set(4, 4, 4);
-      iceBlock.traverse((child) => {
-        if (child.isMesh && child.material) {
-          child.material.emissive.set(0xe0f7fa);
-          child.material.emissiveIntensity = 0.8;
-          child.material.needsUpdate = true;
-        }
-      });
-      this.add(iceBlock);
-    });
-
-    // Ice walls
-    gltfLoader.load('./models/wall_of_ice.glb', (gltf) => {
-      const wall1 = gltf.scene.clone();
-      wall1.position.set(-25, -3, 25);
-      wall1.rotation.y = Math.PI / 2;
-      wall1.scale.set(3, 2, 5);
-      this.add(wall1);
-
-      const wall2 = gltf.scene.clone();
-      wall2.position.set(25, -3, 25);
-      wall2.rotation.y = -Math.PI / 2;
-      wall2.scale.set(3, 2, 5);
-      this.add(wall2);
-    });
-
-    // Persistent Sun
+    // Sun (persistent across all areas)
     this.sun = new THREE.Mesh(
       new THREE.SphereGeometry(5, 32, 32),
       new THREE.MeshBasicMaterial({ color: 0xffffff, fog: false })
@@ -166,188 +59,289 @@ export class MainScene extends SceneBase {
     this.sun.position.set(50, 50, -50);
     this.add(this.sun);
 
-    // Path parameters
-    this.pathWidth = 10;
-    this.pathCenterX = 0;
+    // Only build Scene 1 initially
+    // Scene 2 and 3 will generate when user approaches
+    this.buildScene1();
   }
 
-  // --- SceneTwo region (z=0 to z=-300) ---
-  generateSceneTwo() {
-    if (this.sceneTwoGenerated) return;
-    this.sceneTwoGenerated = true;
+  // ================================
+  // SCENE 1: Snowy Ice Area
+  // Position: z=0 to z=-100
+  // ================================
+  buildScene1() {
+    const scene1Z = -50; // Center of Scene 1
 
+    // Ground with snow texture
     const textureLoader = new THREE.TextureLoader();
-    const stoneTexture = textureLoader.load('../models/stone_texture.jpg');
-    stoneTexture.wrapS = stoneTexture.wrapT = THREE.RepeatWrapping;
-    stoneTexture.repeat.set(100, 100);
+    const snowTexture = textureLoader.load('./models/snow.jpg');
+    snowTexture.wrapS = snowTexture.wrapT = THREE.RepeatWrapping;
+    snowTexture.repeat.set(10, 10);
+    snowTexture.anisotropy = 16;
 
-    // Area 2: Forested area (z=-75, 100x100)
-    const area2 = new Area({
-      positionZ: this.sceneTwoStartZ - 75,
-      width: 100,
-      length: 100,
-      material: new THREE.MeshStandardMaterial({ map: stoneTexture }),
-      customInit: (group) => {
-        this.generateSceneTwoVegetation = this.generateSceneTwoVegetation.bind(this);
-        this.generateSceneTwoVegetation(group);
-      }
+    const ground1 = new THREE.Mesh(
+      new THREE.PlaneGeometry(this.areaWidth, this.areaLength),
+      new THREE.MeshStandardMaterial({
+        map: snowTexture,
+        emissive: new THREE.Color(0xe0f7fa),
+        emissiveIntensity: 0.75
+      })
+    );
+    ground1.rotation.x = -Math.PI / 2;
+    ground1.position.set(0, -0.01, scene1Z);
+    this.add(ground1);
+
+    // Load models
+    const loader = new GLTFLoader();
+
+    // Igloo at the starting point
+    loader.load('./models/igloo.glb', (gltf) => {
+      const igloo = gltf.scene;
+      igloo.position.set(0, 0, 10);
+      igloo.rotation.y = Math.PI;
+      igloo.scale.set(4, 4, 4);
+      igloo.traverse((child) => {
+        if (child.isMesh && child.material) {
+          child.material.emissive.set(0xe0f7fa);
+          child.material.emissiveIntensity = 0.5;
+          child.material.needsUpdate = true;
+        }
+      });
+      this.add(igloo);
     });
-    this.areas.push(area2);
-    this.add(area2.getObject3D());
 
-    // Area 3 (houses) will be generated later when user reaches the end of area 2
-    this.sceneThreeGenerated = false;
+    // Ice walls on sides
+    loader.load('./models/wall_of_ice.glb', (gltf) => {
+      const wall1 = gltf.scene.clone();
+      wall1.position.set(-25, -3, scene1Z);
+      wall1.rotation.y = Math.PI / 2;
+      wall1.scale.set(3, 2, 5);
+      this.add(wall1);
+
+      const wall2 = gltf.scene.clone();
+      wall2.position.set(25, -3, scene1Z);
+      wall2.rotation.y = -Math.PI / 2;
+      wall2.scale.set(3, 2, 5);
+      this.add(wall2);
+    });
   }
 
-  // --- SceneThree region (z=-175 and beyond) ---
-  generateSceneThree() {
-    if (this.sceneThreeGenerated) return;
-    this.sceneThreeGenerated = true;
-    // Area 3: Houses lined up (z=-175, 100x100)
-    const scene3Ground = new THREE.Mesh(
-      new THREE.PlaneGeometry(100, 100),
+  // ================================
+  // SCENE 2: Forest Area
+  // Position: z=-100 to z=-200
+  // Generates procedurally as user approaches
+  // ================================
+  buildScene2() {
+    if (this.scene2Generated) return;
+    this.scene2Generated = true;
+
+    const scene2Z = -150; // Center of Scene 2
+
+    // Ground with stone texture
+    const textureLoader = new THREE.TextureLoader();
+    const stoneTexture = textureLoader.load('./models/stone_texture.jpg');
+    stoneTexture.wrapS = stoneTexture.wrapT = THREE.RepeatWrapping;
+    stoneTexture.repeat.set(10, 10);
+
+    const ground2 = new THREE.Mesh(
+      new THREE.PlaneGeometry(this.areaWidth, this.areaLength),
+      new THREE.MeshStandardMaterial({ map: stoneTexture })
+    );
+    ground2.rotation.x = -Math.PI / 2;
+    ground2.position.set(0, -0.01, scene2Z);
+    this.add(ground2);
+
+    // Initialize procedural tree generation
+    this.initializeTreeGeneration();
+  }
+
+  initializeTreeGeneration() {
+    // Setup for batch-based procedural tree generation
+    const batchSize = 20; // Each batch covers 20 units in z
+    const scene2Start = -100;
+    const scene2End = -200;
+    const batchCount = Math.ceil((scene2End - scene2Start) / -batchSize);
+
+    // Initialize all batches as not generated
+    for (let batch = 0; batch < batchCount; batch++) {
+      this.treeBatches[batch] = false;
+    }
+
+    // Store parameters for use in update()
+    this.treeConfig = {
+      models: ['pine_tree.glb', 'spruce_tree.glb', 'tree.glb'],
+      batchSize: batchSize,
+      batchCount: batchCount,
+      scene2Start: scene2Start,
+      isWithinPath: (x) => Math.abs(x - this.pathCenterX) <= this.pathWidth / 2
+    };
+  }
+
+  generateTreeBatch(batchIndex) {
+    if (this.treeBatches[batchIndex]) return;
+    this.treeBatches[batchIndex] = true;
+
+    const { models, batchSize, scene2Start, isWithinPath } = this.treeConfig;
+    const loader = new GLTFLoader();
+    
+    const batchStartZ = scene2Start - (batchIndex * batchSize);
+    const batchEndZ = batchStartZ - batchSize;
+
+    models.forEach((modelName) => {
+      loader.load(`./models/${modelName}`, (gltf) => {
+        // Create 10 trees per model per batch
+        for (let i = 0; i < 10; i++) {
+          let x, z;
+          // Find position outside the path
+          do {
+            x = Math.random() * this.areaWidth - this.areaWidth / 2;
+            z = batchStartZ - Math.random() * batchSize;
+          } while (isWithinPath(x));
+
+          const tree = gltf.scene.clone();
+          tree.position.set(x, 0, z);
+          tree.rotation.y = Math.random() * Math.PI * 2;
+          tree.scale.setScalar(0.05); // Start small
+          this.add(tree);
+          this.trees.push(tree);
+        }
+      });
+    });
+  }
+
+  // ================================
+  // SCENE 3: Village Area
+  // Position: z=-200 to z=-300
+  // Only generates when user reaches this area
+  // ================================
+  buildScene3() {
+    if (this.scene3Generated) return;
+    this.scene3Generated = true;
+
+    const scene3Z = -250; // Center of Scene 3
+
+    // Ground
+    const ground3 = new THREE.Mesh(
+      new THREE.PlaneGeometry(this.areaWidth, this.areaLength),
       new THREE.MeshStandardMaterial({ color: 0xc2b280 })
     );
-    scene3Ground.rotation.x = -Math.PI / 2;
-    scene3Ground.position.set(0, -0.01, this.sceneTwoStartZ - 175); // z=-175
-    this.add(scene3Ground);
+    ground3.rotation.x = -Math.PI / 2;
+    ground3.position.set(0, -0.01, scene3Z);
+    this.add(ground3);
 
     // Load and place houses
     const loader = new GLTFLoader();
     Promise.all([
-      new Promise((resolve, reject) => loader.load('./models/oldHouse_1.glb', resolve, undefined, reject)),
-      new Promise((resolve, reject) => loader.load('./models/oldHouse_2.glb', resolve, undefined, reject))
+      loader.loadAsync('./models/oldHouse_1.glb').catch(() => null),
+      loader.loadAsync('./models/oldHouse_2.glb').catch(() => null)
     ]).then(([gltf1, gltf2]) => {
-      const houseModels = [gltf1.scene, gltf2.scene];
+      const houseModels = [gltf1?.scene, gltf2?.scene].filter(Boolean);
+      
+      if (houseModels.length === 0) {
+        console.warn('No house models could be loaded');
+        return;
+      }
+
       const houseSpacing = 9;
       const numHouses = 10;
-      const offsetZ = this.sceneTwoStartZ - 135;
+      const startZ = scene3Z + 40;
       const leftX = -10;
       const rightX = 10;
+
+      // Place houses on left side
       for (let i = 0; i < numHouses; i++) {
-        // Alternate models for variety
-        const houseL = houseModels[i % 2].clone();
-        houseL.position.set(leftX, 0, offsetZ - i * houseSpacing);
-        houseL.scale.set(6, 6, 6);
-        this.add(houseL);
-        const houseR = houseModels[(i + 1) % 2].clone();
-        houseR.position.set(rightX, 0, offsetZ - i * houseSpacing);
-        // Mirror the right-side house by flipping X scale
-        houseR.scale.set(-6, 6, 6);
-        this.add(houseR);
+        const modelIndex = i % houseModels.length;
+        if (houseModels[modelIndex]) {
+          const house = houseModels[modelIndex].clone();
+          house.position.set(leftX, 0, startZ - i * houseSpacing);
+          house.scale.set(6, 6, 6);
+          this.add(house);
+          this.houses.push(house);
+        }
       }
-      // Ambient light for scene 3
-      const ambient = new THREE.AmbientLight(0xffffff, 0.7);
-      this.add(ambient);
-    }).catch((error) => {
-      console.error('Error loading house models:', error);
+
+      // Place houses on right side
+      for (let i = 0; i < numHouses; i++) {
+        const modelIndex = (i + 1) % houseModels.length;
+        if (houseModels[modelIndex]) {
+          const house = houseModels[modelIndex].clone();
+          house.position.set(rightX, 0, startZ - i * houseSpacing);
+          house.scale.set(-6, 6, 6); // Mirror by flipping X
+          this.add(house);
+          this.houses.push(house);
+        }
+      }
     });
   }
 
-  generateSceneTwoVegetation(group = this) {
-    // Procedural batch-based tree generation
-    const gltfLoader = new GLTFLoader();
-    const isWithinPath = (x) => Math.abs(x - this.pathCenterX) <= this.pathWidth / 2;
-    const treeModels = ['pine_tree.glb', 'spruce_tree.glb', 'tree.glb'];
-    const batchSize = 10; // Each batch covers 10 units in z
-    // Only generate trees within area 2 boundaries: z=-75 to z=-175
-    const area2Start = this.sceneTwoStartZ - 75;
-    const area2End = area2Start - 100;
-    const batchCount = Math.floor((area2Start - area2End) / batchSize);
-    for (let batch = 0; batch < batchCount; batch++) {
-      this.treeBatches[batch] = false; // Not generated yet
-    }
-
-    // Store for later use in update()
-    this._treeModels = treeModels;
-    this._gltfLoader = gltfLoader;
-    this._isWithinPath = isWithinPath;
-    this._batchSize = batchSize;
-    this._batchCount = batchCount;
-    this._groupForTrees = group;
-  }
+  // ================================
+  // TO ADD MORE SCENES:
+  // 1. Create buildScene4() method following the pattern above
+  // 2. Position it at z=-300 to z=-400 (or similar)
+  // 3. Set this.scene4Generated = false in constructor
+  // 4. Add generation trigger in update() method
+  // ================================
 
   update(userPosition) {
-
-        // Pre-generate SceneThree slightly before the player reaches it
-        if (userPosition.z < this.sceneTwoStartZ - 175 + 10 && !this.sceneThreeGenerated) {
-          this.generateSceneThree();
-        }
     if (!userPosition) return;
 
-    // --- Floating text overlay logic for SceneOne (z=50 to z=0) ---
-    // Example: show text at z=40, z=20, hide after z<0
-    if (userPosition.z > 0 && userPosition.z <= 50) {
-      if (userPosition.z > 35 && userPosition.z <= 50) {
-        showSceneTextOverlay('Welcome to the snowy expanse.');
-      } else if (userPosition.z > 10 && userPosition.z <= 35) {
-        showSceneTextOverlay('The cold bites as you move forward...');
-      } else if (userPosition.z > 0 && userPosition.z <= 10) {
-        showSceneTextOverlay('You approach the edge of the forest.');
+    // Update timeline progress indicator
+    if (window.updateTimelineProgress) {
+      window.updateTimelineProgress(userPosition.z);
+    }
+
+    // Determine current scene based on Z position
+    let newScene = 1;
+    if (userPosition.z < -100) {
+      newScene = 2;
+    }
+    if (userPosition.z < -200) {
+      newScene = 3;
+    }
+    
+    // Update timeline if scene changed
+    if (newScene !== this.currentScene) {
+      this.currentScene = newScene;
+      if (window.updateTimeline) {
+        window.updateTimeline(this.currentScene);
       }
-    } else {
-      hideSceneTextOverlay();
     }
 
-    // Pre-generate SceneTwo slightly before the player reaches it
-    if (userPosition.z < this.sceneTwoStartZ + 10 && !this.sceneTwoGenerated) {
-      this.generateSceneTwo();
+    // Generate Scene 2 when approaching (10 units before boundary)
+    if (!this.scene2Generated && userPosition.z < -90) {
+      this.buildScene2();
     }
 
-    // Procedural tree batch generation
-    if (this._treeModels && this.treeBatches) {
-      // Determine which batch the player is near
-      const playerZ = userPosition.z;
-      for (let batch = 0; batch < this._batchCount; batch++) {
-        const batchStart = this.sceneTwoStartZ - batch * this._batchSize;
-        const batchEnd = batchStart - this._batchSize;
-        // If player is within 10 units of this batch and not generated
-        if (!this.treeBatches[batch] && playerZ < batchStart + 10 && playerZ > batchEnd - 10) {
-          this.treeBatches[batch] = true;
-          // Generate trees for this batch
-          this._treeModels.forEach((model) => {
-            this._gltfLoader.load(`./models/${model}`, (gltf) => {
-              for (let i = 0; i < 10; i++) {
-                let x, z;
-                do {
-                  x = Math.random() * 100 - 50;
-                  z = batchStart - Math.random() * this._batchSize;
-                } while (this._isWithinPath(x));
-                const tree = gltf.scene.clone();
-                tree.position.set(x, 0, z);
-                tree.rotation.y = Math.random() * Math.PI * 2;
-                tree.scale.setScalar(0.02);
-                this._groupForTrees.add(tree);
-                this.trees.push(tree);
-                this.sceneTwoObjects.push(tree);
-              }
-            });
-          });
+    // Generate Scene 3 when approaching (10 units before boundary)
+    if (!this.scene3Generated && userPosition.z < -190) {
+      this.buildScene3();
+    }
+
+    // Procedural tree batch generation for Scene 2
+    if (this.treeConfig && this.scene2Generated) {
+      const { batchSize, batchCount, scene2Start } = this.treeConfig;
+      
+      for (let batch = 0; batch < batchCount; batch++) {
+        const batchStartZ = scene2Start - (batch * batchSize);
+        const batchEndZ = batchStartZ - batchSize;
+        
+        // Generate batch if player is within 30 units
+        if (!this.treeBatches[batch] && 
+            userPosition.z < batchStartZ + 30 && 
+            userPosition.z > batchEndZ - 30) {
+          this.generateTreeBatch(batch);
         }
       }
     }
 
-    // Update tree scale based on proximity to user (gradual appearance)
-    if (this.trees) {
-      this.trees.forEach((tree) => {
-        const distance = Math.abs(tree.position.z - userPosition.z);
-        if (distance < 20) {
-          // Trees get larger as you get closer
-          const scale = THREE.MathUtils.clamp(0.05 + (1 - distance / 20) * 0.15, 0.05, 0.2);
-          tree.scale.set(scale, scale, scale);
-        } else {
-          tree.scale.set(0.05, 0.05, 0.05); // default small size for distant trees
-        }
-      });
-    }
-
-    // Fade out SceneOne objects in the overlap zone
-    this.children.forEach((child) => {
-      if (child.material && child.position.z >= this.sceneTwoStartZ - this.sceneTwoOverlap &&
-          child.position.z <= this.sceneTwoStartZ) {
-        const t = (child.position.z - (this.sceneTwoStartZ - this.sceneTwoOverlap)) / this.sceneTwoOverlap;
-        child.material.opacity = THREE.MathUtils.clamp(1 - t, 0, 1);
-        child.material.transparent = true;
+    // Scale trees based on proximity to user
+    this.trees.forEach((tree) => {
+      const distance = Math.abs(tree.position.z - userPosition.z);
+      if (distance < 30) {
+        // Trees grow larger as you get closer
+        const scale = THREE.MathUtils.clamp(0.05 + (1 - distance / 30) * 0.15, 0.05, 0.2);
+        tree.scale.setScalar(scale);
+      } else {
+        tree.scale.setScalar(0.05); // Small when far
       }
     });
   }
