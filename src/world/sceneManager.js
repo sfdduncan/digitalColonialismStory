@@ -40,14 +40,14 @@ export class SceneManager {
 
   handleSceneTransition(nextSceneName) {
     if (nextSceneName === 'MainScene' && !this.mainScene) {
-      // Trigger flash transition effect
+      // Trigger initial flash transition effect
       if (window.triggerFlashTransition) {
         window.triggerFlashTransition();
       }
       
-      // Wait a moment for flash to reach peak brightness before switching
+      // Wait briefly before switching (switch during flash)
       setTimeout(() => {
-        // Create main scene
+        // Create main scene (which triggers another flash)
         this.mainScene = new MainScene(this.camera);
         
         // Exit current scene

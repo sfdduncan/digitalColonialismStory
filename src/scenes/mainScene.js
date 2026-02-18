@@ -14,6 +14,11 @@ export class MainScene extends SceneBase {
   constructor(camera) {
     super();
 
+    // Trigger flash transition for smooth loading
+    if (window.triggerFlashTransition) {
+      window.triggerFlashTransition();
+    }
+
     // World configuration - consistent dimensions across all areas
     this.areaWidth = 100;
     this.areaLength = 100;
