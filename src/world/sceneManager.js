@@ -3,8 +3,8 @@
 // Manages scene transitions
 // ================================
 
-import { HackScene } from '/src/scenes/HackScene.js';
-import { MainScene } from '/src/scenes/mainScene.js';
+import { HackScene } from './scenes/HackScene.js';
+import { MainScene } from './scenes/mainScene.js';
 
 export class SceneManager {
   constructor(camera) {

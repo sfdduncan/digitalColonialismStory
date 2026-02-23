@@ -8,15 +8,20 @@ export const subtitles = {
       text: "There is a resistance rising. It leads with refusal."
     },
     {
+      trigger: 0,
+      text: "Colonization never ended. It digitized."
+    },
+
+    {
       trigger: -10,
-      text: "Colonization never ended. It digitized. Data became the new land. Knowledge became the new resource. Indigenous peoples became targets of a new kind of extraction."
+      text: "Data became the new land. Knowledge became the new resource. Indigenous peoples became targets of a new kind of extraction."
     },
     {
-      trigger: -25,
+      trigger: -20,
       text: "So Indigenous people began to hack back, to steal back their data, their knowledges, their stores."
     },
     {
-      trigger: -35,
+      trigger: -30,
       text: "But to understand why, we must start at the beginning."
     }
   ],
