@@ -6,6 +6,8 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.module.js';
 import { SceneBase } from './SceneBase.js';
 import { hackImages } from './hackImageConfig.js';
+import { subtitleManager } from '../ui/subtitleManager.js';
+import { subtitles } from '../ui/subtitleText.js';
 
 export class HackScene extends SceneBase {
   constructor(camera) {
@@ -40,6 +42,9 @@ export class HackScene extends SceneBase {
 
     this.createGridFloor();
     this.loadImages();
+    
+    // Load subtitles for this scene
+    subtitleManager.loadSubtitles(subtitles.hackScene);
   }
 
   createGridFloor() {
@@ -322,6 +327,9 @@ export class HackScene extends SceneBase {
       this.cameraLight.position.copy(userPosition);
     }
 
+    // Update subtitles based on camera position
+    subtitleManager.update(userPosition.z);
+
     // Update animated GIF textures
     this.imageTextures.forEach(texture => {
       if (texture.userData.isAnimated) {
@@ -357,6 +365,9 @@ export class HackScene extends SceneBase {
       texture.dispose();
     });
     this.imageTextures = [];
+
+    // Clear subtitles when exiting scene
+    subtitleManager.clear();
 
     super.exit();
   }
