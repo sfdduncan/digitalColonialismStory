@@ -40,49 +40,11 @@ export class HackScene extends SceneBase {
 
     this.fog = new THREE.Fog(0x050505, 20, 60);
 
-    this.createGridFloor();
     this.loadImages();
     
     // Load subtitles for this scene
     subtitleManager.loadSubtitles(subtitles.hackScene);
-  }
-
-  createGridFloor() {
-    const gridSize = 200;
-    const gridDivisions = 40;
-
-    const grid = new THREE.GridHelper(
-      gridSize,
-      gridDivisions,
-      0x0080ff,
-      0x003366
-    );
-    grid.position.y = 0;
-    grid.position.z = -gridSize / 2;
-
-    this.add(grid);
-    this.objects.push(grid);
-
-    const floorGeometry = new THREE.PlaneGeometry(
-      this.corridorWidth * 2,
-      this.corridorLength
-    );
-
-    const floorMaterial = new THREE.MeshStandardMaterial({
-      color: 0x000811,
-      emissive: 0x001133,
-      emissiveIntensity: 0.1,
-      roughness: 0.8,
-      metalness: 0.2
-    });
-
-    const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-    floor.rotation.x = -Math.PI / 2;
-    floor.position.y = 0.01;
-    floor.position.z = -this.corridorLength / 2;
-
-    this.add(floor);
-    this.objects.push(floor);
+  
   }
 
   async loadImages() {

@@ -278,6 +278,55 @@ export class MainScene extends SceneBase {
     });
   }
 
+
+  buildScene4() {
+    if (this.scene4Generated) return;
+      this.scene4Generated = true;  
+
+      const scene4Z = -350; // Center of Scene 4
+      // Ground
+      const ground4 = new THREE.Mesh(
+        new THREE.PlaneGeometry(this.areaWidth, this.areaLength),
+        new THREE.MeshStandardMaterial({ color: 0x808080 })
+      );
+      ground4.rotation.x = -Math.PI / 2;
+      ground4.position.set(0, -0.01, scene4Z);
+      this.add(ground4);
+      // Add your models and objects here
+      const loader = new GLTFLoader();  
+      // Example: Load and place models
+      loader.load('./models/your_model.glb', (gltf) => {
+        const model = gltf.scene;
+        model.position.set(0, 0, scene4Z);
+        model.scale.set(1, 1, 1);
+        this.add(model);
+      });
+
+  }
+
+
+  buildScene5() {
+    if (this.scene5Generated) return;
+      this.scene5Generated = true;   
+      const scene5Z = -450; // Center of Scene 5
+      // Ground
+      const ground5 = new THREE.Mesh(
+        new THREE.PlaneGeometry(this.areaWidth, this.areaLength),
+        new THREE.MeshStandardMaterial({ color: 0x404040 })
+      );
+      ground5.rotation.x = -Math.PI / 2;
+      ground5.position.set(0, -0.01, scene5Z);
+      this.add(ground5);
+      // Add your models and objects here
+      const loader = new GLTFLoader();
+      // Example: Load and place models
+      loader.load('./models/your_model.glb', (gltf) => {
+        const model = gltf.scene;
+        model.position.set(0, 0, scene5Z);
+        model.scale.set(1, 1, 1);
+        this.add(model);
+      });
+  }
   // ================================
   // TO ADD MORE SCENES:
   // 1. Create buildScene4() method following the pattern above

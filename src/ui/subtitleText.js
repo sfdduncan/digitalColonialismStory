@@ -5,24 +5,23 @@ export const subtitles = {
   hackScene: [
     {
       trigger: 10,
-      text: "There is a resistance rising. It leads with refusal."
+      text: "In March of 2022, a hacktivist collective calling itself Guacamaya breached the networks of mining companies operating in Guatemala's Fenix nickel project."
     },
     {
       trigger: 0,
-      text: "Colonization never ended. It digitized."
+      text: "They leaked over four terabytes of data exposing working conditions, environmental damage, and corporate efforts to silence critics."
     },
-
     {
       trigger: -10,
-      text: "Data became the new land. Knowledge became the new resource. Indigenous peoples became targets of a new kind of extraction."
+      text: "But their actions are not isolated."
     },
     {
       trigger: -20,
-      text: "So Indigenous people began to hack back, to steal back their data, their knowledges, their stores."
+      text: "This is all part of a broader uprising. A refusal of a new, digital colonialism. A demand for sovereignty over data, knowledge, and the stories that define them."
     },
     {
       trigger: -30,
-      text: "But to understand why, we must start at the beginning."
+      text: "But to understand this movement, we must return to the beginning. To trace it through centuries of dispossession, survival, and resistance."
     }
   ],
   
