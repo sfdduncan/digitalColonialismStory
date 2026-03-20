@@ -90,7 +90,7 @@ function triggerFlashTransition() {
   // Remove class after animation completes
   setTimeout(() => {
     flashElement.classList.remove('flashing');
-  }, 800); // Match animation duration
+  }, 1200); // Match animation duration
 }
 
 // Make functions globally accessible

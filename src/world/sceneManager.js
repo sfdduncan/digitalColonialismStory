@@ -58,13 +58,14 @@ export class SceneManager {
       
       // Wait briefly before switching (switch during flash)
       setTimeout(() => {
-        // Create main scene (which triggers another flash)
-        this.mainScene = new MainScene(this.camera);
-        
-        // Exit current scene
+        // Exit current scene FIRST so its subtitleManager.clear() doesn't
+        // wipe the subtitles that MainScene loads in its constructor below.
         if (this.currentScene.exit) {
           this.currentScene.exit();
         }
+
+        // Create main scene (loads its own subtitles after hackScene has cleared)
+        this.mainScene = new MainScene(this.camera);
         
         // Switch to main scene
         this.currentScene = this.mainScene;

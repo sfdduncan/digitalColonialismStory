@@ -8,6 +8,10 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.module.js';
 import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/loaders/GLTFLoader.js';
 import { SceneBase } from './SceneBase.js';
+import { subtitleManager } from '../ui/subtitleManager.js';
+import { subtitles } from '../ui/subtitleText.js';
+import { archiveImagesManager } from '../ui/archiveImagesManager.js';
+import { archiveImages } from '../ui/archiveImagesConfig.js';
 
 
 export class MainScene extends SceneBase {
@@ -27,10 +31,12 @@ export class MainScene extends SceneBase {
 
     // Track objects and generation state
     this.trees = [];
+    this.grass = [];
     this.houses = [];
     this.scene2Generated = false;
     this.scene3Generated = false;
     this.treeBatches = {};
+    this.grassBatches = {};
     this.currentScene = 1; // Track which scene the user is in
 
     // Scene appearance
@@ -67,6 +73,15 @@ export class MainScene extends SceneBase {
     // Only build Scene 1 initially
     // Scene 2 and 3 will generate when user approaches
     this.buildScene1();
+
+    // Load subtitles for MainScene (starts at Scene 1 / igloo).
+    subtitleManager.loadSubtitles(subtitles.mainScene);
+    subtitleManager.update(camera.position.z);
+    
+    // Initialize and load archive images for MainScene
+    archiveImagesManager.init(this); // Pass the scene to the manager
+    archiveImagesManager.loadImages(archiveImages.mainScene);
+    archiveImagesManager.update(camera.position.z);
   }
 
   // ================================
@@ -117,7 +132,7 @@ export class MainScene extends SceneBase {
     // Ice walls on sides
     loader.load('./models/wall_of_ice.glb', (gltf) => {
       const wall1 = gltf.scene.clone();
-      wall1.position.set(-25, -3, scene1Z);
+      wall1.position.set(-25, -2.2, scene1Z);
       wall1.rotation.y = Math.PI / 2;
       wall1.scale.set(3, 2, 5);
       this.add(wall1);
@@ -155,8 +170,77 @@ export class MainScene extends SceneBase {
     ground2.position.set(0, -0.01, scene2Z);
     this.add(ground2);
 
-    // Initialize procedural tree generation
+    // Initialize procedural tree and grass generation
     this.initializeTreeGeneration();
+    this.initializeGrassGeneration();
+  }
+
+  initializeGrassGeneration() { 
+    // Setup for batch-based procedural grass generation 
+    const grassBatchSize = 50; 
+    const scene2Start = -100; 
+    const scene2End = -200; 
+    const grassBatchCount = Math.ceil((scene2End - scene2Start) / - grassBatchSize)
+
+    for (let batch = 0; batch < grassBatchCount; batch++) {
+      this.grassBatches[batch] = false;
+    }
+
+    this.grassConfig = {
+      models: [
+        { file: 'shortGrass.glb', yOffset: -5 },
+        { file: 'mediumGrass.glb', yOffset: -9 },
+        { file: 'tallGrass.glb', yOffset: 1 }
+      ],
+      batchSize: grassBatchSize,
+      batchCount: grassBatchCount,
+      scene2Start: scene2Start
+    };
+  }
+
+  generateGrassBatch(batchIndex) {
+    if (this.grassBatches[batchIndex]) return;
+    this.grassBatches[batchIndex] = true;
+
+    const { models, batchSize: grassBatchSize, scene2Start } = this.grassConfig;
+    const loader = new GLTFLoader();
+    
+    const batchStartZ = scene2Start - (batchIndex * grassBatchSize);
+    const batchEndZ = batchStartZ - grassBatchSize;
+
+    models.forEach((modelConfig) => {
+      loader.load(`./models/${modelConfig.file}`, (gltf) => {
+        // Create 30 grass per model per batch
+        for (let i = 0; i < 30; i++) {
+          // Place grass on left or right side (like hack scene images)
+          const placeOnLeft = Math.random() > 0.5;
+          let x, z;
+          
+          // Create narrow walls on each side of the path (15 units wide)
+          const wallWidth = 15;
+          
+          if (placeOnLeft) {
+            // Left wall: from -5 (path edge) extending left 15 units to -20
+            x = -(this.pathWidth / 2) - Math.random() * wallWidth;
+          } else {
+            // Right wall: from +5 (path edge) extending right 15 units to +20
+            x = (this.pathWidth / 2) + Math.random() * wallWidth;
+          }
+          
+          // Add z-offset variation like hack scene for better corridor effect
+          const baseZ = batchStartZ - (i * grassBatchSize / 30);
+          const zOffset = (Math.random() - 0.5) * 4;
+          z = baseZ + zOffset;
+
+          const grass  = gltf.scene.clone();
+          grass.position.set(x, 0 + modelConfig.yOffset, z);
+          grass.rotation.y = Math.random() * Math.PI * 2;
+          grass.scale.setScalar(0.03); // Static size
+          this.add(grass);
+          this.grass.push(grass);
+        }
+      });
+    });
   }
 
   initializeTreeGeneration() {
@@ -173,11 +257,14 @@ export class MainScene extends SceneBase {
 
     // Store parameters for use in update()
     this.treeConfig = {
-      models: ['pine_tree.glb', 'spruce_tree.glb', 'tree.glb'],
+      models: [
+        { file: 'pine_tree.glb', yOffset: 0 },
+        { file: 'spruce_tree.glb', yOffset: 0 },
+        { file: 'tree.glb', yOffset: 0 }
+      ],
       batchSize: batchSize,
       batchCount: batchCount,
-      scene2Start: scene2Start,
-      isWithinPath: (x) => Math.abs(x - this.pathCenterX) <= this.pathWidth / 2
+      scene2Start: scene2Start
     };
   }
 
@@ -185,25 +272,38 @@ export class MainScene extends SceneBase {
     if (this.treeBatches[batchIndex]) return;
     this.treeBatches[batchIndex] = true;
 
-    const { models, batchSize, scene2Start, isWithinPath } = this.treeConfig;
+    const { models, batchSize, scene2Start } = this.treeConfig;
     const loader = new GLTFLoader();
     
     const batchStartZ = scene2Start - (batchIndex * batchSize);
     const batchEndZ = batchStartZ - batchSize;
 
-    models.forEach((modelName) => {
-      loader.load(`./models/${modelName}`, (gltf) => {
-        // Create 10 trees per model per batch
-        for (let i = 0; i < 10; i++) {
+    models.forEach((modelConfig) => {
+      loader.load(`./models/${modelConfig.file}`, (gltf) => {
+        // Create 15 trees per model per batch (increased density)
+        for (let i = 0; i < 15; i++) {
+          // Randomly choose left or right side
+          const placeOnLeft = Math.random() > 0.5;
           let x, z;
-          // Find position outside the path
-          do {
-            x = Math.random() * this.areaWidth - this.areaWidth / 2;
-            z = batchStartZ - Math.random() * batchSize;
-          } while (isWithinPath(x));
+          
+          // Create narrow walls on each side of the path (15 units wide)
+          const wallWidth = 15;
+          
+          if (placeOnLeft) {
+            // Left wall: from -5 (path edge) extending left 15 units to -20
+            x = -(this.pathWidth / 2) - Math.random() * wallWidth;
+          } else {
+            // Right wall: from +5 (path edge) extending right 15 units to +20
+            x = (this.pathWidth / 2) + Math.random() * wallWidth;
+          }
+          
+          // Add z-offset variation like hack scene for better corridor effect
+          const baseZ = batchStartZ - (i * batchSize / 15);
+          const zOffset = (Math.random() - 0.5) * 4;
+          z = baseZ + zOffset;
 
           const tree = gltf.scene.clone();
-          tree.position.set(x, 0, z);
+          tree.position.set(x, 0 + modelConfig.yOffset, z);
           tree.rotation.y = Math.random() * Math.PI * 2;
           tree.scale.setScalar(0.05); // Start small
           this.add(tree);
@@ -338,6 +438,12 @@ export class MainScene extends SceneBase {
   update(userPosition) {
     if (!userPosition) return;
 
+    // Update subtitles based on camera position while moving through MainScene.
+    subtitleManager.update(userPosition.z);
+    
+    // Update archive images based on camera position
+    archiveImagesManager.update(userPosition.z);
+
     // Update timeline progress indicator
     if (window.updateTimelineProgress) {
       window.updateTimelineProgress(userPosition.z);
@@ -370,6 +476,16 @@ export class MainScene extends SceneBase {
       this.buildScene3();
     }
 
+    // Generate Scene 4 when approaching (10 units before boundary)
+    if (!this.scene4Generated && userPosition.z < -290) {
+      this.buildScene4();
+    }
+
+    // Generate Scene 5 when approaching (10 units before boundary)
+    if (!this.scene5Generated && userPosition.z < -390) {
+      this.buildScene5();
+    }
+
     // Procedural tree batch generation for Scene 2
     if (this.treeConfig && this.scene2Generated) {
       const { batchSize, batchCount, scene2Start } = this.treeConfig;
@@ -383,6 +499,23 @@ export class MainScene extends SceneBase {
             userPosition.z < batchStartZ + 30 && 
             userPosition.z > batchEndZ - 30) {
           this.generateTreeBatch(batch);
+        }
+      }
+    }
+
+    // Procedural grass batch generation for Scene 2
+    if (this.grassConfig && this.scene2Generated) {
+      const { batchSize: grassBatchSize, batchCount: grassBatchCount, scene2Start: grassScene2Start } = this.grassConfig;
+      
+      for (let batch = 0; batch < grassBatchCount; batch++) {
+        const batchStartZ = grassScene2Start - (batch * grassBatchSize);
+        const batchEndZ = batchStartZ - grassBatchSize;
+        
+        // Generate batch if player is within 30 units
+        if (!this.grassBatches[batch] && 
+            userPosition.z < batchStartZ + 30 && 
+            userPosition.z > batchEndZ - 30) {
+          this.generateGrassBatch(batch);
         }
       }
     }

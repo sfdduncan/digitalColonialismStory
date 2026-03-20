@@ -439,11 +439,11 @@ canvas {
   max-width: 80%;
   width: auto;
   padding: 1.5rem 2.5rem;
-   -webkit-text-stroke-width: .1px; /* The width of the outline */
+   -webkit-text-stroke-width: .3px; /* The width of the outline */
   -webkit-text-stroke-color: black; /* The color of the outline */
   color: #ffffff;
   font-family: 'Segoe UI', Arial, sans-serif;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   line-height: 1.6;
   text-align: center;
   z-index: 1000;
@@ -470,3 +470,4 @@ canvas {
     bottom: 60px;
   }
 }
+

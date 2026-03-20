@@ -26,16 +26,27 @@ export const subtitles = {
   ],
   
   mainScene: [
-    // {
-    //   trigger: 0,
-    //   text: "Example text for main scene"
-    // }
+    {
+      trigger: 10,
+      text: "For thousands of years, Indigenous peoples across the globe stewarded their lands through relationships of reciprocity and responsibility."
+    },
+    {
+      trigger: -15,
+      text: "Knowledge was not extracted and stored. It was lived, practiced, and transmitted through generations."
+    },
+    {
+      trigger: -40,
+      text: "The human and the non-human were not separate. Land was not property. It was relation."
+    },
+    {
+      trigger: -65,
+      text: "These knowledge systems were sophisticated, place-based, and deeply ecological. They belonged to the communities that built them."
+    },
+    {
+      trigger: -90,
+      text: "That belonging would soon be contested."
+    }
   ],
   
-  scene3: [
-    // {
-    //   trigger: -200,
-    //   text: "Example text for scene 3"
-    // }
-  ]
+
 };

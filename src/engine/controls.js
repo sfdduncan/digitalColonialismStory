@@ -11,7 +11,7 @@ export function createControls(camera, domElement) {
   // Breathing animation
   let breathingTime = 0;
   const breathingSpeed = 2; // Speed of breathing cycle
-  const breathingAmount = 0.1; // Subtle up/down movement (1.5cm)
+  const breathingAmount = 0.07; // Subtle up/down movement (1.5cm)
   
   // Idle sway animation - slower, subtle up/down movement
   let swayTime = 0;
@@ -43,47 +43,25 @@ export function createControls(camera, domElement) {
 
 
   // Rotation limits
-  const HORIZONTAL_LIMIT = Math.PI / 6; // 30 degrees left/right turning
-  const VERTICAL_LIMIT_UP = Math.PI / 12; // 15 degrees looking up
-  const VERTICAL_LIMIT_DOWN = Math.PI / 12; // 15 degrees looking down
-
-  // Store initial rotation when pointer locks
-  let initialHorizontalRotation = 0;
-  let hasSetInitialRotation = false;
+  const HORIZONTAL_LIMIT = Math.PI / 12; // 15 degrees left/right
+  const VERTICAL_LIMIT = Math.PI / 12; // 15 degrees up/down
 
   function clampRotation() {
     if (!controls.isLocked) return;
 
-    // Set initial rotation on first lock
-    if (!hasSetInitialRotation) {
-      initialHorizontalRotation = camera.rotation.y;
-      hasSetInitialRotation = true;
-    }
-
     // Lock roll to prevent camera tilting
     camera.rotation.z = 0;
 
-    // Clamp vertical looking (pitch - up/down on X axis)
-    if (camera.rotation.x > VERTICAL_LIMIT_UP) {
-      camera.rotation.x = VERTICAL_LIMIT_UP;
-    } else if (camera.rotation.x < -VERTICAL_LIMIT_DOWN) {
-      camera.rotation.x = -VERTICAL_LIMIT_DOWN;
-    }
+    // Clamp vertical looking (pitch - up/down)
+    camera.rotation.x = Math.max(-VERTICAL_LIMIT, Math.min(VERTICAL_LIMIT, camera.rotation.x));
 
-    // Clamp horizontal turning (yaw - left/right on Y axis)
-    const currentRotation = camera.rotation.y;
-    const rotationDelta = currentRotation - initialHorizontalRotation;
+    // Clamp horizontal turning (yaw - left/right)
+    // Normalize to -PI to PI range
+    let yaw = camera.rotation.y;
+    while (yaw > Math.PI) yaw -= 2 * Math.PI;
+    while (yaw < -Math.PI) yaw += 2 * Math.PI;
     
-    // Normalize the delta to handle angle wrapping
-    let normalizedDelta = rotationDelta;
-    while (normalizedDelta > Math.PI) normalizedDelta -= 2 * Math.PI;
-    while (normalizedDelta < -Math.PI) normalizedDelta += 2 * Math.PI;
-    
-    if (normalizedDelta < -HORIZONTAL_LIMIT) {
-      camera.rotation.y = initialHorizontalRotation - HORIZONTAL_LIMIT;
-    } else if (normalizedDelta > HORIZONTAL_LIMIT) {
-      camera.rotation.y = initialHorizontalRotation + HORIZONTAL_LIMIT;
-    }
+    camera.rotation.y = Math.max(-HORIZONTAL_LIMIT, Math.min(HORIZONTAL_LIMIT, yaw));
   }
 
   // Clamp rotation after every mousemove when pointer is locked
@@ -95,7 +73,7 @@ export function createControls(camera, domElement) {
 
   // Update camera position based on movement
   function update() {
-    const speed = 0.05;
+    const speed = 0.03;
     
     // Only forward movement allowed
     if (move.forward) controls.moveForward(speed);
@@ -124,7 +102,6 @@ export function createControls(camera, domElement) {
     controlsEnabled = enabled;
     if (!enabled && controls.isLocked) {
       controls.unlock();
-      hasSetInitialRotation = false; // Reset when unlocking
     }
   }
 
@@ -132,11 +109,6 @@ export function createControls(camera, domElement) {
     if (controlsEnabled) {
       controls.lock();
     }
-  });
-
-  // Reset initial rotation when pointer lock changes
-  controls.addEventListener('unlock', () => {
-    hasSetInitialRotation = false;
   });
 
   // Prevent camera movement if controls are disabled
