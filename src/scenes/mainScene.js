@@ -2,7 +2,8 @@
 // MAIN SCENE - Contains all areas
 // Scene 1: Snowy area (z=0 to z=-100)
 // Scene 2: Forest area (z=-100 to z=-200)  
-// Scene 3: Village area (z=-200 to z=-300)
+// Scene 3: Hilly grassland (z=-200 to z=-300)
+// Scene 4: Village area (z=-300 to z=-400)
 // ================================
 
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.module.js';
@@ -12,6 +13,8 @@ import { subtitleManager } from '../ui/subtitleManager.js';
 import { subtitles } from '../ui/subtitleText.js';
 import { archiveImagesManager } from '../ui/archiveImagesManager.js';
 import { archiveImages } from '../ui/archiveImagesConfig.js';
+import { ShaderGrass, HillyShaderGrass } from '../world/ShaderGrass.js';
+import { textDisplayManager } from '../ui/textDisplayManager.js';
 
 
 export class MainScene extends SceneBase {
@@ -31,26 +34,64 @@ export class MainScene extends SceneBase {
 
     // Track objects and generation state
     this.trees = [];
-    this.grass = [];
+    this.shaderGrass = null; // Shader-based grass for Scene 2
+    this.hillyShaderGrass = null; // Hilly shader grass for Scene 3
     this.houses = [];
     this.scene2Generated = false;
     this.scene3Generated = false;
+    this.scene4Generated = false;
+    this.scene5Generated = false;
     this.treeBatches = {};
-    this.grassBatches = {};
     this.currentScene = 1; // Track which scene the user is in
 
-    // Scene appearance
+    // Define sky colors for each scene
+    this.sceneColors = [
+      {
+        // Scene 1: Arctic - Light blue/cyan
+        background: new THREE.Color(0xe4faff),
+        fog: new THREE.Color(0x87ceeb),
+        zStart: 50,
+        zEnd: -100
+      },
+      {
+        // Scene 2: Forest 
+        background: new THREE.Color(0xBDF6FE),
+        fog: new THREE.Color(0x6b7c6b),
+        zStart: -100,
+        zEnd: -200
+      },
+      {
+        // Scene 3: Village - Warm orange/brown sunset
+        background: new THREE.Color(0xd4a574),
+        fog: new THREE.Color(0xb08855),
+        zStart: -200,
+        zEnd: -300
+      },
+      {
+        // Scene 4: Dark purple/gray dusk
+        background: new THREE.Color(0x6b5b7a),
+        fog: new THREE.Color(0x4a3d54),
+        zStart: -300,
+        zEnd: -450
+      }
+    ];
+
+    // Scene appearance - start with Scene 1 colors
     this.background = new THREE.Color(0xe4faff);
     this.fog = new THREE.Fog(0x87ceeb, 2, 120);
 
     // Set camera start position at the igloo (Scene 1)
     camera.position.set(0, 10, 10);
     camera.lookAt(0, 0, -20);
+    
+    // Reset rotation to face forward (negative Z) after lookAt
+    // This ensures rotation limits work symmetrically
+    camera.rotation.set(0, 0, 0);
 
     // Restrict camera movement
     this.restrictCamera = (camera) => {
-      const boundary = 50;
-      camera.position.x = Math.max(-boundary, Math.min(boundary, camera.position.x));
+      const pathHalfWidth = 5; // Keep user on 10-unit wide path
+      camera.position.x = Math.max(-pathHalfWidth, Math.min(pathHalfWidth, camera.position.x));
       camera.position.z = Math.max(-350, Math.min(50, camera.position.z));
     };
 
@@ -74,14 +115,38 @@ export class MainScene extends SceneBase {
     // Scene 2 and 3 will generate when user approaches
     this.buildScene1();
 
-    // Load subtitles for MainScene (starts at Scene 1 / igloo).
-    subtitleManager.loadSubtitles(subtitles.mainScene);
+    // Load subtitles for Scene 1 (Arctic/Igloo area)
+    subtitleManager.loadSubtitles(subtitles.scene1);
     subtitleManager.update(camera.position.z);
     
     // Initialize and load archive images for MainScene
     archiveImagesManager.init(this); // Pass the scene to the manager
     archiveImagesManager.loadImages(archiveImages.mainScene);
     archiveImagesManager.update(camera.position.z);
+    
+    // Initialize text display manager
+    textDisplayManager.init(this, camera);
+    
+    // Load bulk text displays with trigger points
+      const bulkTextDisplays = [
+         {
+           trigger: -100, // Between Scene 1 and 2
+           text: subtitles.bulkText1[0].text,
+           direction: 'left',
+           image: './imgs/breakText1.png'
+         },
+    //   {
+    //     trigger: -200, // Between Scene 2 and 3
+    //     text: subtitles.bulkText2[0].text,
+    //     direction: 'right'
+    //   },
+    //   {
+    //     trigger: -300, // Between Scene 3 and 4
+    //     text: subtitles.bulkText3[0].text,
+    //     direction: 'left'
+    //   }
+       ];
+       textDisplayManager.loadTextDisplays(bulkTextDisplays);
   }
 
   // ================================
@@ -101,9 +166,7 @@ export class MainScene extends SceneBase {
     const ground1 = new THREE.Mesh(
       new THREE.PlaneGeometry(this.areaWidth, this.areaLength),
       new THREE.MeshStandardMaterial({
-        map: snowTexture,
-        emissive: new THREE.Color(0xe0f7fa),
-        emissiveIntensity: 0.75
+        map: snowTexture
       })
     );
     ground1.rotation.x = -Math.PI / 2;
@@ -161,86 +224,25 @@ export class MainScene extends SceneBase {
     const stoneTexture = textureLoader.load('./models/stone_texture.jpg');
     stoneTexture.wrapS = stoneTexture.wrapT = THREE.RepeatWrapping;
     stoneTexture.repeat.set(10, 10);
+    stoneTexture.anisotropy = 10;
 
     const ground2 = new THREE.Mesh(
       new THREE.PlaneGeometry(this.areaWidth, this.areaLength),
-      new THREE.MeshStandardMaterial({ map: stoneTexture })
+      new THREE.MeshStandardMaterial({
+        map: stoneTexture
+     })
     );
     ground2.rotation.x = -Math.PI / 2;
     ground2.position.set(0, -0.01, scene2Z);
     this.add(ground2);
 
-    // Initialize procedural tree and grass generation
+    // Initialize procedural tree generation
     this.initializeTreeGeneration();
-    this.initializeGrassGeneration();
-  }
-
-  initializeGrassGeneration() { 
-    // Setup for batch-based procedural grass generation 
-    const grassBatchSize = 50; 
-    const scene2Start = -100; 
-    const scene2End = -200; 
-    const grassBatchCount = Math.ceil((scene2End - scene2Start) / - grassBatchSize)
-
-    for (let batch = 0; batch < grassBatchCount; batch++) {
-      this.grassBatches[batch] = false;
-    }
-
-    this.grassConfig = {
-      models: [
-        { file: 'shortGrass.glb', yOffset: -5 },
-        { file: 'mediumGrass.glb', yOffset: -9 },
-        { file: 'tallGrass.glb', yOffset: 1 }
-      ],
-      batchSize: grassBatchSize,
-      batchCount: grassBatchCount,
-      scene2Start: scene2Start
-    };
-  }
-
-  generateGrassBatch(batchIndex) {
-    if (this.grassBatches[batchIndex]) return;
-    this.grassBatches[batchIndex] = true;
-
-    const { models, batchSize: grassBatchSize, scene2Start } = this.grassConfig;
-    const loader = new GLTFLoader();
     
-    const batchStartZ = scene2Start - (batchIndex * grassBatchSize);
-    const batchEndZ = batchStartZ - grassBatchSize;
-
-    models.forEach((modelConfig) => {
-      loader.load(`./models/${modelConfig.file}`, (gltf) => {
-        // Create 30 grass per model per batch
-        for (let i = 0; i < 30; i++) {
-          // Place grass on left or right side (like hack scene images)
-          const placeOnLeft = Math.random() > 0.5;
-          let x, z;
-          
-          // Create narrow walls on each side of the path (15 units wide)
-          const wallWidth = 15;
-          
-          if (placeOnLeft) {
-            // Left wall: from -5 (path edge) extending left 15 units to -20
-            x = -(this.pathWidth / 2) - Math.random() * wallWidth;
-          } else {
-            // Right wall: from +5 (path edge) extending right 15 units to +20
-            x = (this.pathWidth / 2) + Math.random() * wallWidth;
-          }
-          
-          // Add z-offset variation like hack scene for better corridor effect
-          const baseZ = batchStartZ - (i * grassBatchSize / 30);
-          const zOffset = (Math.random() - 0.5) * 4;
-          z = baseZ + zOffset;
-
-          const grass  = gltf.scene.clone();
-          grass.position.set(x, 0 + modelConfig.yOffset, z);
-          grass.rotation.y = Math.random() * Math.PI * 2;
-          grass.scale.setScalar(0.03); // Static size
-          this.add(grass);
-          this.grass.push(grass);
-        }
-      });
-    });
+    // Add shader-based grass
+    this.shaderGrass = new ShaderGrass(this.areaWidth, this.areaLength, scene2Z);
+    const grassMesh = this.shaderGrass.getMesh();
+    this.add(grassMesh);
   }
 
   initializeTreeGeneration() {
@@ -314,9 +316,9 @@ export class MainScene extends SceneBase {
   }
 
   // ================================
-  // SCENE 3: Village Area
+  // SCENE 3: Hilly Grassland
   // Position: z=-200 to z=-300
-  // Only generates when user reaches this area
+  // Green to yellow grass on rolling hills
   // ================================
   buildScene3() {
     if (this.scene3Generated) return;
@@ -324,14 +326,41 @@ export class MainScene extends SceneBase {
 
     const scene3Z = -250; // Center of Scene 3
 
-    // Ground
-    const ground3 = new THREE.Mesh(
+    // Create hilly grassland with shader grass
+    this.hillyShaderGrass = new HillyShaderGrass(this.areaWidth, this.areaLength, scene3Z);
+    const terrain = this.hillyShaderGrass.getTerrain();
+    const grassMesh = this.hillyShaderGrass.getMesh();
+    this.add(terrain);
+    this.add(grassMesh);
+  }
+
+  // ================================
+  // SCENE 4: Village Area
+  // Position: z=-300 to z=-400
+  // Village with houses
+  // ================================
+  buildScene4() {
+    if (this.scene4Generated) return;
+    this.scene4Generated = true;
+
+    const scene4Z = -350; // Center of Scene 4
+
+    // Ground with dirt texture
+    const textureLoader = new THREE.TextureLoader();
+    const dirtTexture = textureLoader.load('./models/claycrack.jpg');
+    dirtTexture.wrapS = dirtTexture.wrapT = THREE.RepeatWrapping;
+    dirtTexture.repeat.set(10, 10);
+    dirtTexture.anisotropy = 16;
+
+    const ground4 = new THREE.Mesh(
       new THREE.PlaneGeometry(this.areaWidth, this.areaLength),
-      new THREE.MeshStandardMaterial({ color: 0xc2b280 })
+      new THREE.MeshStandardMaterial({
+        map: dirtTexture
+      })
     );
-    ground3.rotation.x = -Math.PI / 2;
-    ground3.position.set(0, -0.01, scene3Z);
-    this.add(ground3);
+    ground4.rotation.x = -Math.PI / 2;
+    ground4.position.set(0, -0.01, scene4Z);
+    this.add(ground4);
 
     // Load and place houses
     const loader = new GLTFLoader();
@@ -348,7 +377,7 @@ export class MainScene extends SceneBase {
 
       const houseSpacing = 9;
       const numHouses = 10;
-      const startZ = scene3Z + 40;
+      const startZ = scene4Z + 40;
       const leftX = -10;
       const rightX = 10;
 
@@ -376,32 +405,6 @@ export class MainScene extends SceneBase {
         }
       }
     });
-  }
-
-
-  buildScene4() {
-    if (this.scene4Generated) return;
-      this.scene4Generated = true;  
-
-      const scene4Z = -350; // Center of Scene 4
-      // Ground
-      const ground4 = new THREE.Mesh(
-        new THREE.PlaneGeometry(this.areaWidth, this.areaLength),
-        new THREE.MeshStandardMaterial({ color: 0x808080 })
-      );
-      ground4.rotation.x = -Math.PI / 2;
-      ground4.position.set(0, -0.01, scene4Z);
-      this.add(ground4);
-      // Add your models and objects here
-      const loader = new GLTFLoader();  
-      // Example: Load and place models
-      loader.load('./models/your_model.glb', (gltf) => {
-        const model = gltf.scene;
-        model.position.set(0, 0, scene4Z);
-        model.scale.set(1, 1, 1);
-        this.add(model);
-      });
-
   }
 
 
@@ -435,8 +438,67 @@ export class MainScene extends SceneBase {
   // 4. Add generation trigger in update() method
   // ================================
 
-  update(userPosition) {
+  // ================================
+  // SKY COLOR TRANSITION
+  // Smoothly interpolates background and fog colors between scenes
+  // ================================
+  updateSkyColors(zPosition) {
+    // Find which scene transition zone we're in
+    let currentZoneIndex = 0;
+    let nextZoneIndex = 1;
+    
+    // Determine the current and next color zones
+    for (let i = 0; i < this.sceneColors.length; i++) {
+      if (zPosition >= this.sceneColors[i].zEnd) {
+        currentZoneIndex = i;
+        nextZoneIndex = Math.min(i + 1, this.sceneColors.length - 1);
+        break;
+      }
+    }
+    
+    const currentZone = this.sceneColors[currentZoneIndex];
+    const nextZone = this.sceneColors[nextZoneIndex];
+    
+    // Calculate transition progress (0 to 1)
+    // Transition starts 20 units before the boundary
+    const transitionDistance = 20;
+    const boundary = currentZone.zEnd;
+    const transitionStart = boundary + transitionDistance;
+    
+    let t = 0; // transition factor (0 = current scene, 1 = next scene)
+    
+    if (zPosition < transitionStart && zPosition > boundary) {
+      // We're in the transition zone
+      t = 1 - (zPosition - boundary) / transitionDistance;
+      t = Math.max(0, Math.min(1, t)); // clamp to 0-1
+      
+      // Smooth step easing for smoother transition
+      t = t * t * (3 - 2 * t);
+      
+      // Interpolate background color
+      this.background.lerpColors(currentZone.background, nextZone.background, t);
+      
+      // Interpolate fog color
+      this.fog.color.lerpColors(currentZone.fog, nextZone.fog, t);
+    } else if (zPosition <= boundary) {
+      // Past the boundary, use next zone colors
+      this.background.copy(nextZone.background);
+      this.fog.color.copy(nextZone.fog);
+    } else {
+      // Before transition, use current zone colors
+      this.background.copy(currentZone.background);
+      this.fog.color.copy(currentZone.fog);
+    }
+  }
+
+  update(userPosition, deltaTime = 0.016) {
     if (!userPosition) return;
+
+    // Update text display manager (for bulk text animations)
+    textDisplayManager.update(userPosition.z, deltaTime);
+
+    // Update sky colors based on position
+    this.updateSkyColors(userPosition.z);
 
     // Update subtitles based on camera position while moving through MainScene.
     subtitleManager.update(userPosition.z);
@@ -457,6 +519,12 @@ export class MainScene extends SceneBase {
     if (userPosition.z < -200) {
       newScene = 3;
     }
+    if (userPosition.z < -300) {
+      newScene = 4;
+    }
+    if (userPosition.z < -400) {
+      newScene = 5;
+    }
     
     // Update timeline if scene changed
     if (newScene !== this.currentScene) {
@@ -469,21 +537,30 @@ export class MainScene extends SceneBase {
     // Generate Scene 2 when approaching (10 units before boundary)
     if (!this.scene2Generated && userPosition.z < -90) {
       this.buildScene2();
+      // Load Scene 2 subtitles
+      subtitleManager.loadSubtitles(subtitles.scene2);
     }
 
     // Generate Scene 3 when approaching (10 units before boundary)
     if (!this.scene3Generated && userPosition.z < -190) {
       this.buildScene3();
+      // Load Scene 3 subtitles (combine both parts)
+      const scene3Subs = [...subtitles.scene3, ...subtitles.scene3Part2];
+      subtitleManager.loadSubtitles(scene3Subs);
     }
 
     // Generate Scene 4 when approaching (10 units before boundary)
     if (!this.scene4Generated && userPosition.z < -290) {
       this.buildScene4();
+      // Load Scene 4 subtitles
+      subtitleManager.loadSubtitles(subtitles.scene4);
     }
 
     // Generate Scene 5 when approaching (10 units before boundary)
     if (!this.scene5Generated && userPosition.z < -390) {
       this.buildScene5();
+      // Load Scene 5 subtitles
+      subtitleManager.loadSubtitles(subtitles.scene5);
     }
 
     // Procedural tree batch generation for Scene 2
@@ -503,21 +580,14 @@ export class MainScene extends SceneBase {
       }
     }
 
-    // Procedural grass batch generation for Scene 2
-    if (this.grassConfig && this.scene2Generated) {
-      const { batchSize: grassBatchSize, batchCount: grassBatchCount, scene2Start: grassScene2Start } = this.grassConfig;
-      
-      for (let batch = 0; batch < grassBatchCount; batch++) {
-        const batchStartZ = grassScene2Start - (batch * grassBatchSize);
-        const batchEndZ = batchStartZ - grassBatchSize;
-        
-        // Generate batch if player is within 30 units
-        if (!this.grassBatches[batch] && 
-            userPosition.z < batchStartZ + 30 && 
-            userPosition.z > batchEndZ - 30) {
-          this.generateGrassBatch(batch);
-        }
-      }
+    // Update shader grass wind animation
+    if (this.shaderGrass) {
+      this.shaderGrass.update(deltaTime);
+    }
+    
+    // Update hilly shader grass wind animation
+    if (this.hillyShaderGrass) {
+      this.hillyShaderGrass.update(deltaTime);
     }
 
     // Scale trees based on proximity to user

@@ -97,6 +97,13 @@ function triggerFlashTransition() {
 window.showMainSceneUI = showMainSceneUI;
 window.triggerFlashTransition = triggerFlashTransition;
 
+// Pause/unpause user movement (for text displays)
+window.pauseUserMovement = function(paused) {
+  if (controls && controls.setControlsEnabled) {
+    controls.setControlsEnabled(!paused);
+  }
+};
+
 // --- Timeline hamburger menu logic ---
 const timelineHamburger = document.getElementById('timeline-hamburger');
 const timelineOverlay = document.getElementById('timeline-overlay');

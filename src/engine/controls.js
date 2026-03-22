@@ -43,8 +43,8 @@ export function createControls(camera, domElement) {
 
 
   // Rotation limits
-  const HORIZONTAL_LIMIT = Math.PI / 12; // 15 degrees left/right
-  const VERTICAL_LIMIT = Math.PI / 12; // 15 degrees up/down
+  const HORIZONTAL_LIMIT = Math.PI / 24; // 15 degrees left/right
+  const VERTICAL_LIMIT = Math.PI / 24; // 15 degrees up/down
 
   function clampRotation() {
     if (!controls.isLocked) return;
@@ -80,6 +80,10 @@ export function createControls(camera, domElement) {
 
     // Clamp rotation after movement
     clampRotation();
+    
+    // Keep user within the middle path (10 units wide)
+    const pathHalfWidth = 5;
+    camera.position.x = Math.max(-pathHalfWidth, Math.min(pathHalfWidth, camera.position.x));
 
     // Breathing animation - subtle up/down movement
     breathingTime += 0.016; // Approximately 60fps
