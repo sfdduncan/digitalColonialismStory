@@ -572,7 +572,7 @@ export class MainScene extends SceneBase {
     this.scene6TreeConfig = {
       models: [
         { file: 'tropical_tree2.glb', yOffset: 0, scale: 0.5 },
-        { file: 'tropicaltree3.glb', yOffset: -1, scale: 0.15 }
+       // { file: 'tropicaltree3.glb', yOffset: -1, scale: 0.15 }
       ],
       batchSize: batchSize,
       batchCount: batchCount,
