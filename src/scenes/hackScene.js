@@ -18,12 +18,12 @@ export class HackScene extends SceneBase {
     this.lastUsedTextures = new Map();
 
     // Scene configuration
-    this.corridorLength = 50;
+    this.corridorLength = 100;
     this.corridorWidth = 12;
     this.wallDistance = 5;
     this.imageSpacing = 8;
     this.imageHeight = 5;
-    this.transitionZone = 50;
+    this.transitionZone = 100;
 
     this.setupScene();
   }

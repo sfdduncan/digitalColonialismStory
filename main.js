@@ -28,8 +28,8 @@ let starterActive = true;
 // Initialize renderer, camera, and sceneManager immediately
 const renderer = createRenderer();
 const camera = createCamera();
-const sceneManager = new SceneManager(camera);
 const controls = createControls(camera, renderer.domElement);
+const sceneManager = new SceneManager(camera, controls);
 
 // Initialize help UI
 initializeHelpUI();

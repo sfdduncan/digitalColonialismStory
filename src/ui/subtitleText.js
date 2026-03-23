@@ -1,24 +1,29 @@
 export const subtitles = {
-  // HackScene - Pre-scene (before MainScene)
   hackScene: [
     {
       trigger: 10,
       text: "In March of 2022, a hacktivist collective calling itself Guacamaya breached the networks of mining companies operating in Guatemala's Fenix nickel project."
     },
     {
-      trigger: -15,
-      text: "They leaked four terabytes of data. Working conditions. Environmental damage. Gender-based violence. Corporate cover-ups."
+      trigger: -5,
+      text: "The Fenix nickel mine had been operating on Maya Q'eqchi' land since the 1960s, when a Canadian company first obtained a mining concession by lobbying the military government to suspend the Guatemalan constitution."
     },
     {
-      trigger: -30,
-      text: "The Fenix nickel mine had been operating on Maya Q'eqchi' land since the 1960s, backed by military governments and shielded from accountability by the Guatemalan state."
+      trigger: -25,
+      text: "In the decades that followed, the mine changed operators but never changed its relationship to the land or the people. It continued to operate without consent, with harm towards the community, and with impunity in the face of documented human rights abuses and environmental damage."
     },
     {
-      trigger: -40,
-      text: "This was not an isolated act. It was the latest expression of a struggle centuries in the making."
+      trigger: -45,
+      text: "When legal channels and judicial processes failed to protect those communities from ongoing assault, Guacamaya breached the corporate networks coordinating that violence, leaking four terabytes of data exposing working conditions, environmental damage, gender-based violence, and internal corporate messaging."
+    },
+    {
+      trigger: -65,
+      text: "Guacamaya's actions are not solely a rupture unique to the current digital era, but the newest iteration of centuries-long traditions of decolonial resistance against extractive colonial powers." }, 
+    {
+      trigger: -85,
+      text: "In order to understand that, we must position ourselves within this longer history, to trace how each generation of Indigenous resistance represents a continued dedication to defending the land, and their human and non-human relations."
     }
   ],
-
   // MainScene - Scene 1: Arctic/Igloo Area (z=0 to z=-100)
   scene1: [
     {

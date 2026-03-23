@@ -11,13 +11,14 @@ export function initializeTimeline() {
   timeline.appendChild(backgroundLine);
   
   // Create timeline points for each scene
-  // Position them at the actual scene boundaries
-  const scenes = [
-    { id: 1, label: 'Scene 1', position: 0 },       // z=0 (start)
-    { id: 2, label: 'Scene 2', position: 33.33 },   // z=-100 (33.33% of journey)
-    { id: 3, label: 'Scene 3', position: 66.67 }    // z=-200 (66.67% of journey)
-    // Add more scenes as needed
-  ];
+const scenes = [
+  { id: 1, label: 'Scene 1', position: 0 },      // 0/5
+  { id: 2, label: 'Scene 2', position: 20 },     // 1/5
+  { id: 3, label: 'Scene 3', position: 40 },     // 2/5
+  { id: 4, label: 'Scene 4', position: 60 },     // 3/5
+  { id: 5, label: 'Scene 5', position: 80 },     // 4/5
+  { id: 6, label: 'Scene 6', position: 100 },    // 5/5
+];
   
   scenes.forEach((scene) => {
     const point = document.createElement('div');
@@ -66,7 +67,10 @@ export function updateTimelineProgress(zPosition, totalScenes = 3) {
   const sceneBoundaries = [
     { start: 0, end: -100 },    // Scene 1
     { start: -100, end: -200 }, // Scene 2
-    { start: -200, end: -300 }  // Scene 3
+    { start: -200, end: -300 } , // Scene 3
+    { start: -300, end: -400 } , // Scene 4 
+    { start: -400, end: -500 } , // Scene 5
+    { start: -500, end: -600 }   // Scene 6
   ];
   
   // Total z range

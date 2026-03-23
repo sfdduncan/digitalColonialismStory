@@ -43,8 +43,8 @@ export function createControls(camera, domElement) {
 
 
   // Rotation limits
-  const HORIZONTAL_LIMIT = Math.PI / 24; // 15 degrees left/right
-  const VERTICAL_LIMIT = Math.PI / 24; // 15 degrees up/down
+  const HORIZONTAL_LIMIT = Math.PI/6; // 15 degrees left/right
+  const VERTICAL_LIMIT = Math.PI/12; // 15 degrees up/down
 
   function clampRotation() {
     if (!controls.isLocked) return;
@@ -85,6 +85,11 @@ export function createControls(camera, domElement) {
     const pathHalfWidth = 5;
     camera.position.x = Math.max(-pathHalfWidth, Math.min(pathHalfWidth, camera.position.x));
 
+    // Skip breathing animation if in aerial view mode
+    if (controls.aerialViewActive) {
+      return; // Don't override camera position in aerial view
+    }
+
     // Breathing animation - subtle up/down movement
     breathingTime += 0.016; // Approximately 60fps
     const breathingOffset = Math.sin(breathingTime * breathingSpeed) * breathingAmount;
@@ -99,6 +104,9 @@ export function createControls(camera, domElement) {
 
   // Attach update function to the animation loop
   controls.update = update;
+  
+  // Aerial view flag (used to disable position overrides)
+  controls.aerialViewActive = false;
 
   // Click to lock pointer, only if controls are enabled
   let controlsEnabled = true;

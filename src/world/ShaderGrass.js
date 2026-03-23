@@ -4,7 +4,7 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.module.js';
 
 export class ShaderGrass {
-  constructor(width, length, positionZ) {
+  constructor(width, length, positionZ, options = {}) {
     this.width = width;
     this.length = length;
     this.positionZ = positionZ;
@@ -14,6 +14,10 @@ export class ShaderGrass {
     this.grassCount = 200000; // Number of grass blades
     this.grassHeight = 0.6;
     this.grassWidth = 0.08;
+    
+    // Optional configuration
+    this.pathWidth = options.pathWidth || 0; // Width of clear path in middle
+    this.patchiness = options.patchiness || 0; // 0-1, higher = more patchy
     
     this.create();
   }
@@ -125,11 +129,37 @@ export class ShaderGrass {
   positionGrassBlades() {
     const dummy = new THREE.Object3D();
     
+    // Simple noise function for patchiness
+    const noise = (x, z) => {
+      const n = Math.sin(x * 0.1) * Math.cos(z * 0.1) + 
+                Math.sin(x * 0.05 + 3.14) * Math.cos(z * 0.05);
+      return (n + 2) / 4; // Normalize to 0-1
+    };
+    
+    let placedCount = 0;
+    let attempts = 0;
+    const maxAttempts = this.grassCount * 3; // Try up to 3x to place grass
+    
     // Grass covers the entire scene (user can walk through it)
-    for (let i = 0; i < this.grassCount; i++) {
+    while (placedCount < this.grassCount && attempts < maxAttempts) {
+      attempts++;
+      
       // Random position across the entire scene width and length
       const x = (Math.random() - 0.5) * this.width;
       const z = this.positionZ + (Math.random() - 0.5) * this.length;
+      
+      // Skip if in path area (middle corridor)
+      if (this.pathWidth > 0 && Math.abs(x) < this.pathWidth / 2) {
+        continue;
+      }
+      
+      // Skip some positions for patchiness using noise
+      if (this.patchiness > 0) {
+        const noiseValue = noise(x, z);
+        if (Math.random() < this.patchiness && noiseValue < 0.5) {
+          continue; // Skip this position
+        }
+      }
       
       dummy.position.set(x, 0, z);
       
@@ -145,7 +175,13 @@ export class ShaderGrass {
       );
       
       dummy.updateMatrix();
-      this.mesh.setMatrixAt(i, dummy.matrix);
+      this.mesh.setMatrixAt(placedCount, dummy.matrix);
+      placedCount++;
+    }
+    
+    // If we didn't place all grass, update the count
+    if (placedCount < this.grassCount) {
+      console.log(`Placed ${placedCount} grass blades out of ${this.grassCount} requested`);
     }
     
     this.mesh.instanceMatrix.needsUpdate = true;
@@ -230,7 +266,9 @@ export class HillyShaderGrass {
       }
       
       // Create hills using sine waves, multiplied by fade factor
-      const height = Math.sin(x * this.hillFrequency) * Math.cos(z * this.hillFrequency) * this.hillAmplitude * fadeFactor;
+      // Offset to ensure terrain starts at y=0 (minimum height)
+      const rawHeight = Math.sin(x * this.hillFrequency) * Math.cos(z * this.hillFrequency);
+      const height = (rawHeight + 1) * this.hillAmplitude * fadeFactor / 2; // Range: 0 to hillAmplitude
       positions[i + 2] = height;
     }
     
@@ -245,15 +283,16 @@ export class HillyShaderGrass {
     
     this.terrain = new THREE.Mesh(geometry, material);
     this.terrain.rotation.x = -Math.PI / 2;
-    this.terrain.position.set(0, -0.01, this.positionZ);
+    this.terrain.position.set(0, 0, this.positionZ); // Start at y=0
     
     return this.terrain;
   }
   
   // Function to get terrain height at any x, z position
   getTerrainHeight(x, z) {
-    // Use the same sine wave function as terrain generation
-    const adjustedZ = z - this.positionZ;
+    // Transform world Z to match the local coordinate system used in terrain generation
+    // After rotation, worldZ maps to -localY: localY = -(worldZ - this.positionZ)
+    const adjustedZ = -(z - this.positionZ);
     const halfLength = this.length / 2;
     
     // Create fade factor to flatten hills towards the end (negative z)
@@ -267,7 +306,9 @@ export class HillyShaderGrass {
       fadeFactor = fadeFactor * fadeFactor * (3 - 2 * fadeFactor); // smoothstep
     }
     
-    return Math.sin(x * this.hillFrequency) * Math.cos(adjustedZ * this.hillFrequency) * this.hillAmplitude * fadeFactor;
+    // Match terrain generation: offset to ensure minimum height is 0
+    const rawHeight = Math.sin(x * this.hillFrequency) * Math.cos(adjustedZ * this.hillFrequency);
+    return (rawHeight + 1) * this.hillAmplitude * fadeFactor / 2; // Range: 0 to hillAmplitude
   }
   
   createGrassGeometry() {

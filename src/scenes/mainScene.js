@@ -3,7 +3,7 @@
 // Scene 1: Snowy area (z=0 to z=-100)
 // Scene 2: Forest area (z=-100 to z=-200)  
 // Scene 3: Hilly grassland (z=-200 to z=-300)
-// Scene 4: Village area (z=-300 to z=-400)
+// Scene 4: Mountain pass (z=-300 to z=-400)
 // ================================
 
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.module.js';
@@ -14,7 +14,8 @@ import { subtitles } from '../ui/subtitleText.js';
 import { archiveImagesManager } from '../ui/archiveImagesManager.js';
 import { archiveImages } from '../ui/archiveImagesConfig.js';
 import { ShaderGrass, HillyShaderGrass } from '../world/ShaderGrass.js';
-import { textDisplayManager } from '../ui/textDisplayManager.js';
+import { OceanShader } from '../world/OceanShader.js';
+// import { textDisplayManager } from '../ui/textDisplayManager.js';
 
 
 export class MainScene extends SceneBase {
@@ -34,14 +35,21 @@ export class MainScene extends SceneBase {
 
     // Track objects and generation state
     this.trees = [];
+    this.tropicalTrees = []; // Tropical trees for Scene 5 (unused now - ocean scene)
+    this.scene6Trees = []; // Tropical trees for Scene 6
     this.shaderGrass = null; // Shader-based grass for Scene 2
     this.hillyShaderGrass = null; // Hilly shader grass for Scene 3
+    this.oceanShader = null; // Ocean shader for Scene 5
+    this.rainSystem6 = null; // Rain particles for Scene 6
     this.houses = [];
     this.scene2Generated = false;
     this.scene3Generated = false;
     this.scene4Generated = false;
     this.scene5Generated = false;
+    this.scene6Generated = false;
     this.treeBatches = {};
+    this.tropicalTreeBatches = {}; // Unused for Scene 5 (ocean) - kept for compatibility
+    this.scene6TreeBatches = {}; // Batches for tropical trees in Scene 6
     this.currentScene = 1; // Track which scene the user is in
 
     // Define sky colors for each scene
@@ -50,6 +58,8 @@ export class MainScene extends SceneBase {
         // Scene 1: Arctic - Light blue/cyan
         background: new THREE.Color(0xe4faff),
         fog: new THREE.Color(0x87ceeb),
+        fogNear: 2,
+        fogFar: 120,
         zStart: 50,
         zEnd: -100
       },
@@ -57,6 +67,8 @@ export class MainScene extends SceneBase {
         // Scene 2: Forest 
         background: new THREE.Color(0xBDF6FE),
         fog: new THREE.Color(0x6b7c6b),
+        fogNear: 2,
+        fogFar: 120,
         zStart: -100,
         zEnd: -200
       },
@@ -64,15 +76,37 @@ export class MainScene extends SceneBase {
         // Scene 3: Village - Warm orange/brown sunset
         background: new THREE.Color(0xd4a574),
         fog: new THREE.Color(0xb08855),
+        fogNear: 2,
+        fogFar: 120,
         zStart: -200,
         zEnd: -300
       },
       {
-        // Scene 4: Dark purple/gray dusk
-        background: new THREE.Color(0x6b5b7a),
-        fog: new THREE.Color(0x4a3d54),
+        // Scene 4: Mountain pass
+        background: new THREE.Color(0xe4faff),
+        fog: new THREE.Color(0xe4faff),
+        fogNear: 10000, // Very far away
+        fogFar: 10000, // Very far away
         zStart: -300,
-        zEnd: -450
+        zEnd: -400
+      },
+      {
+        // Scene 5: Ocean - Clear atmosphere with neutral weak fog
+        background: new THREE.Color(0x87ceeb), // Blue sky
+        fog: new THREE.Color(0xb0c4de), // Light steel blue - neutral and subtle
+        fogNear: 30,
+        fogFar: 200,
+        zStart: -400,
+        zEnd: -500
+      },
+      {
+        // Scene 6: Tropical Rainforest - Rainy blue/gray atmosphere
+        background: new THREE.Color(0x8b9da8),
+        fog: new THREE.Color(0x6b7d87),
+        fogNear: 2,
+        fogFar: 1200,
+        zStart: -500,
+        zEnd: -600
       }
     ];
 
@@ -92,7 +126,7 @@ export class MainScene extends SceneBase {
     this.restrictCamera = (camera) => {
       const pathHalfWidth = 5; // Keep user on 10-unit wide path
       camera.position.x = Math.max(-pathHalfWidth, Math.min(pathHalfWidth, camera.position.x));
-      camera.position.z = Math.max(-350, Math.min(50, camera.position.z));
+      camera.position.z = Math.max(-600, Math.min(50, camera.position.z)); // Allow movement through all 6 scenes
     };
 
     // Global lighting
@@ -125,7 +159,7 @@ export class MainScene extends SceneBase {
     archiveImagesManager.update(camera.position.z);
     
     // Initialize text display manager
-    textDisplayManager.init(this, camera);
+    // textDisplayManager.init(this, camera);
     
     // Load bulk text displays with trigger points
       const bulkTextDisplays = [
@@ -146,7 +180,7 @@ export class MainScene extends SceneBase {
     //     direction: 'left'
     //   }
        ];
-       textDisplayManager.loadTextDisplays(bulkTextDisplays);
+       // textDisplayManager.loadTextDisplays(bulkTextDisplays);
   }
 
   // ================================
@@ -288,14 +322,14 @@ export class MainScene extends SceneBase {
           const placeOnLeft = Math.random() > 0.5;
           let x, z;
           
-          // Create narrow walls on each side of the path (15 units wide)
-          const wallWidth = 15;
+          // Create narrow walls on each side of the path (5 units wide, right alongside path)
+          const wallWidth = 5;
           
           if (placeOnLeft) {
-            // Left wall: from -5 (path edge) extending left 15 units to -20
+            // Left wall: from -5 (path edge) extending left 5 units to -10
             x = -(this.pathWidth / 2) - Math.random() * wallWidth;
           } else {
-            // Right wall: from +5 (path edge) extending right 15 units to +20
+            // Right wall: from +5 (path edge) extending right 5 units to +10
             x = (this.pathWidth / 2) + Math.random() * wallWidth;
           }
           
@@ -335,9 +369,9 @@ export class MainScene extends SceneBase {
   }
 
   // ================================
-  // SCENE 4: Village Area
+  // SCENE 4: Mountain Pass Area
   // Position: z=-300 to z=-400
-  // Village with houses
+  // Rocky cliffs on sides similar to Scene 1 ice walls
   // ================================
   buildScene4() {
     if (this.scene4Generated) return;
@@ -345,7 +379,7 @@ export class MainScene extends SceneBase {
 
     const scene4Z = -350; // Center of Scene 4
 
-    // Ground with dirt texture
+    // Ground with dirt/rock texture
     const textureLoader = new THREE.TextureLoader();
     const dirtTexture = textureLoader.load('./models/claycrack.jpg');
     dirtTexture.wrapS = dirtTexture.wrapT = THREE.RepeatWrapping;
@@ -362,74 +396,275 @@ export class MainScene extends SceneBase {
     ground4.position.set(0, -0.01, scene4Z);
     this.add(ground4);
 
-    // Load and place houses
+    // Load cliff/mountain rock models for sides (similar to Scene 1 ice walls)
     const loader = new GLTFLoader();
-    Promise.all([
-      loader.loadAsync('./models/oldHouse_1.glb').catch(() => null),
-      loader.loadAsync('./models/oldHouse_2.glb').catch(() => null)
-    ]).then(([gltf1, gltf2]) => {
-      const houseModels = [gltf1?.scene, gltf2?.scene].filter(Boolean);
-      
-      if (houseModels.length === 0) {
-        console.warn('No house models could be loaded');
-        return;
-      }
+    
+    loader.load('./models/cliff_rock_boulder_field.glb', (gltf) => {
+      // Left cliff - 7.5 units from center
+      const cliffLeft = gltf.scene.clone();
+      cliffLeft.position.set(-15, -4, -300);
+      cliffLeft.rotation.y = Math.PI / 2 + 0.3; // Rotated counterclockwise
+      cliffLeft.scale.set(0.25, 0.5, 0.25);
+      this.add(cliffLeft);
 
-      const houseSpacing = 9;
-      const numHouses = 10;
-      const startZ = scene4Z + 40;
-      const leftX = -10;
-      const rightX = 10;
+      // Right cliff - 7.5 units from center (mirrored)
+      const cliffRight = gltf.scene.clone();
+      cliffRight.position.set(15, -4, -400);
+      cliffRight.rotation.y = -Math.PI / 2 + 0.3; // Rotated counterclockwise
+      cliffRight.scale.set(0.25, 0.5, 0.25);
+      this.add(cliffRight);
+    });
+    
+    // Beach sand models at the end of Scene 4 (transition to ocean)
+    loader.load('./models/beach_sand_photoscan.glb', (gltf) => {
+      // Left beach sand
+      const sandLeft = gltf.scene.clone();
+      sandLeft.position.set(-15, -2, -385);
+      sandLeft.scale.set(2, 2, 2.25);
+      this.add(sandLeft);
 
-      // Place houses on left side
-      for (let i = 0; i < numHouses; i++) {
-        const modelIndex = i % houseModels.length;
-        if (houseModels[modelIndex]) {
-          const house = houseModels[modelIndex].clone();
-          house.position.set(leftX, 0, startZ - i * houseSpacing);
-          house.scale.set(6, 6, 6);
-          this.add(house);
-          this.houses.push(house);
-        }
-      }
-
-      // Place houses on right side
-      for (let i = 0; i < numHouses; i++) {
-        const modelIndex = (i + 1) % houseModels.length;
-        if (houseModels[modelIndex]) {
-          const house = houseModels[modelIndex].clone();
-          house.position.set(rightX, 0, startZ - i * houseSpacing);
-          house.scale.set(-6, 6, 6); // Mirror by flipping X
-          this.add(house);
-          this.houses.push(house);
-        }
-      }
+      // Right beach sand
+      const sandRight = gltf.scene.clone();
+      sandRight.position.set(-5, -2.25, -368);
+      sandRight.rotation.y = Math.PI / 2 ; // Rotate to face opposite direction
+      sandRight.scale.set(1.6, 1.6, 1.6);
+      this.add(sandRight);
     });
   }
 
 
+  // ================================
+  // SCENE 5: Ocean
+  // Position: z=-400 to z=-500
+  // Full-screen ocean shader effect
+  // ================================
   buildScene5() {
     if (this.scene5Generated) return;
-      this.scene5Generated = true;   
-      const scene5Z = -450; // Center of Scene 5
-      // Ground
-      const ground5 = new THREE.Mesh(
-        new THREE.PlaneGeometry(this.areaWidth, this.areaLength),
-        new THREE.MeshStandardMaterial({ color: 0x404040 })
+    this.scene5Generated = true;   
+    
+    // Create ocean shader - fills entire scene with animated water
+    this.oceanShader = new OceanShader();
+    this.add(this.oceanShader.getMesh());
+    
+    // Volcano island configurations
+    // Easily customize position, rotation, and scale for each island
+    const volcanoConfigs = [
+      {
+        file: 'kohala_volcano_hawaii.glb',
+        position: { x: 30, y: -3, z: -455 },
+        rotation: { x: 0, y: Math.PI / 3 + .95, z: 0 },
+        scale: { x: .0048, y: .006 , z: .002 }
+      },
+
+      {
+        file: 'kohala_volcano_hawaii.glb',
+        position: { x: -35, y: -2.5, z: -455 },
+        rotation: { x: 0, y: -Math.PI/4 - 1, z: 0 },
+        scale: { x: .0048, y: .006 , z: .002 }
+      }
+    ];
+    
+    // Load and place volcano islands
+    const loader = new GLTFLoader();
+    volcanoConfigs.forEach(config => {
+      loader.load(
+        `./models/${config.file}`,
+        (gltf) => {
+          const volcano = gltf.scene;
+          volcano.position.set(config.position.x, config.position.y, config.position.z);
+          volcano.rotation.set(config.rotation.x, config.rotation.y, config.rotation.z);
+          volcano.scale.set(config.scale.x, config.scale.y, config.scale.z);
+          this.add(volcano);
+          console.log(`Loaded ${config.file} successfully at`, volcano.position);
+        },
+        undefined,
+        (error) => {
+          console.error(`Error loading ${config.file}:`, error);
+        }
       );
-      ground5.rotation.x = -Math.PI / 2;
-      ground5.position.set(0, -0.01, scene5Z);
-      this.add(ground5);
-      // Add your models and objects here
-      const loader = new GLTFLoader();
-      // Example: Load and place models
-      loader.load('./models/your_model.glb', (gltf) => {
-        const model = gltf.scene;
-        model.position.set(0, 0, scene5Z);
-        model.scale.set(1, 1, 1);
-        this.add(model);
-      });
+    });
   }
+
+  // ================================
+  // SCENE 6: Tropical Rainforest
+  // Position: z=-500 to z=-600
+  // Generates procedurally with tropical trees
+  // ================================
+  buildScene6() {
+    if (this.scene6Generated) return;
+    this.scene6Generated = true;   
+    
+    const scene6Z = -550; // Center of Scene 6
+    
+    // Ground with tropical/earthy texture
+    const textureLoader = new THREE.TextureLoader();
+    const groundTexture = textureLoader.load('./models/stone_texture.jpg');
+    groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
+    groundTexture.repeat.set(10, 10);
+    groundTexture.anisotropy = 10;
+
+    const ground6 = new THREE.Mesh(
+      new THREE.PlaneGeometry(this.areaWidth, this.areaLength),
+      new THREE.MeshStandardMaterial({
+        map: groundTexture,
+        color: 0x4a6741 // Darker green-brown tint for rainforest floor
+      })
+    );
+    ground6.rotation.x = -Math.PI / 2;
+    ground6.position.set(0, -0.01, scene6Z);
+    this.add(ground6);
+    
+    // Initialize procedural tropical tree generation
+    this.initializeScene6TreeGeneration();
+    
+    // Create rain effect
+    this.createRainEffect6();
+  }
+  
+  createRainEffect6() {
+    const rainCount = 2000;
+    const rainGeometry = new THREE.BufferGeometry();
+    const rainPositions = new Float32Array(rainCount * 6);
+    const rainVelocities = new Float32Array(rainCount);
+    
+    const lineLength = 0.5;
+    
+    for (let i = 0; i < rainCount; i++) {
+      const i6 = i * 6;
+      const x = (Math.random() - 0.5) * 50;
+      const y = Math.random() * 30 + 5;
+      const z = (Math.random() - 0.5) * 50 - 550;
+      
+      rainPositions[i6] = x;
+      rainPositions[i6 + 1] = y;
+      rainPositions[i6 + 2] = z;
+      
+      rainPositions[i6 + 3] = x;
+      rainPositions[i6 + 4] = y - lineLength;
+      rainPositions[i6 + 5] = z;
+      
+      rainVelocities[i] = Math.random() * 0.3 + 0.5;
+    }
+    
+    rainGeometry.setAttribute('position', new THREE.BufferAttribute(rainPositions, 3));
+    rainGeometry.setAttribute('velocity', new THREE.BufferAttribute(rainVelocities, 1));
+    
+    const rainMaterial = new THREE.LineBasicMaterial({
+      color: 0xaaaaaa,
+      transparent: true,
+      opacity: 0.6
+    });
+    
+    this.rainSystem6 = new THREE.LineSegments(rainGeometry, rainMaterial);
+    this.add(this.rainSystem6);
+  }
+
+  initializeScene6TreeGeneration() {
+    const batchSize = 40;
+    const scene6Start = -500;
+    const scene6End = -600;
+    const batchCount = Math.ceil((scene6End - scene6Start) / -batchSize);
+
+    for (let batch = 0; batch < batchCount; batch++) {
+      this.scene6TreeBatches[batch] = false;
+    }
+
+    this.scene6TreeConfig = {
+      models: [
+        { file: 'tropical_tree2.glb', yOffset: 0, scale: 0.5 },
+        { file: 'tropicaltree3.glb', yOffset: -1, scale: 0.15 }
+      ],
+      batchSize: batchSize,
+      batchCount: batchCount,
+      scene6Start: scene6Start
+    };
+  }
+
+  generateScene6TreeBatch(batchIndex) {
+    if (this.scene6TreeBatches[batchIndex]) return;
+    this.scene6TreeBatches[batchIndex] = true;
+
+    const { models, batchSize, scene6Start } = this.scene6TreeConfig;
+    const loader = new GLTFLoader();
+    
+    const batchStartZ = scene6Start - (batchIndex * batchSize);
+    const batchEndZ = batchStartZ - batchSize;
+
+    models.forEach((modelConfig) => {
+      loader.load(`./models/${modelConfig.file}`, (gltf) => {
+        for (let i = 0; i < 12; i++) {
+          const placeOnLeft = Math.random() > 0.5;
+          let x, z;
+          
+          const wallWidth = 5;
+          
+          if (placeOnLeft) {
+            x = -(this.pathWidth / 2) - Math.random() * wallWidth;
+          } else {
+            x = (this.pathWidth / 2) + Math.random() * wallWidth;
+          }
+          
+          const baseZ = batchStartZ - (i * batchSize / 12);
+          const zOffset = (Math.random() - 0.5) * 4;
+          z = baseZ + zOffset;
+
+          const tree = gltf.scene.clone();
+          tree.position.set(x, 0 + modelConfig.yOffset, z);
+          tree.rotation.y = Math.random() * Math.PI * 2;
+          
+          const treeScale = modelConfig.scale || 0.05;
+          tree.scale.setScalar(treeScale);
+          
+          tree.userData.baseScale = treeScale;
+          
+          this.add(tree);
+          this.scene6Trees.push(tree);
+        }
+      });
+    });
+  }
+  
+  // ================================
+  // CAMERA TERRAIN FOLLOWING
+  // ================================
+  adjustCameraHeightForTerrain(cameraPosition) {
+    const baseHeight = 1.6; // Normal camera height above ground
+    let terrainHeight = 0;
+    
+    // Scene 3: Hilly grassland (z=-200 to z=-300)
+    if (cameraPosition.z < -200 && cameraPosition.z > -300 && this.hillyShaderGrass) {
+      terrainHeight = this.hillyShaderGrass.getTerrainHeight(cameraPosition.x, cameraPosition.z);
+    }
+    // Scene 4: River valley (z=-300 to z=-400)
+    else if (cameraPosition.z < -300 && cameraPosition.z > -400) {
+      terrainHeight = this.getScene4TerrainHeight(cameraPosition.x, cameraPosition.z);
+    }
+    
+    // Smoothly adjust camera height
+    const targetHeight = terrainHeight + baseHeight;
+    cameraPosition.y = targetHeight;
+  }
+  
+  // Get terrain height for Scene 4 (river valley)
+  getScene4TerrainHeight(x, z) {
+    const scene4Start = -300;
+    const hillAmplitude = 5;
+    const hillFrequency = 0.02;
+    const riverHalfWidth = 2.5;
+    
+    // If in river area, return river level (lower)
+    if (Math.abs(x) < riverHalfWidth) {
+      return -0.5; // River is below ground
+    }
+    
+    // Calculate hill height (matching terrain generation)
+    const heightZ = (Math.sin(z * hillFrequency) + 1) * hillAmplitude / 2;
+    const distanceFromRiver = Math.abs(x) - riverHalfWidth;
+    const heightX = Math.sin(distanceFromRiver * 0.1) * hillAmplitude * 0.3;
+    
+    return heightZ + heightX;
+  }
+  
   // ================================
   // TO ADD MORE SCENES:
   // 1. Create buildScene4() method following the pattern above
@@ -480,22 +715,30 @@ export class MainScene extends SceneBase {
       
       // Interpolate fog color
       this.fog.color.lerpColors(currentZone.fog, nextZone.fog, t);
+      
+      // Interpolate fog distances
+      this.fog.near = currentZone.fogNear + (nextZone.fogNear - currentZone.fogNear) * t;
+      this.fog.far = currentZone.fogFar + (nextZone.fogFar - currentZone.fogFar) * t;
     } else if (zPosition <= boundary) {
       // Past the boundary, use next zone colors
       this.background.copy(nextZone.background);
       this.fog.color.copy(nextZone.fog);
+      this.fog.near = nextZone.fogNear;
+      this.fog.far = nextZone.fogFar;
     } else {
       // Before transition, use current zone colors
       this.background.copy(currentZone.background);
       this.fog.color.copy(currentZone.fog);
+      this.fog.near = currentZone.fogNear;
+      this.fog.far = currentZone.fogFar;
     }
   }
 
-  update(userPosition, deltaTime = 0.016) {
+  update(userPosition, deltaTime = 0.016, renderer = null) {
     if (!userPosition) return;
 
     // Update text display manager (for bulk text animations)
-    textDisplayManager.update(userPosition.z, deltaTime);
+    // textDisplayManager.update(userPosition.z, deltaTime);
 
     // Update sky colors based on position
     this.updateSkyColors(userPosition.z);
@@ -525,6 +768,9 @@ export class MainScene extends SceneBase {
     if (userPosition.z < -400) {
       newScene = 5;
     }
+    if (userPosition.z < -500) {
+      newScene = 6;
+    }
     
     // Update timeline if scene changed
     if (newScene !== this.currentScene) {
@@ -549,8 +795,8 @@ export class MainScene extends SceneBase {
       subtitleManager.loadSubtitles(scene3Subs);
     }
 
-    // Generate Scene 4 when approaching (10 units before boundary)
-    if (!this.scene4Generated && userPosition.z < -290) {
+    // Generate Scene 4 early (when entering Scene 3) so it's visible in the distance
+    if (!this.scene4Generated && userPosition.z < -210) {
       this.buildScene4();
       // Load Scene 4 subtitles
       subtitleManager.loadSubtitles(subtitles.scene4);
@@ -563,6 +809,13 @@ export class MainScene extends SceneBase {
       subtitleManager.loadSubtitles(subtitles.scene5);
     }
 
+    // Generate Scene 6 when approaching (10 units before boundary)
+    if (!this.scene6Generated && userPosition.z < -490) {
+      this.buildScene6();
+      // Load Scene 6 subtitles
+      subtitleManager.loadSubtitles(subtitles.scene6);
+    }
+
     // Procedural tree batch generation for Scene 2
     if (this.treeConfig && this.scene2Generated) {
       const { batchSize, batchCount, scene2Start } = this.treeConfig;
@@ -571,11 +824,28 @@ export class MainScene extends SceneBase {
         const batchStartZ = scene2Start - (batch * batchSize);
         const batchEndZ = batchStartZ - batchSize;
         
-        // Generate batch if player is within 30 units
+        // Generate batch if player is within 10 units
         if (!this.treeBatches[batch] && 
-            userPosition.z < batchStartZ + 30 && 
-            userPosition.z > batchEndZ - 30) {
+            userPosition.z < batchStartZ + 10 && 
+            userPosition.z > batchEndZ - 10) {
           this.generateTreeBatch(batch);
+        }
+      }
+    }
+
+    // Procedural tropical tree batch generation for Scene 6
+    if (this.scene6TreeConfig && this.scene6Generated) {
+      const { batchSize, batchCount, scene6Start } = this.scene6TreeConfig;
+      
+      for (let batch = 0; batch < batchCount; batch++) {
+        const batchStartZ = scene6Start - (batch * batchSize);
+        const batchEndZ = batchStartZ - batchSize;
+        
+        // Generate batch if player is within 10 units
+        if (!this.scene6TreeBatches[batch] && 
+            userPosition.z < batchStartZ + 10 && 
+            userPosition.z > batchEndZ - 10) {
+          this.generateScene6TreeBatch(batch);
         }
       }
     }
@@ -589,16 +859,74 @@ export class MainScene extends SceneBase {
     if (this.hillyShaderGrass) {
       this.hillyShaderGrass.update(deltaTime);
     }
+    
+    // Update ocean shader (Scene 5)
+    if (this.oceanShader) {
+      this.oceanShader.update(deltaTime);
+    }
+    
+    // Update rain effect (Scene 6)
+    if (this.rainSystem6 && userPosition.z < -480 && userPosition.z > -620) {
+      const positions = this.rainSystem6.geometry.attributes.position.array;
+      const velocities = this.rainSystem6.geometry.attributes.velocity.array;
+      const lineLength = 0.5;
+      
+      const lineCount = positions.length / 6;
+      
+      for (let i = 0; i < lineCount; i++) {
+        const i6 = i * 6;
+        
+        positions[i6 + 1] -= velocities[i] * 60 * deltaTime;
+        positions[i6 + 4] -= velocities[i] * 60 * deltaTime;
+        
+        if (positions[i6 + 4] < 0) {
+          const x = userPosition.x + (Math.random() - 0.5) * 50;
+          const y = 30 + Math.random() * 10;
+          const z = userPosition.z + (Math.random() - 0.5) * 50;
+          
+          positions[i6] = x;
+          positions[i6 + 1] = y;
+          positions[i6 + 2] = z;
+          
+          positions[i6 + 3] = x;
+          positions[i6 + 4] = y - lineLength;
+          positions[i6 + 5] = z;
+        }
+      }
+      
+      this.rainSystem6.geometry.attributes.position.needsUpdate = true;
+    }
+    
+    // Adjust camera height to follow terrain in Scene 3
+    if (userPosition.z < -200 && userPosition.z > -300 && this.hillyShaderGrass) {
+      const terrainHeight = this.hillyShaderGrass.getTerrainHeight(userPosition.x, userPosition.z);
+      const baseHeight = 1.6; // Normal camera height above ground
+      userPosition.y = terrainHeight + baseHeight;
+    }
 
-    // Scale trees based on proximity to user
+    // Scale trees based on proximity to user (Scene 2)
     this.trees.forEach((tree) => {
       const distance = Math.abs(tree.position.z - userPosition.z);
-      if (distance < 30) {
+      if (distance < 10) {
         // Trees grow larger as you get closer
-        const scale = THREE.MathUtils.clamp(0.05 + (1 - distance / 30) * 0.15, 0.05, 0.2);
+        const scale = THREE.MathUtils.clamp(0.05 + (1 - distance / 10) * 0.15, 0.05, 0.2);
         tree.scale.setScalar(scale);
       } else {
         tree.scale.setScalar(0.05); // Small when far
+      }
+    });
+
+    // Scale tropical trees based on proximity to user (Scene 6)
+    this.scene6Trees.forEach((tree) => {
+      const distance = Math.abs(tree.position.z - userPosition.z);
+      const baseScale = tree.userData.baseScale || 0.05;
+      
+      if (distance < 10) {
+        const growthMultiplier = 1 + (1 - distance / 10) * 3;
+        const scale = baseScale * growthMultiplier;
+        tree.scale.setScalar(scale);
+      } else {
+        tree.scale.setScalar(baseScale);
       }
     });
   }
