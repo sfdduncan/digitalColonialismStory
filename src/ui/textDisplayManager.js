@@ -1,7 +1,6 @@
-// Text Display Manager - handles pausing the viewer and displaying images
-// that break apart and flow away (based on script.js instanced mesh particle effect)
 
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.module.js';
+import { subtitleManager } from './subtitleManager.js';
 
 export class TextDisplayManager {
   constructor(scene, camera) {
@@ -17,7 +16,7 @@ export class TextDisplayManager {
     // Animation configuration
     this.tileSize = 0.1; // Size of each square tile in world units
     this.animInDuration = 5; // Duration of flow-in animation in seconds
-    this.displayTime = 10000; // Time to pause and display (4 seconds for reading)
+    this.displayTime = 8000; // Time to pause and display (4 seconds for reading)
     this.animOutDuration = 5; // Duration of flow-out animation in seconds
     this.postAnimDelay = 500; // Delay after animation before resuming movement
     
@@ -74,6 +73,9 @@ export class TextDisplayManager {
       return;
     }
     
+    // Fade out subtitle smoothly before starting breakText animation
+    subtitleManager.hide();
+    
     this.isDisplaying = true;
     this.isPaused = true;
     this.animState = 'in'; // Start with tiles flowing in from left
@@ -109,7 +111,7 @@ export class TextDisplayManager {
     }
     
     // Calculate image dimensions
-    const imageHeight = 10;
+    const imageHeight = 8;
     const aspect = texture.image ? (texture.image.width / texture.image.height) : 4;
     const imageWidth = imageHeight * aspect;
     
@@ -133,7 +135,7 @@ export class TextDisplayManager {
     // Position in front of camera
     const cameraDirection = new THREE.Vector3();
     this.camera.getWorldDirection(cameraDirection);
-    const distance = 10;
+    const distance = 9;
     instancedMesh.position.copy(this.camera.position).add(cameraDirection.multiplyScalar(distance));
     instancedMesh.position.y += 2; // Move image up
     instancedMesh.quaternion.copy(this.camera.quaternion);

@@ -14,22 +14,22 @@ export function initializeHelpUI() {
   helpOverlay.innerHTML = `
     <div id="help-content">
       <button id="help-close" aria-label="Close help">&times;</button>
-      <h2>How to Move</h2>
+      <h2><span class="highlight">How to Move</span></h2>
       <div class="help-instructions">
         <div class="help-item">
-          <strong>W</strong> or <strong>↑</strong>
+          <strong><span class="highlight">W</span></strong> or <strong><span class="highlight">↑</span></strong>
           <p>Move forward</p>
         </div>
         <div class="help-item">
-          <strong>Mouse</strong>
+          <strong><span class="highlight">Mouse</span></strong>
           <p>Look around (click to activate)</p>
         </div>
         <div class="help-item">
-          <strong>ESC</strong>
+          <strong><span class="highlight">ESC</span></strong>
           <p>Release mouse control</p>
         </div>
       </div>
-      <p class="help-note">Click anywhere to begin your journey</p>
+      <p class="help-note"><span class="highlight">Click anywhere to begin your journey</span></p>
     </div>
   `;
   document.body.appendChild(helpOverlay);
@@ -37,6 +37,26 @@ export function initializeHelpUI() {
   // Toggle help overlay
   function toggleHelp() {
     helpOverlay.classList.toggle('active');
+    
+    // Hide/show UI elements
+    const timelineHamburger = document.getElementById('timeline-hamburger');
+    const sceneTimeline = document.getElementById('scene-timeline');
+    
+    if (helpOverlay.classList.contains('active')) {
+      // Hide UI elements
+      if (helpButton) helpButton.style.display = 'none';
+      if (timelineHamburger) timelineHamburger.style.display = 'none';
+      if (sceneTimeline) sceneTimeline.style.display = 'none';
+      // Disable subtitles while help is open
+      if (window.subtitleManager) window.subtitleManager.disable();
+    } else {
+      // Show UI elements
+      if (helpButton) helpButton.style.display = 'flex';
+      if (timelineHamburger) timelineHamburger.style.display = 'flex';
+      if (sceneTimeline) sceneTimeline.style.display = 'flex';
+      // Enable subtitles when help is closed
+      if (window.subtitleManager) window.subtitleManager.enable();
+    }
   }
 
   // Event listeners
@@ -58,4 +78,36 @@ export function initializeHelpUI() {
       toggleHelp();
     }
   });
+
+  // Return function to show help overlay programmatically
+  return {
+    show: () => {
+      if (!helpOverlay.classList.contains('active')) {
+        helpOverlay.classList.add('active');
+        
+        // Hide UI elements
+        const timelineHamburger = document.getElementById('timeline-hamburger');
+        const sceneTimeline = document.getElementById('scene-timeline');
+        if (helpButton) helpButton.style.display = 'none';
+        if (timelineHamburger) timelineHamburger.style.display = 'none';
+        if (sceneTimeline) sceneTimeline.style.display = 'none';
+        // Disable subtitles while help is open
+        if (window.subtitleManager) window.subtitleManager.disable();
+      }
+    },
+    hide: () => {
+      if (helpOverlay.classList.contains('active')) {
+        helpOverlay.classList.remove('active');
+        
+        // Show UI elements
+        const timelineHamburger = document.getElementById('timeline-hamburger');
+        const sceneTimeline = document.getElementById('scene-timeline');
+        if (helpButton) helpButton.style.display = 'flex';
+        if (timelineHamburger) timelineHamburger.style.display = 'flex';
+        if (sceneTimeline) sceneTimeline.style.display = 'flex';
+        // Enable subtitles when help is closed
+        if (window.subtitleManager) window.subtitleManager.enable();
+      }
+    }
+  };
 }

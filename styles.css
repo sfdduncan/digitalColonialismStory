@@ -14,14 +14,21 @@
   height: 40px;
   background: none;
   border: none;
-  color: #fff;
+  color: #ffffff;
   font-size: 2.5rem;
   font-weight: bold;
   cursor: pointer;
   z-index: 1400;
   line-height: 1;
-  transition: color 0.2s;
+  transition: color 0.2s, opacity 0.2s;
+  opacity: 0.9;
 }
+
+#timeline-close:hover {
+  opacity: 1;
+  color: #ffffff;
+}
+
 /* Hamburger menu styles */
 #timeline-hamburger {
   position: fixed;
@@ -60,7 +67,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(20, 20, 30, 1);
+  background: rgba(0, 0, 0, 0.95);
   z-index: 1300;
   display: none;
   flex-direction: column;
@@ -71,12 +78,13 @@
   display: flex;
 }
 #timeline-header {
-  color: #fff;
+  color: #ffffff;
   font-size: 2.3rem;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.08em;
-  font-family:'Lucida Sans', Lucida Sans Regular;
-  margin-top: 2.2rem;
+  font-family: "Host Grotesk", sans-serif;
+  margin-top: 10.5rem;
+  padding-top: 1.5rem;
   margin-left: 2.2rem;
   user-select: none;
 }
@@ -89,14 +97,21 @@
   height: 40px;
   background: none;
   border: none;
-  color: #fff;
+  color: #ffffff;
   font-size: 2.5rem;
   font-weight: bold;
   cursor: pointer;
   z-index: 1400;
   line-height: 1;
-  transition: color 0.2s;
+  transition: color 0.2s, opacity 0.2s;
+  opacity: 0.9;
 }
+
+#timeline-close:hover {
+  opacity: 1;
+  color: #ffffff;
+}
+
 /* Hamburger menu styles */
 #timeline-hamburger {
   position: fixed;
@@ -135,7 +150,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.1);
   z-index: 1300;
   display: none;
   flex-direction: column;
@@ -145,15 +160,191 @@
   display: flex;
 }
 #timeline-header {
-  color: #fff;
+  color: #ffffff;
   font-size: 2.3rem;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.08em;
-  font-family:'Lucida Sans', Lucida Sans Regular;
-  margin-top: 2.2rem;
+  font-family: "Host Grotesk", sans-serif;
+  margin-top: 3.5rem;
   margin-left: 2.2rem;
   user-select: none;
 }
+
+/* Vertical timeline container */
+#vertical-timeline-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 3rem 2rem;
+  margin-top: 1rem;
+}
+
+/* Custom scrollbar for timeline */
+#vertical-timeline-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+#vertical-timeline-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+#vertical-timeline-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+#vertical-timeline-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+#vertical-timeline {
+  position: relative;
+  max-width: 1000px;
+  margin: 0 auto;
+  min-height: 100%;
+  padding: 2rem 0;
+}
+
+/* Main vertical line */
+.timeline-vertical-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: white;
+  transform: translateX(-50%);
+}
+
+/* Timeline event */
+.timeline-event {
+  position: relative;
+  margin: 4rem 0;
+  opacity: 1;
+  transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+}
+
+.timeline-event.hidden {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.timeline-event.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Branch line */
+.timeline-branch {
+  position: absolute;
+  top: 50%;
+  width: 60px;
+  height: 2px;
+  background: white;
+  transform: translateY(-50%);
+}
+
+.timeline-event.left .timeline-branch {
+  right: 50%;
+  margin-right: 1px;
+}
+
+.timeline-event.right .timeline-branch {
+  left: 50%;
+  margin-left: 1px;
+}
+
+/* Circle at end of branch */
+.timeline-circle {
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  border: 2px solid white;
+  border-radius: 50%;
+  background: transparent;
+  transform: translateY(-50%);
+}
+
+.timeline-event.left .timeline-circle {
+  right: 50%;
+  margin-right: 60px;
+}
+
+.timeline-event.right .timeline-circle {
+  left: 50%;
+  margin-left: 60px;
+}
+
+/* Content positioning */
+.timeline-content {
+  width: calc(50% - 80px);
+  font-family: "Host Grotesk", sans-serif;
+}
+
+.timeline-event.left .timeline-content {
+  margin-left: 0;
+  margin-right: auto;
+  text-align: right;
+  padding-right: 2rem;
+}
+
+.timeline-event.right .timeline-content {
+  margin-left: auto;
+  margin-right: 0;
+  text-align: left;
+  padding-left: 2rem;
+}
+
+/* Year styling */
+.timeline-year {
+  font-size: 0.9rem;
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.05em;
+}
+
+/* Title styling */
+.timeline-title {
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin-bottom: 0.8rem;
+  letter-spacing: 0.03em;
+}
+
+/* Description styling (no highlight) */
+.timeline-description {
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.02em;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .timeline-content {
+    width: calc(50% - 60px);
+  }
+  
+  .timeline-event.left .timeline-content {
+    padding-right: 1rem;
+  }
+  
+  .timeline-event.right .timeline-content {
+    padding-left: 1rem;
+  }
+  
+  .timeline-title {
+    font-size: 1.1rem;
+  }
+  
+  .timeline-description {
+    font-size: 0.85rem;
+  }
+}
+
 /* Starter screen overlay styles */
 #starter-screen-overlay {
   position: fixed;
@@ -174,7 +365,7 @@
   width: 100vw;
 }
 
-#starter-svg-container svg {
+#starter-svg-container img {
   width: 100%;
   height: auto;
   display: block;
@@ -210,14 +401,14 @@
 }
 
 #flash-transition.flashing {
-  animation: flashTransition 0.8s ease-in-out forwards;
+  animation: flashTransition 2s ease-in-out forwards;
 }
 
 @keyframes flashTransition {
   0% {
     opacity: 0;
   }
-  25% {
+  30% {
     opacity: 1;
   }
   100% {
@@ -250,7 +441,7 @@ canvas {
   color: #fff;
   font-size: 1.8rem;
   font-weight: bold;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: "Host Grotesk", sans-serif;
   cursor: pointer;
   z-index: 1200;
   display: none; /* Hidden initially, shown after starter screen */
@@ -340,12 +531,11 @@ canvas {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.1);
   z-index: 1300;
   display: none;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(8px);
 }
 
 #help-overlay.active {
@@ -354,13 +544,12 @@ canvas {
 
 #help-content {
   position: relative;
-  background: rgba(101, 101, 102, 0.15);
-  border: 2px solid rgba(244, 242, 242, 0.2);
-  border-radius: 10px;
+  background: none;
   padding: 2.5rem;
   max-width: 500px;
-  color: #fff;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  color: #ffffff;
+  font-family: "Host Grotesk", sans-serif;
+  font-weight: 400;
 }
 
 #help-close {
@@ -371,26 +560,28 @@ canvas {
   height: 36px;
   background: none;
   border: none;
-  color: #fff;
+  color: #ffffff;
   font-size: 2rem;
   font-weight: bold;
   cursor: pointer;
   line-height: 1;
   transition: color 0.2s;
-  opacity: 0.7;
+  opacity: 0.9;
 }
 
 #help-close:hover {
   opacity: 1;
   transform: scale(1.1);
+  color: #ffffff;
 }
 
 #help-content h2 {
   margin: 0 0 1.5rem 0;
   font-size: 2rem;
-  font-weight: 400;
+  font-weight: 500;
   letter-spacing: 0.05em;
-  text-align: center;
+  text-align: left;
+  color: #ffffff;
 }
 
 .help-instructions {
@@ -404,28 +595,30 @@ canvas {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 0.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0;
+  background: none;
+  border: none;
 }
 
 .help-item strong {
   font-size: 1.2rem;
-  color: #fff;
+  color: #ffffff;
+  font-weight: 500;
   letter-spacing: 0.05em;
 }
 
 .help-item p {
   margin: 0;
   font-size: 1rem;
-  color: rgba(255, 255, 255, 0.8);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .help-note {
-  text-align: center;
+  text-align: left;
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.6);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.7);
   margin: 1rem 0 0 0;
   font-style: italic;
 }
@@ -433,37 +626,136 @@ canvas {
 /* Subtitle styles */
 #subtitle-container {
   position: fixed;
-  bottom: 80px;
+  bottom: 5%;
   left: 50%;
   transform: translateX(-50%);
-  max-width: 80%;
+  max-width: 90%;
   width: auto;
-  padding: 1.5rem 2.5rem;
-   -webkit-text-stroke-width: .3px; /* The width of the outline */
-  -webkit-text-stroke-color: black; /* The color of the outline */
+  padding: 1rem 2rem;
+  
+  /* Host Grotesk font styling */
+  font-family: "Host Grotesk", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  
+  /* White text */
   color: #ffffff;
-  font-family: 'Segoe UI', Arial, sans-serif;
-  font-size: 1.4rem;
+  font-size: 1rem;
+  
+  /* Increased line spacing to separate black highlights between lines */
   line-height: 1.6;
   text-align: center;
   z-index: 1000;
   pointer-events: none;
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.highlight { 
+  background-color: black;
+  border-radius: 5px;
+  padding: 0.1rem 0.5rem;
+  color: white;
+  
+  /* Each line gets its own background box when text wraps */
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Ensure italics work inside highlights */
+.highlight em,
+#subtitle-container em {
+  font-style: italic;
 }
 
 .subtitle-visible {
   opacity: 1;
-  transform: translateX(-50%) translateY(0);
 }
 
 .subtitle-hidden {
   opacity: 0;
-  transform: translateX(-50%) translateY(20px);
 }
 
 /* Responsive subtitle sizing */
 @media (max-width: 768px) {
   #subtitle-container {
+    max-width: 90%;
+    font-size: 1.1rem;
+    padding: 1.2rem 1.8rem;
+    bottom: 60px;
+  }
+}
+
+/* Rotation limit fog overlays */
+.rotation-limit-overlay {
+  position: fixed;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 900;
+  opacity: 0;
+  transition: opacity 0.15s ease-out;
+}
+
+#rotation-limit-left {
+  right: 0;
+  background: radial-gradient(ellipse 80% 150% at right center, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 30%, transparent 60%);
+}
+
+#rotation-limit-right {
+  left: 0;
+  background: radial-gradient(ellipse 80% 150% at left center, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 30%, transparent 60%);
+}
+
+/* Memory text container - styled like subtitles */
+#memory-text-container {
+  position: fixed;
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 90%;
+  width: auto;
+  padding: 1rem 2rem;
+  
+  /* Host Grotesk font styling */
+  font-family: "Host Grotesk", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  
+  /* Black text (for white background) */
+  color: #000000;
+  font-size: 1rem;
+  
+  /* Increased line spacing to separate highlights between lines */
+  line-height: 1.6;
+  text-align: center;
+  z-index: 1100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.highlight-inverse { 
+  background-color: white;
+  border-radius: 5px;
+  padding: 0.1rem 0.5rem;
+  color: black !important;
+  display: inline;
+  
+  /* Each line gets its own background box when text wraps */
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+#memory-text-container.visible {
+  opacity: 1;
+}
+
+/* Responsive memory text sizing */
+@media (max-width: 768px) {
+  #memory-text-container {
     max-width: 90%;
     font-size: 1.1rem;
     padding: 1.2rem 1.8rem;

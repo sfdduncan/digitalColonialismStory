@@ -13,10 +13,14 @@ import { SceneManager } from './src/world/sceneManager.js'
 // UI
 import { initializeHelpUI } from './src/ui/helpUI.js'
 import { initializeTimeline, updateTimeline, updateTimelineProgress } from './src/ui/timeline.js'
+import { subtitleManager } from './src/ui/subtitleManager.js'
+import { initializeVerticalTimeline, updateVerticalTimeline } from './src/ui/verticalTimeline.js'
 
-// Make timeline functions globally accessible for scene manager
+// Make timeline functions and subtitle manager globally accessible for scene manager
 window.updateTimeline = updateTimeline;
 window.updateTimelineProgress = updateTimelineProgress;
+window.subtitleManager = subtitleManager;
+window.updateVerticalTimeline = updateVerticalTimeline;
 
 
 
@@ -32,16 +36,20 @@ const controls = createControls(camera, renderer.domElement);
 const sceneManager = new SceneManager(camera, controls);
 
 // Initialize help UI
-initializeHelpUI();
+const helpUI = initializeHelpUI();
 
-// Initialize timeline
+// Initialize timelines
 initializeTimeline();
+initializeVerticalTimeline();
 
-// Load SVG into the container
-fetch('imgs/starter_screen.svg')
-  .then(r => r.text())
-  .then(svg => {
-    starterSvgContainer.innerHTML = svg;
+// Load PNG into the container
+fetch('imgs/title_card.png')
+  .then(r => r.blob())
+  .then(blob => {
+    const url = URL.createObjectURL(blob);
+    const img = document.createElement('img');
+    img.src = url;
+    starterSvgContainer.appendChild(img);
   });
 
 function hideStarterScreen() {
@@ -77,6 +85,9 @@ function showMainSceneUI() {
   
   const sceneTimeline = document.getElementById('scene-timeline');
   if (sceneTimeline) sceneTimeline.style.display = 'flex';
+  
+  // Automatically show help overlay when scene one starts
+  if (helpUI) helpUI.show();
 }
 
 // Flash transition effect
@@ -90,7 +101,7 @@ function triggerFlashTransition() {
   // Remove class after animation completes
   setTimeout(() => {
     flashElement.classList.remove('flashing');
-  }, 1200); // Match animation duration
+  }, 2000); // Match animation duration
 }
 
 // Make functions globally accessible
@@ -109,10 +120,21 @@ const timelineHamburger = document.getElementById('timeline-hamburger');
 const timelineOverlay = document.getElementById('timeline-overlay');
 
 function updateControlsForTimelineOverlay() {
+  const helpButton = document.getElementById('help-button');
+  const sceneTimeline = document.getElementById('scene-timeline');
+  
   if (timelineOverlay.classList.contains('active')) {
     controls.setControlsEnabled(false);
+    // Hide UI elements
+    if (timelineHamburger) timelineHamburger.style.display = 'none';
+    if (helpButton) helpButton.style.display = 'none';
+    if (sceneTimeline) sceneTimeline.style.display = 'none';
   } else {
     controls.setControlsEnabled(true);
+    // Show UI elements
+    if (timelineHamburger) timelineHamburger.style.display = 'flex';
+    if (helpButton) helpButton.style.display = 'flex';
+    if (sceneTimeline) sceneTimeline.style.display = 'flex';
   }
 }
 

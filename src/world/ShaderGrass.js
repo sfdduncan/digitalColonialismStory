@@ -11,9 +11,9 @@ export class ShaderGrass {
     this.time = 0;
     
     // Grass configuration
-    this.grassCount = 200000; // Number of grass blades
+    this.grassCount = 250000; // Number of grass blades
     this.grassHeight = 0.6;
-    this.grassWidth = 0.08;
+    this.grassWidth = 0.12;
     
     // Optional configuration
     this.pathWidth = options.pathWidth || 0; // Width of clear path in middle

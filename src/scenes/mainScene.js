@@ -1,11 +1,3 @@
-// ================================
-// MAIN SCENE - Contains all areas
-// Scene 1: Snowy area (z=0 to z=-100)
-// Scene 2: Forest area (z=-100 to z=-200)  
-// Scene 3: Hilly grassland (z=-200 to z=-300)
-// Scene 4: Mountain pass (z=-300 to z=-400)
-// ================================
-
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.module.js';
 import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/loaders/GLTFLoader.js';
 import { SceneBase } from './SceneBase.js';
@@ -15,7 +7,11 @@ import { archiveImagesManager } from '../ui/archiveImagesManager.js';
 import { archiveImages } from '../ui/archiveImagesConfig.js';
 import { ShaderGrass, HillyShaderGrass } from '../world/ShaderGrass.js';
 import { OceanShader } from '../world/OceanShader.js';
-// import { textDisplayManager } from '../ui/textDisplayManager.js';
+import { CloudShader } from '../world/CloudShader.js';
+import { hackImages, hackVideos, hackBackgroundVideo } from './hackImageConfig.js';
+import { sceneAudioManager } from '../ui/sceneAudioManager.js';
+import { mainSceneAudioZones } from '../ui/sceneAudioConfig.js';
+import { textDisplayManager } from '../ui/textDisplayManager.js';
 
 
 export class MainScene extends SceneBase {
@@ -40,13 +36,42 @@ export class MainScene extends SceneBase {
     this.shaderGrass = null; // Shader-based grass for Scene 2
     this.hillyShaderGrass = null; // Hilly shader grass for Scene 3
     this.oceanShader = null; // Ocean shader for Scene 5
+    this.cloudShader = null; // Cloud shader for Scene 5
     this.rainSystem6 = null; // Rain particles for Scene 6
     this.houses = [];
+    
+    // Polar bear family (mom and two cubs)
+    this.polarBears = []; // Array of {mesh, mixer, startX, targetX, speed, moving}
+    this.polarBearTriggered = false; // Track if bear family has been triggered
+    
+    // Scene 7 (hack corridor) tracking
+    this.scene7ImageWalls = [];
+    this.scene7ImageTextures = [];
+    this.scene7VideoElements = []; // Track all video elements for cleanup
+    this.scene7LastUsedTextures = new Map(); // Track last used textures to avoid repetition
+    
+    // Scene object tracking for disposal
+    this.scene1Objects = [];
+    this.scene2Objects = [];
+    this.scene3Objects = [];
+    this.scene4Objects = [];
+    this.scene5Objects = [];
+    this.scene6Objects = [];
+    this.scene7Objects = [];
+    
+    this.scene1Disposed = false;
+    this.scene2Disposed = false;
+    this.scene3Disposed = false;
+    this.scene4Disposed = false;
+    this.scene5Disposed = false;
+    this.scene6Disposed = false;
+    
     this.scene2Generated = false;
     this.scene3Generated = false;
     this.scene4Generated = false;
     this.scene5Generated = false;
     this.scene6Generated = false;
+    this.scene7Generated = false;
     this.treeBatches = {};
     this.tropicalTreeBatches = {}; // Unused for Scene 5 (ocean) - kept for compatibility
     this.scene6TreeBatches = {}; // Batches for tropical trees in Scene 6
@@ -107,6 +132,15 @@ export class MainScene extends SceneBase {
         fogFar: 1200,
         zStart: -500,
         zEnd: -600
+      },
+      {
+        // Scene 7: Dark corridor (hack scene) - Return to digital
+        background: new THREE.Color(0x050505),
+        fog: new THREE.Color(0x050505),
+        fogNear: 20,
+        fogFar: 60,
+        zStart: -600,
+        zEnd: -700
       }
     ];
 
@@ -114,20 +148,7 @@ export class MainScene extends SceneBase {
     this.background = new THREE.Color(0xe4faff);
     this.fog = new THREE.Fog(0x87ceeb, 2, 120);
 
-    // Set camera start position at the igloo (Scene 1)
-    camera.position.set(0, 10, 10);
-    camera.lookAt(0, 0, -20);
-    
-    // Reset rotation to face forward (negative Z) after lookAt
-    // This ensures rotation limits work symmetrically
-    camera.rotation.set(0, 0, 0);
-
-    // Restrict camera movement
-    this.restrictCamera = (camera) => {
-      const pathHalfWidth = 5; // Keep user on 10-unit wide path
-      camera.position.x = Math.max(-pathHalfWidth, Math.min(pathHalfWidth, camera.position.x));
-      camera.position.z = Math.max(-600, Math.min(50, camera.position.z)); // Allow movement through all 6 scenes
-    };
+;
 
     // Global lighting
     const light = new THREE.DirectionalLight(0xffffff, 1);
@@ -146,47 +167,50 @@ export class MainScene extends SceneBase {
     this.add(this.sun);
 
     // Only build Scene 1 initially
-    // Scene 2 and 3 will generate when user approaches
     this.buildScene1();
 
     // Load subtitles for Scene 1 (Arctic/Igloo area)
     subtitleManager.loadSubtitles(subtitles.scene1);
     subtitleManager.update(camera.position.z);
     
+    // Load audio zones for MainScene
+    sceneAudioManager.loadAudioZones(mainSceneAudioZones);
+    sceneAudioManager.update(camera.position.z);
+    
     // Initialize and load archive images for MainScene
+    archiveImagesManager.clear(); // Clear any previous state
     archiveImagesManager.init(this); // Pass the scene to the manager
     archiveImagesManager.loadImages(archiveImages.mainScene);
     archiveImagesManager.update(camera.position.z);
     
     // Initialize text display manager
-    // textDisplayManager.init(this, camera);
+    textDisplayManager.init(this, camera);
     
     // Load bulk text displays with trigger points
-      const bulkTextDisplays = [
-         {
-           trigger: -100, // Between Scene 1 and 2
-           text: subtitles.bulkText1[0].text,
-           direction: 'left',
-           image: './imgs/breakText1.png'
-         },
-    //   {
-    //     trigger: -200, // Between Scene 2 and 3
-    //     text: subtitles.bulkText2[0].text,
-    //     direction: 'right'
-    //   },
-    //   {
-    //     trigger: -300, // Between Scene 3 and 4
-    //     text: subtitles.bulkText3[0].text,
-    //     direction: 'left'
-    //   }
-       ];
-       // textDisplayManager.loadTextDisplays(bulkTextDisplays);
+    const bulkTextDisplays = [
+      {
+        trigger: -100, // Between Scene 1 and 2
+        text: subtitles.bulkText1[0].text,
+        direction: 'left',
+        image: './imgs/breakText1.png'
+      },
+      {
+        trigger: -200, // Between Scene 2 and 3
+        text: subtitles.bulkText2[0].text,
+        direction: 'right',
+        image: './imgs/breakText2.png'
+      },
+      {
+        trigger: -300, // Between Scene 3 and 4
+        text: subtitles.bulkText3[0].text,
+        direction: 'left',
+        image: './imgs/breakText3.png'
+      }
+    ];
+    textDisplayManager.loadTextDisplays(bulkTextDisplays);
   }
 
-  // ================================
-  // SCENE 1: Snowy Ice Area
-  // Position: z=0 to z=-100
-  // ================================
+  // Scene 1: Snowy Ice Area (z=0 to z=-100)
   buildScene1() {
     const scene1Z = -50; // Center of Scene 1
 
@@ -200,12 +224,15 @@ export class MainScene extends SceneBase {
     const ground1 = new THREE.Mesh(
       new THREE.PlaneGeometry(this.areaWidth, this.areaLength),
       new THREE.MeshStandardMaterial({
-        map: snowTexture
+        map: snowTexture,
+        emissiveIntensity: 0.4, 
+        emissive: new THREE.Color(0x0fefefe) // cyan 
       })
     );
     ground1.rotation.x = -Math.PI / 2;
     ground1.position.set(0, -0.01, scene1Z);
     this.add(ground1);
+    this.scene1Objects.push(ground1);
 
     // Load models
     const loader = new GLTFLoader();
@@ -213,7 +240,7 @@ export class MainScene extends SceneBase {
     // Igloo at the starting point
     loader.load('./models/igloo.glb', (gltf) => {
       const igloo = gltf.scene;
-      igloo.position.set(0, 0, 10);
+      igloo.position.set(0, .5, -5);
       igloo.rotation.y = Math.PI;
       igloo.scale.set(4, 4, 4);
       igloo.traverse((child) => {
@@ -224,29 +251,28 @@ export class MainScene extends SceneBase {
         }
       });
       this.add(igloo);
+      this.scene1Objects.push(igloo);
     });
 
     // Ice walls on sides
     loader.load('./models/wall_of_ice.glb', (gltf) => {
       const wall1 = gltf.scene.clone();
-      wall1.position.set(-25, -2.2, scene1Z);
+      wall1.position.set(-25, -2.5, scene1Z);
       wall1.rotation.y = Math.PI / 2;
-      wall1.scale.set(3, 2, 5);
+      wall1.scale.set(1.6, 2, 5);
       this.add(wall1);
+      this.scene1Objects.push(wall1);
 
       const wall2 = gltf.scene.clone();
-      wall2.position.set(25, -3, scene1Z);
+      wall2.position.set(25, -2.5, scene1Z);
       wall2.rotation.y = -Math.PI / 2;
-      wall2.scale.set(3, 2, 5);
+      wall2.scale.set(1.6, 2, 5);
       this.add(wall2);
+      this.scene1Objects.push(wall2);
     });
   }
 
-  // ================================
-  // SCENE 2: Forest Area
-  // Position: z=-100 to z=-200
-  // Generates procedurally as user approaches
-  // ================================
+  // Scene 2: Forest Area (z=-100 to z=-200) - Generates procedurally
   buildScene2() {
     if (this.scene2Generated) return;
     this.scene2Generated = true;
@@ -269,6 +295,7 @@ export class MainScene extends SceneBase {
     ground2.rotation.x = -Math.PI / 2;
     ground2.position.set(0, -0.01, scene2Z);
     this.add(ground2);
+    this.scene2Objects.push(ground2);
 
     // Initialize procedural tree generation
     this.initializeTreeGeneration();
@@ -281,7 +308,7 @@ export class MainScene extends SceneBase {
 
   initializeTreeGeneration() {
     // Setup for batch-based procedural tree generation
-    const batchSize = 20; // Each batch covers 20 units in z
+    const batchSize = 15; // Each batch covers 15 units in z
     const scene2Start = -100;
     const scene2End = -200;
     const batchCount = Math.ceil((scene2End - scene2Start) / -batchSize);
@@ -318,25 +345,42 @@ export class MainScene extends SceneBase {
       loader.load(`./models/${modelConfig.file}`, (gltf) => {
         // Create 15 trees per model per batch (increased density)
         for (let i = 0; i < 15; i++) {
-          // Randomly choose left or right side
-          const placeOnLeft = Math.random() > 0.5;
-          let x, z;
-          
-          // Create narrow walls on each side of the path (5 units wide, right alongside path)
-          const wallWidth = 5;
-          
-          if (placeOnLeft) {
-            // Left wall: from -5 (path edge) extending left 5 units to -10
-            x = -(this.pathWidth / 2) - Math.random() * wallWidth;
-          } else {
-            // Right wall: from +5 (path edge) extending right 5 units to +10
-            x = (this.pathWidth / 2) + Math.random() * wallWidth;
-          }
-          
-          // Add z-offset variation like hack scene for better corridor effect
+          // Calculate z position first to check for clear zones
           const baseZ = batchStartZ - (i * batchSize / 15);
           const zOffset = (Math.random() - 0.5) * 4;
-          z = baseZ + zOffset;
+          const z = baseZ + zOffset;
+          
+          // Check if we're in a breakText zone - wider path for floating images
+          const inBreakTextZone = (z > -115 && z < -90) || (z > -210 && z < -190) || (z > -310 && z < -290);
+          
+          // Randomly choose left or right side
+          const placeOnLeft = Math.random() > 0.5;
+          let x;
+          
+          if (inBreakTextZone) {
+            // Wider gap (30 units total) for breakText zones
+            const breakTextPathHalfWidth = 20; // 30 units wide total
+            const wallWidth = 5;
+            
+            if (placeOnLeft) {
+              // Left wall: starts at -15, extends left 5 units to -20
+              x = -breakTextPathHalfWidth - Math.random() * wallWidth;
+            } else {
+              // Right wall: starts at +15, extends right 5 units to +20
+              x = breakTextPathHalfWidth + Math.random() * wallWidth;
+            }
+          } else {
+            // Normal narrow walls (10 units wide path)
+            const wallWidth = 5;
+            
+            if (placeOnLeft) {
+              // Left wall: from -5 (path edge) extending left 5 units to -10
+              x = -(this.pathWidth / 2) - Math.random() * wallWidth;
+            } else {
+              // Right wall: from +5 (path edge) extending right 5 units to +10
+              x = (this.pathWidth / 2) + Math.random() * wallWidth;
+            }
+          }
 
           const tree = gltf.scene.clone();
           tree.position.set(x, 0 + modelConfig.yOffset, z);
@@ -349,11 +393,7 @@ export class MainScene extends SceneBase {
     });
   }
 
-  // ================================
-  // SCENE 3: Hilly Grassland
-  // Position: z=-200 to z=-300
-  // Green to yellow grass on rolling hills
-  // ================================
+  // Scene 3: Hilly Grassland (z=-200 to z=-300) - Green to yellow grass on rolling hills
   buildScene3() {
     if (this.scene3Generated) return;
     this.scene3Generated = true;
@@ -368,11 +408,7 @@ export class MainScene extends SceneBase {
     this.add(grassMesh);
   }
 
-  // ================================
-  // SCENE 4: Mountain Pass Area
-  // Position: z=-300 to z=-400
-  // Rocky cliffs on sides similar to Scene 1 ice walls
-  // ================================
+  // Scene 4: Mountain Pass Area (z=-300 to z=-400) - Rocky cliffs on sides
   buildScene4() {
     if (this.scene4Generated) return;
     this.scene4Generated = true;
@@ -395,6 +431,7 @@ export class MainScene extends SceneBase {
     ground4.rotation.x = -Math.PI / 2;
     ground4.position.set(0, -0.01, scene4Z);
     this.add(ground4);
+    this.scene4Objects.push(ground4);
 
     // Load cliff/mountain rock models for sides (similar to Scene 1 ice walls)
     const loader = new GLTFLoader();
@@ -406,6 +443,7 @@ export class MainScene extends SceneBase {
       cliffLeft.rotation.y = Math.PI / 2 + 0.3; // Rotated counterclockwise
       cliffLeft.scale.set(0.25, 0.5, 0.25);
       this.add(cliffLeft);
+      this.scene4Objects.push(cliffLeft);
 
       // Right cliff - 7.5 units from center (mirrored)
       const cliffRight = gltf.scene.clone();
@@ -413,6 +451,7 @@ export class MainScene extends SceneBase {
       cliffRight.rotation.y = -Math.PI / 2 + 0.3; // Rotated counterclockwise
       cliffRight.scale.set(0.25, 0.5, 0.25);
       this.add(cliffRight);
+      this.scene4Objects.push(cliffRight);
     });
     
     // Beach sand models at the end of Scene 4 (transition to ocean)
@@ -422,6 +461,7 @@ export class MainScene extends SceneBase {
       sandLeft.position.set(-15, -2, -385);
       sandLeft.scale.set(2, 2, 2.25);
       this.add(sandLeft);
+      this.scene4Objects.push(sandLeft);
 
       // Right beach sand
       const sandRight = gltf.scene.clone();
@@ -429,15 +469,12 @@ export class MainScene extends SceneBase {
       sandRight.rotation.y = Math.PI / 2 ; // Rotate to face opposite direction
       sandRight.scale.set(1.6, 1.6, 1.6);
       this.add(sandRight);
+      this.scene4Objects.push(sandRight);
     });
   }
 
 
-  // ================================
-  // SCENE 5: Ocean
-  // Position: z=-400 to z=-500
-  // Full-screen ocean shader effect
-  // ================================
+  // Scene 5: Ocean (z=-400 to z=-500) - Full-screen ocean shader effect
   buildScene5() {
     if (this.scene5Generated) return;
     this.scene5Generated = true;   
@@ -445,6 +482,13 @@ export class MainScene extends SceneBase {
     // Create ocean shader - fills entire scene with animated water
     this.oceanShader = new OceanShader();
     this.add(this.oceanShader.getMesh());
+    
+    // Create clouds above the ocean
+    this.cloudShader = new CloudShader();
+    this.cloudShader.getClouds().forEach(cloud => {
+      this.add(cloud);
+      this.scene5Objects.push(cloud);
+    });
     
     // Volcano island configurations
     // Easily customize position, rotation, and scale for each island
@@ -475,6 +519,7 @@ export class MainScene extends SceneBase {
           volcano.rotation.set(config.rotation.x, config.rotation.y, config.rotation.z);
           volcano.scale.set(config.scale.x, config.scale.y, config.scale.z);
           this.add(volcano);
+          this.scene5Objects.push(volcano);
           console.log(`Loaded ${config.file} successfully at`, volcano.position);
         },
         undefined,
@@ -485,11 +530,7 @@ export class MainScene extends SceneBase {
     });
   }
 
-  // ================================
-  // SCENE 6: Tropical Rainforest
-  // Position: z=-500 to z=-600
-  // Generates procedurally with tropical trees
-  // ================================
+  // Scene 6: Tropical Rainforest (z=-500 to z=-600) - Generates procedurally with tropical trees
   buildScene6() {
     if (this.scene6Generated) return;
     this.scene6Generated = true;   
@@ -513,6 +554,7 @@ export class MainScene extends SceneBase {
     ground6.rotation.x = -Math.PI / 2;
     ground6.position.set(0, -0.01, scene6Z);
     this.add(ground6);
+    this.scene6Objects.push(ground6);
     
     // Initialize procedural tropical tree generation
     this.initializeScene6TreeGeneration();
@@ -560,7 +602,7 @@ export class MainScene extends SceneBase {
   }
 
   initializeScene6TreeGeneration() {
-    const batchSize = 40;
+    const batchSize = 10;
     const scene6Start = -500;
     const scene6End = -600;
     const batchCount = Math.ceil((scene6End - scene6Start) / -batchSize);
@@ -572,7 +614,8 @@ export class MainScene extends SceneBase {
     this.scene6TreeConfig = {
       models: [
         { file: 'tropical_tree2.glb', yOffset: 0, scale: 0.5 },
-       // { file: 'tropicaltree3.glb', yOffset: -1, scale: 0.15 }
+        { file: 'jungle_tree (2).glb', yOffset: -1, scale: 0.25 }, 
+        { file: 'bushes_tropical.glb', yOffset: 0, scale: 0.5 }
       ],
       batchSize: batchSize,
       batchCount: batchCount,
@@ -596,7 +639,7 @@ export class MainScene extends SceneBase {
           const placeOnLeft = Math.random() > 0.5;
           let x, z;
           
-          const wallWidth = 5;
+          const wallWidth = 20;
           
           if (placeOnLeft) {
             x = -(this.pathWidth / 2) - Math.random() * wallWidth;
@@ -624,11 +667,9 @@ export class MainScene extends SceneBase {
     });
   }
   
-  // ================================
-  // CAMERA TERRAIN FOLLOWING
-  // ================================
+  // Camera terrain following
   adjustCameraHeightForTerrain(cameraPosition) {
-    const baseHeight = 1.6; // Normal camera height above ground
+    const baseHeight = 1.7; // Normal camera height above ground
     let terrainHeight = 0;
     
     // Scene 3: Hilly grassland (z=-200 to z=-300)
@@ -665,18 +706,483 @@ export class MainScene extends SceneBase {
     return heightZ + heightX;
   }
   
-  // ================================
-  // TO ADD MORE SCENES:
-  // 1. Create buildScene4() method following the pattern above
-  // 2. Position it at z=-300 to z=-400 (or similar)
-  // 3. Set this.scene4Generated = false in constructor
-  // 4. Add generation trigger in update() method
-  // ================================
+  // Scene 7: Dark Hack Corridor (z=-600 to z=-700) - Matches the HackScene setup
+  async buildScene7() {
+    if (this.scene7Generated) return;
+    this.scene7Generated = true;
 
-  // ================================
-  // SKY COLOR TRANSITION
-  // Smoothly interpolates background and fog colors between scenes
-  // ================================
+    const scene7Start = -600;
+    const corridorLength = 100;
+    const wallDistance = 5;
+    const imageSpacing = 8;
+    const imageHeight = 5;
+
+    // Create background video walls (like HackScene)
+    await this.createScene7BackgroundVideoWalls();
+
+    // Load all images and videos
+    const textureLoader = new THREE.TextureLoader();
+    
+    // Load static images (including GIFs)
+    const loadPromises = hackImages.map(path => {
+      return new Promise(resolve => {
+        const isGif = path.toLowerCase().endsWith('.gif');
+        
+        if (isGif) {
+          const img = document.createElement('img');
+          img.src = path;
+          img.style.display = 'none';
+          document.body.appendChild(img);
+          
+          img.onload = () => {
+            const texture = new THREE.Texture(img);
+            texture.minFilter = THREE.LinearFilter;
+            texture.magFilter = THREE.LinearFilter;
+            texture.needsUpdate = true;
+            texture.userData.imagePath = path;
+            texture.userData.isAnimated = true;
+            texture.userData.imageElement = img;
+            resolve(texture);
+          };
+          img.onerror = () => resolve(null);
+        } else {
+          textureLoader.load(
+            path,
+            texture => {
+              texture.userData.imagePath = path;
+              resolve(texture);
+            },
+            undefined,
+            () => resolve(null)
+          );
+        }
+      });
+    });
+
+    const loadedTextures = (await Promise.all(loadPromises)).filter(t => t);
+
+    // Load ALL corridor videos from hackVideos array
+    const videoTextures = await Promise.all(hackVideos.map(async (videoPath) => {
+      const video = document.createElement('video');
+      video.src = videoPath;
+      video.loop = true;
+      video.muted = true;
+      video.playsInline = true;
+      video.autoplay = true;
+      video.setAttribute('webkit-playsinline', 'true');
+
+      this.scene7VideoElements.push(video);
+
+      try {
+        await video.play();
+      } catch (err) {
+        console.warn(`Scene 7 video autoplay failed for ${videoPath}:`, err);
+      }
+
+      const videoTexture = new THREE.VideoTexture(video);
+      videoTexture.minFilter = THREE.LinearFilter;
+      videoTexture.magFilter = THREE.LinearFilter;
+      videoTexture.userData.imagePath = videoPath;
+      videoTexture.userData.isVideo = true;
+      
+      return videoTexture;
+    }));
+
+    this.scene7ImageTextures = [...loadedTextures, ...videoTextures];
+
+    console.log(`Scene 7: Loaded ${loadedTextures.length} images and ${videoTextures.length} videos`);
+
+    // Generate image walls
+    this.generateScene7ImageWalls(scene7Start, corridorLength, wallDistance, imageSpacing, imageHeight);
+  }
+
+  async createScene7BackgroundVideoWalls() {
+    // Create video element for background walls
+    const bgVideo = document.createElement('video');
+    bgVideo.src = hackBackgroundVideo;
+    bgVideo.loop = true;
+    bgVideo.muted = true;
+    bgVideo.playsInline = true;
+    bgVideo.autoplay = true;
+    bgVideo.setAttribute('webkit-playsinline', 'true');
+
+    this.scene7VideoElements.push(bgVideo);
+
+    try {
+      await bgVideo.play();
+      console.log('Scene 7 background video loaded:', hackBackgroundVideo);
+    } catch (err) {
+      console.warn('Scene 7 background video autoplay failed:', err);
+    }
+
+    const bgVideoTexture = new THREE.VideoTexture(bgVideo);
+    bgVideoTexture.minFilter = THREE.LinearFilter;
+    bgVideoTexture.magFilter = THREE.LinearFilter;
+
+    const boxWidth = 30;
+    const boxHeight = 20;
+    const corridorStart = -600;
+    const corridorEnd = -720;
+    const boxLength = corridorStart - corridorEnd;
+    const boxCenterZ = (corridorStart + corridorEnd) / 2;
+
+    // LEFT WALL
+    const leftWallGeo = new THREE.PlaneGeometry(boxLength, boxHeight);
+    const leftWallMat = new THREE.MeshBasicMaterial({
+      map: bgVideoTexture,
+      side: THREE.DoubleSide
+    });
+    const leftWall = new THREE.Mesh(leftWallGeo, leftWallMat);
+    leftWall.position.set(-boxWidth / 2, boxHeight / 2, boxCenterZ);
+    leftWall.rotation.y = Math.PI / 2;
+    this.add(leftWall);
+    this.scene7Objects.push(leftWall);
+
+    // RIGHT WALL
+    const rightWallGeo = new THREE.PlaneGeometry(boxLength, boxHeight);
+    const rightWallMat = new THREE.MeshBasicMaterial({
+      map: bgVideoTexture.clone(),
+      side: THREE.DoubleSide
+    });
+    const rightWall = new THREE.Mesh(rightWallGeo, rightWallMat);
+    rightWall.position.set(boxWidth / 2, boxHeight / 2, boxCenterZ);
+    rightWall.rotation.y = -Math.PI / 2;
+    this.add(rightWall);
+    this.scene7Objects.push(rightWall);
+
+    // FRONT WALL (at corridor start)
+    const frontWallGeo = new THREE.PlaneGeometry(boxWidth, boxHeight);
+    const frontWallMat = new THREE.MeshBasicMaterial({
+      map: bgVideoTexture.clone(),
+      side: THREE.DoubleSide
+    });
+    const frontWall = new THREE.Mesh(frontWallGeo, frontWallMat);
+    frontWall.position.set(0, boxHeight / 2, corridorStart);
+    this.add(frontWall);
+    this.scene7Objects.push(frontWall);
+
+    // CEILING
+    const ceilingGeo = new THREE.PlaneGeometry(boxWidth, boxLength);
+    const ceilingMat = new THREE.MeshBasicMaterial({
+      map: bgVideoTexture.clone(),
+      side: THREE.DoubleSide
+    });
+    const ceiling = new THREE.Mesh(ceilingGeo, ceilingMat);
+    ceiling.position.set(0, boxHeight, boxCenterZ);
+    ceiling.rotation.x = Math.PI / 2;
+    this.add(ceiling);
+    this.scene7Objects.push(ceiling);
+
+    // FLOOR
+    const floorGeo = new THREE.PlaneGeometry(boxWidth, boxLength);
+    const floorMat = new THREE.MeshBasicMaterial({
+      map: bgVideoTexture.clone(),
+      side: THREE.DoubleSide
+    });
+    const floor = new THREE.Mesh(floorGeo, floorMat);
+    floor.position.set(0, 0, boxCenterZ);
+    floor.rotation.x = -Math.PI / 2;
+    this.add(floor);
+    this.scene7Objects.push(floor);
+  }
+
+  generateScene7ImageWalls(scene7Start, corridorLength, wallDistance, imageSpacing, imageHeight) {
+    const corridorStart = scene7Start;
+    const corridorEnd = scene7Start - corridorLength - 20;
+    const totalLength = corridorStart - corridorEnd;
+    const numPositions = Math.floor(totalLength / imageSpacing) * 2;
+
+    const imageStartZ = corridorStart;
+
+    // Place videos prominently near the front of the corridor first
+    const videoTextures = this.scene7ImageTextures.filter(t => t.userData.isVideo);
+    if (videoTextures.length > 0) {
+      const videoTexture = videoTextures[0];
+      this.createScene7ImageWall(videoTexture, -wallDistance - 1, scene7Start - 8, 'left', imageHeight);
+      this.createScene7ImageWall(videoTexture, wallDistance + 1, scene7Start - 16, 'right', imageHeight);
+      if (videoTextures.length > 1) {
+        this.createScene7ImageWall(videoTextures[1], -wallDistance - 1.5, scene7Start - 24, 'left', imageHeight);
+      }
+    }
+
+    // Generate corridor wall images
+    for (let i = 0; i < numPositions; i++) {
+      const baseZ = imageStartZ - (i * imageSpacing) / 2;
+      const zOffset = (Math.random() - 0.5) * 4;
+      const zPosition = baseZ + zOffset;
+
+      const placeLeft = Math.random() > 0.2;
+      const placeRight = Math.random() > 0.2;
+
+      if (placeLeft) {
+        const leftTexture = this.getRandomScene7Texture('left-' + i);
+        if (leftTexture) {
+          const leftX = -wallDistance - Math.random() * 2;
+          this.createScene7ImageWall(leftTexture, leftX, zPosition, 'left', imageHeight);
+        }
+      }
+
+      if (placeRight) {
+        const rightTexture = this.getRandomScene7Texture('right-' + i);
+        if (rightTexture) {
+          const rightX = wallDistance + Math.random() * 2;
+          const rightZOffset = (Math.random() - 0.5) * 4;
+          this.createScene7ImageWall(rightTexture, rightX, baseZ + rightZOffset, 'right', imageHeight);
+        }
+      }
+    }
+
+    // Add images beyond the corridor walls
+    this.generateScene7BeyondImages(imageStartZ, corridorEnd, wallDistance);
+  }
+
+  generateScene7BeyondImages(imageStartZ, imageEndZ, wallDistance) {
+    const numBeyondImages = 50;
+    const totalRange = imageStartZ - imageEndZ;
+
+    for (let i = 0; i < numBeyondImages; i++) {
+      const texture = this.getRandomScene7Texture('beyond-' + i);
+      if (!texture) continue;
+
+      const side = Math.random() > 0.5 ? 1 : -1;
+      const x = side * (wallDistance + Math.random() * 25 + 5);
+      const y = Math.random() * 20 + 1;
+      const z = imageStartZ - Math.random() * totalRange;
+
+      const rotY = side === 1 ? -Math.PI / 2 : Math.PI / 2;
+
+      this.createScene7FloatingImage(texture, x, y, z, 0, rotY, 0);
+    }
+  }
+
+  getRandomScene7Texture(positionKey) {
+    if (this.scene7ImageTextures.length === 0) return null;
+    
+    const lastPath = this.scene7LastUsedTextures.get(positionKey);
+    let attempts = 0;
+    let texture;
+    
+    do {
+      const randomIndex = Math.floor(Math.random() * this.scene7ImageTextures.length);
+      texture = this.scene7ImageTextures[randomIndex];
+      attempts++;
+    } while (texture.userData.imagePath === lastPath && attempts < 10 && this.scene7ImageTextures.length > 1);
+    
+    this.scene7LastUsedTextures.set(positionKey, texture.userData.imagePath);
+    return texture;
+  }
+
+  createScene7FloatingImage(texture, x, y, z, rotX, rotY, rotZ) {
+    if (!texture) return;
+
+    const sizeMultiplier = 0.4 + Math.random() * 0.8;
+    const randomHeight = 5 * sizeMultiplier;
+
+    const aspectRatio =
+      texture.image?.videoWidth
+        ? texture.image.videoWidth / texture.image.videoHeight
+        : texture.image?.width && texture.image?.height
+        ? texture.image.width / texture.image.height
+        : 1.6;
+
+    const width = randomHeight * aspectRatio;
+    const geometry = new THREE.PlaneGeometry(width, randomHeight);
+
+    const material = new THREE.MeshBasicMaterial({
+      map: texture,
+      side: THREE.DoubleSide
+    });
+
+    const wall = new THREE.Mesh(geometry, material);
+    wall.position.set(x, y, z);
+    wall.rotation.set(rotX, rotY, rotZ);
+
+    this.add(wall);
+    this.scene7ImageWalls.push(wall);
+  }
+
+  createScene7ImageWall(texture, xPosition, zPosition, side, baseHeight) {
+    if (!texture) return;
+
+    const sizeMultiplier = 0.4 + Math.random() * 0.8;
+    const randomHeight = baseHeight * sizeMultiplier;
+
+    const aspectRatio =
+      texture.image?.videoWidth
+        ? texture.image.videoWidth / texture.image.videoHeight
+        : texture.image?.width && texture.image?.height
+        ? texture.image.width / texture.image.height
+        : 1.6;
+
+    const width = randomHeight * aspectRatio;
+    const geometry = new THREE.PlaneGeometry(width, randomHeight);
+
+    const material = new THREE.MeshBasicMaterial({
+      map: texture,
+      side: THREE.DoubleSide
+    });
+
+    const wall = new THREE.Mesh(geometry, material);
+
+    const baseY = randomHeight / 2;
+    const yOffset = (Math.random() - 0.5) * 8;
+
+    wall.position.set(xPosition, baseY + yOffset + 2, zPosition);
+    wall.rotation.y = side === 'left' ? Math.PI / 2 : -Math.PI / 2;
+
+    this.add(wall);
+    this.scene7ImageWalls.push(wall);
+  }
+  
+  // To add more scenes: Create buildSceneX() method, position it, set this.sceneXGenerated = false, add generation trigger in update()
+
+  // Scene disposal methods - Clean up objects from previous scenes to reduce memory/lag
+  disposeObject(obj) {
+    if (!obj) return;
+    
+    if (obj.geometry) obj.geometry.dispose();
+    
+    if (obj.material) {
+      if (Array.isArray(obj.material)) {
+        obj.material.forEach(mat => {
+          if (mat.map) mat.map.dispose();
+          if (mat.emissiveMap) mat.emissiveMap.dispose();
+          mat.dispose();
+        });
+      } else {
+        if (obj.material.map) obj.material.map.dispose();
+        if (obj.material.emissiveMap) obj.material.emissiveMap.dispose();
+        obj.material.dispose();
+      }
+    }
+    
+    if (obj.parent) obj.parent.remove(obj);
+  }
+
+  disposeScene1() {
+    if (this.scene1Disposed) return;
+    this.scene1Disposed = true;
+    
+    console.log('Disposing Scene 1 objects');
+    
+    // Dispose polar bears
+    this.polarBears.forEach(bear => {
+      this.disposeObject(bear.mesh);
+    });
+    this.polarBears = [];
+    
+    // Dispose all tracked Scene 1 objects
+    this.scene1Objects.forEach(obj => this.disposeObject(obj));
+    this.scene1Objects = [];
+  }
+
+  disposeScene2() {
+    if (this.scene2Disposed) return;
+    this.scene2Disposed = true;
+    
+    console.log('Disposing Scene 2 objects');
+    
+    // Dispose trees
+    this.trees.forEach(tree => this.disposeObject(tree));
+    this.trees = [];
+    
+    // Dispose shader grass
+    if (this.shaderGrass) {
+      this.disposeObject(this.shaderGrass.getMesh());
+      this.shaderGrass = null;
+    }
+    
+    // Dispose all tracked Scene 2 objects
+    this.scene2Objects.forEach(obj => this.disposeObject(obj));
+    this.scene2Objects = [];
+  }
+
+  disposeScene3() {
+    if (this.scene3Disposed) return;
+    this.scene3Disposed = true;
+    
+    console.log('Disposing Scene 3 objects');
+    
+    // Dispose hilly shader grass
+    if (this.hillyShaderGrass) {
+      const terrain = this.hillyShaderGrass.getTerrain();
+      const grass = this.hillyShaderGrass.getMesh();
+      this.disposeObject(terrain);
+      this.disposeObject(grass);
+      this.hillyShaderGrass = null;
+    }
+    
+    // Dispose all tracked Scene 3 objects
+    this.scene3Objects.forEach(obj => this.disposeObject(obj));
+    this.scene3Objects = [];
+  }
+
+  disposeScene4() {
+    if (this.scene4Disposed) return;
+    this.scene4Disposed = true;
+    
+    console.log('Disposing Scene 4 objects');
+    
+    // Dispose all tracked Scene 4 objects
+    this.scene4Objects.forEach(obj => this.disposeObject(obj));
+    this.scene4Objects = [];
+  }
+
+  disposeScene5() {
+    if (this.scene5Disposed) return;
+    this.scene5Disposed = true;
+    
+    console.log('Disposing Scene 5 objects');
+    
+    // Dispose ocean shader
+    if (this.oceanShader) {
+      this.disposeObject(this.oceanShader.getMesh());
+      this.oceanShader = null;
+    }
+    
+    // Dispose cloud shader
+    if (this.cloudShader) {
+      this.cloudShader.dispose();
+      this.cloudShader = null;
+    }
+    
+    // Dispose all tracked Scene 5 objects
+    this.scene5Objects.forEach(obj => this.disposeObject(obj));
+    this.scene5Objects = [];
+  }
+
+  disposeScene6() {
+    if (this.scene6Disposed) return;
+    this.scene6Disposed = true;
+    
+    console.log('Disposing Scene 6 objects');
+    
+    // Dispose tropical trees
+    this.scene6Trees.forEach(tree => this.disposeObject(tree));
+    this.scene6Trees = [];
+    
+    // Dispose rain system
+    if (this.rainSystem6) {
+      this.disposeObject(this.rainSystem6);
+      this.rainSystem6 = null;
+    }
+    
+    // Dispose all tracked Scene 6 objects
+    this.scene6Objects.forEach(obj => this.disposeObject(obj));
+    this.scene6Objects = [];
+  }
+
+  // Clean up Scene 7 video elements when needed
+  disposeScene7Videos() {
+    // Stop and clean up all video elements
+    this.scene7VideoElements.forEach(video => {
+      video.pause();
+      video.src = '';
+    });
+    this.scene7VideoElements = [];
+  }
+
+  // Sky color transition - Smoothly interpolates background and fog colors between scenes
   updateSkyColors(zPosition) {
     // Find which scene transition zone we're in
     let currentZoneIndex = 0;
@@ -738,13 +1244,16 @@ export class MainScene extends SceneBase {
     if (!userPosition) return;
 
     // Update text display manager (for bulk text animations)
-    // textDisplayManager.update(userPosition.z, deltaTime);
+    textDisplayManager.update(userPosition.z, deltaTime);
 
     // Update sky colors based on position
     this.updateSkyColors(userPosition.z);
 
     // Update subtitles based on camera position while moving through MainScene.
     subtitleManager.update(userPosition.z);
+    
+    // Update scene audio based on camera position
+    sceneAudioManager.update(userPosition.z);
     
     // Update archive images based on camera position
     archiveImagesManager.update(userPosition.z);
@@ -771,6 +1280,9 @@ export class MainScene extends SceneBase {
     if (userPosition.z < -500) {
       newScene = 6;
     }
+    if (userPosition.z < -600) {
+      newScene = 7;
+    }
     
     // Update timeline if scene changed
     if (newScene !== this.currentScene) {
@@ -779,6 +1291,13 @@ export class MainScene extends SceneBase {
         window.updateTimeline(this.currentScene);
       }
     }
+
+    // Dispose scenes that are 2+ scenes behind to reduce lag
+    if (this.currentScene >= 3) this.disposeScene1();
+    if (this.currentScene >= 4) this.disposeScene2();
+    if (this.currentScene >= 5) this.disposeScene3();
+    if (this.currentScene >= 6) this.disposeScene4();
+    if (this.currentScene >= 7) this.disposeScene5();
 
     // Generate Scene 2 when approaching (10 units before boundary)
     if (!this.scene2Generated && userPosition.z < -90) {
@@ -790,9 +1309,8 @@ export class MainScene extends SceneBase {
     // Generate Scene 3 when approaching (10 units before boundary)
     if (!this.scene3Generated && userPosition.z < -190) {
       this.buildScene3();
-      // Load Scene 3 subtitles (combine both parts)
-      const scene3Subs = [...subtitles.scene3, ...subtitles.scene3Part2];
-      subtitleManager.loadSubtitles(scene3Subs);
+      // Load Scene 3 subtitles
+      subtitleManager.loadSubtitles(subtitles.scene3);
     }
 
     // Generate Scene 4 early (when entering Scene 3) so it's visible in the distance
@@ -814,6 +1332,13 @@ export class MainScene extends SceneBase {
       this.buildScene6();
       // Load Scene 6 subtitles
       subtitleManager.loadSubtitles(subtitles.scene6);
+    }
+
+    // Generate Scene 7 (hack corridor) when approaching
+    if (!this.scene7Generated && userPosition.z < -590) {
+      this.buildScene7();
+      // Load Scene 7 subtitles
+      subtitleManager.loadSubtitles(subtitles.scene7);
     }
 
     // Procedural tree batch generation for Scene 2
@@ -865,6 +1390,11 @@ export class MainScene extends SceneBase {
       this.oceanShader.update(deltaTime);
     }
     
+    // Update cloud shader (Scene 5)
+    if (this.cloudShader) {
+      this.cloudShader.update(deltaTime);
+    }
+    
     // Update rain effect (Scene 6)
     if (this.rainSystem6 && userPosition.z < -480 && userPosition.z > -620) {
       const positions = this.rainSystem6.geometry.attributes.position.array;
@@ -907,9 +1437,10 @@ export class MainScene extends SceneBase {
     // Scale trees based on proximity to user (Scene 2)
     this.trees.forEach((tree) => {
       const distance = Math.abs(tree.position.z - userPosition.z);
-      if (distance < 10) {
+      const growthDistance = 20; // Distance over which trees grow (increase for slower growth)
+      if (distance < growthDistance) {
         // Trees grow larger as you get closer
-        const scale = THREE.MathUtils.clamp(0.05 + (1 - distance / 10) * 0.15, 0.05, 0.2);
+        const scale = THREE.MathUtils.clamp(0.05 + (1 - distance / growthDistance) * 0.15, 0.05, 0.2);
         tree.scale.setScalar(scale);
       } else {
         tree.scale.setScalar(0.05); // Small when far
@@ -929,5 +1460,14 @@ export class MainScene extends SceneBase {
         tree.scale.setScalar(baseScale);
       }
     });
+
+    // Update animated GIF textures for Scene 7
+    if (this.scene7Generated && userPosition.z < -580) {
+      this.scene7ImageTextures.forEach(texture => {
+        if (texture.userData.isAnimated) {
+          texture.needsUpdate = true;
+        }
+      });
+    }
   }
 }

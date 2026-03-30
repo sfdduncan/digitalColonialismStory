@@ -1,13 +1,10 @@
-// ================================
-// HACK SCENE (Pre-Scene)
-// Dark corridor with images from imgs/hack folder
-// ================================
-
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.module.js';
 import { SceneBase } from './SceneBase.js';
-import { hackImages } from './hackImageConfig.js';
+import { hackImages, hackVideos, hackBackgroundVideo } from './hackImageConfig.js';
 import { subtitleManager } from '../ui/subtitleManager.js';
 import { subtitles } from '../ui/subtitleText.js';
+import { sceneAudioManager } from '../ui/sceneAudioManager.js';
+import { hackSceneAudioZones } from '../ui/sceneAudioConfig.js';
 
 export class HackScene extends SceneBase {
   constructor(camera) {
@@ -16,6 +13,7 @@ export class HackScene extends SceneBase {
     this.imageWalls = [];
     this.imageTextures = [];
     this.lastUsedTextures = new Map();
+    this.backgroundVideoElements = []; // Track video elements for cleanup
 
     // Scene configuration
     this.corridorLength = 100;
@@ -23,13 +21,13 @@ export class HackScene extends SceneBase {
     this.wallDistance = 5;
     this.imageSpacing = 8;
     this.imageHeight = 5;
-    this.transitionZone = 100;
+    this.transitionZone = 85;
 
     this.setupScene();
   }
 
   setupScene() {
-    this.background = new THREE.Color(0x050505);
+    this.background = new THREE.Color(0xffffff);
 
     const ambientLight = new THREE.AmbientLight(0x404040, 1.5);
     this.add(ambientLight);
@@ -38,18 +36,115 @@ export class HackScene extends SceneBase {
     this.cameraLight.position.copy(this.camera.position);
     this.add(this.cameraLight);
 
-    this.fog = new THREE.Fog(0x050505, 20, 60);
+    this.fog = new THREE.Fog(0xffffff, 15, 80);
 
+    this.createBackgroundVideoWalls();
+    
     this.loadImages();
     
     // Load subtitles for this scene
     subtitleManager.loadSubtitles(subtitles.hackScene);
+    
+    // Load audio zones for this scene
+    sceneAudioManager.loadAudioZones(hackSceneAudioZones);
   
+  }
+
+  async createBackgroundVideoWalls() {
+    // Create video element for background
+    const bgVideo = document.createElement('video');
+    bgVideo.src = hackBackgroundVideo;
+    bgVideo.loop = true;
+    bgVideo.muted = true;
+    bgVideo.playsInline = true;
+    bgVideo.autoplay = true;
+    bgVideo.setAttribute('webkit-playsinline', 'true');
+
+    this.backgroundVideoElements.push(bgVideo);
+
+    try {
+      await bgVideo.play();
+      console.log('Background video loaded:', hackBackgroundVideo);
+    } catch (err) {
+      console.warn('Background video autoplay failed:', err);
+    }
+
+    const bgVideoTexture = new THREE.VideoTexture(bgVideo);
+    bgVideoTexture.minFilter = THREE.LinearFilter;
+    bgVideoTexture.magFilter = THREE.LinearFilter;
+
+    const boxWidth = 30; // Width of the box (x-axis)
+    const boxHeight = 20; // Height of the box (y-axis)
+    const corridorStart = 40; // Behind camera start position
+    const corridorEnd = -120; // Past transition zone
+    const boxLength = corridorStart - corridorEnd; // Total length (z-axis)
+    const boxCenterZ = (corridorStart + corridorEnd) / 2;
+
+    // LEFT WALL (runs along the corridor on the left side)
+    const leftWallGeo = new THREE.PlaneGeometry(boxLength, boxHeight);
+    const leftWallMat = new THREE.MeshBasicMaterial({
+      map: bgVideoTexture,
+      side: THREE.DoubleSide
+    });
+    const leftWall = new THREE.Mesh(leftWallGeo, leftWallMat);
+    leftWall.position.set(-boxWidth / 2, boxHeight / 2, boxCenterZ);
+    leftWall.rotation.y = Math.PI / 2;
+    this.add(leftWall);
+    this.objects.push(leftWall);
+
+    // RIGHT WALL (runs along the corridor on the right side)
+    const rightWallGeo = new THREE.PlaneGeometry(boxLength, boxHeight);
+    const rightWallMat = new THREE.MeshBasicMaterial({
+      map: bgVideoTexture.clone(),
+      side: THREE.DoubleSide
+    });
+    const rightWall = new THREE.Mesh(rightWallGeo, rightWallMat);
+    rightWall.position.set(boxWidth / 2, boxHeight / 2, boxCenterZ);
+    rightWall.rotation.y = -Math.PI / 2;
+    this.add(rightWall);
+    this.objects.push(rightWall);
+
+    // FRONT WALL (behind camera start - positive z)
+    const frontWallGeo = new THREE.PlaneGeometry(boxWidth, boxHeight);
+    const frontWallMat = new THREE.MeshBasicMaterial({
+      map: bgVideoTexture.clone(),
+      side: THREE.DoubleSide
+    });
+    const frontWall = new THREE.Mesh(frontWallGeo, frontWallMat);
+    frontWall.position.set(0, boxHeight / 2, corridorStart);
+    this.add(frontWall);
+    this.objects.push(frontWall);
+
+
+    const ceilingGeo = new THREE.PlaneGeometry(boxWidth, boxLength);
+    const ceilingMat = new THREE.MeshBasicMaterial({
+      map: bgVideoTexture.clone(),
+      side: THREE.DoubleSide
+    });
+    const ceiling = new THREE.Mesh(ceilingGeo, ceilingMat);
+    ceiling.position.set(0, boxHeight, boxCenterZ);
+    ceiling.rotation.x = Math.PI / 2;
+    this.add(ceiling);
+    this.objects.push(ceiling);
+
+
+    const floorGeo = new THREE.PlaneGeometry(boxWidth, boxLength);
+    const floorMat = new THREE.MeshBasicMaterial({
+      map: bgVideoTexture.clone(),
+      side: THREE.DoubleSide
+    });
+    const floor = new THREE.Mesh(floorGeo, floorMat);
+    floor.position.set(0, 0, boxCenterZ);
+    floor.rotation.x = -Math.PI / 2;
+    this.add(floor);
+    this.objects.push(floor);
+
   }
 
   async loadImages() {
     const textureLoader = new THREE.TextureLoader();
 
+    // Load static images
     const loadPromises = hackImages.map(path => {
       return new Promise(resolve => {
         const isGif = path.toLowerCase().endsWith('.gif');
@@ -89,40 +184,63 @@ export class HackScene extends SceneBase {
 
     const loadedTextures = (await Promise.all(loadPromises)).filter(t => t);
 
-    // Create video texture
-    const video = document.createElement('video');
-    video.src = 'imgs/hack/hack_video.mp4';
-    video.loop = true;
-    video.muted = true;
-    video.playsInline = true;
-    video.autoplay = true;
-    video.setAttribute('webkit-playsinline', 'true');
+    // Load corridor videos
+    const videoTextures = await Promise.all(hackVideos.map(async (videoPath) => {
+      const video = document.createElement('video');
+      video.src = videoPath;
+      video.loop = true;
+      video.muted = true;
+      video.playsInline = true;
+      video.autoplay = true;
+      video.setAttribute('webkit-playsinline', 'true');
 
-    this.videoElement = video;
+      this.backgroundVideoElements.push(video);
 
-    try {
-      await video.play();
-    } catch (err) {
-      console.warn('Video autoplay failed:', err);
-    }
+      try {
+        await video.play();
+      } catch (err) {
+        console.warn(`Video autoplay failed for ${videoPath}:`, err);
+      }
 
-    const videoTexture = new THREE.VideoTexture(video);
-    videoTexture.minFilter = THREE.LinearFilter;
-    videoTexture.magFilter = THREE.LinearFilter;
-    videoTexture.userData.imagePath = 'imgs/hack/hack_video.mp4';
+      const videoTexture = new THREE.VideoTexture(video);
+      videoTexture.minFilter = THREE.LinearFilter;
+      videoTexture.magFilter = THREE.LinearFilter;
+      videoTexture.userData.imagePath = videoPath;
+      videoTexture.userData.isVideo = true;
+      
+      return videoTexture;
+    }));
 
-    this.imageTextures = [...loadedTextures, videoTexture];
+    this.imageTextures = [...loadedTextures, ...videoTextures];
+
+    console.log(`Loaded ${loadedTextures.length} images and ${videoTextures.length} videos for hack corridor`);
 
     this.generateImageWalls();
   }
 
   generateImageWalls() {
-    const numPositions =
-      Math.floor(this.corridorLength / this.imageSpacing) * 2;
+    // Calculate positions to span full corridor length
+    const corridorStart = 40; // Behind camera
+    const corridorEnd = -120; // End of corridor
+    const totalLength = corridorStart - corridorEnd; // 170 units
+    const numPositions = Math.floor(totalLength / this.imageSpacing) * 2;
+
+    // Start images from beginning of corridor
+    const imageStartZ = corridorStart;
+
+    // Place videos prominently near the front of the corridor first
+    // This ensures videos are visible early and not buried under photos
+    const videoTextures = this.imageTextures.filter(t => t.userData.isVideo);
+    if (videoTextures.length > 0) {
+      const videoTexture = videoTextures[0];
+      this.createImageWall(videoTexture, -this.wallDistance - 1, 20, 'left');
+      this.createImageWall(videoTexture, this.wallDistance + 1, 10, 'right');
+      this.createImageWall(videoTexture, -this.wallDistance - 1.5, 0, 'left');
+    }
 
     // Generate corridor wall images (on the sides)
     for (let i = 0; i < numPositions; i++) {
-      const baseZ = -(i * this.imageSpacing) / 2;
+      const baseZ = imageStartZ - (i * this.imageSpacing) / 2;
       const zOffset = (Math.random() - 0.5) * 4;
       const zPosition = baseZ + zOffset;
 
@@ -159,7 +277,12 @@ export class HackScene extends SceneBase {
   }
 
   generateBeyondImages() {
-    const numBeyondImages = 80;
+    const numBeyondImages = 50;
+
+    // Start from beginning of corridor and extend to end
+    const imageStartZ = 40;
+    const imageEndZ = -120;
+    const totalRange = imageStartZ - imageEndZ;
 
     for (let i = 0; i < numBeyondImages; i++) {
       const texture = this.getRandomTexture('beyond-' + i);
@@ -169,7 +292,7 @@ export class HackScene extends SceneBase {
       const side = Math.random() > 0.5 ? 1 : -1;
       const x = side * (this.wallDistance + Math.random() * 25 + 5);
       const y = Math.random() * 20 + 1;
-      const z = -Math.random() * this.corridorLength * 1.2;
+      const z = imageStartZ - Math.random() * totalRange;
 
       // Keep images facing the corridor (no random rotation)
       const rotY = side === 1 ? -Math.PI / 2 : Math.PI / 2;
@@ -203,8 +326,8 @@ export class HackScene extends SceneBase {
   createImageWall(texture, xPosition, zPosition, side) {
     if (!texture) return;
 
-    // More varied sizes for corridor walls
-    const sizeMultiplier = 0.4 + Math.random() * 1.8;
+    // Smaller sizes for corridor images
+    const sizeMultiplier = 0.78 + Math.random() * 1.2;
     const randomHeight = this.imageHeight * sizeMultiplier;
 
     const aspectRatio =
@@ -218,22 +341,21 @@ export class HackScene extends SceneBase {
 
     const geometry = new THREE.PlaneGeometry(width, randomHeight);
 
-    const material = new THREE.MeshStandardMaterial({
+    // Basic material with no brightness effects
+    const material = new THREE.MeshBasicMaterial({
       map: texture,
-      emissiveMap: texture,
-      emissive: 0xffffff,
-      emissiveIntensity: 1.0,
       side: THREE.DoubleSide
     });
 
     const wall = new THREE.Mesh(geometry, material);
 
     const baseY = randomHeight / 2;
-    const yOffset = (Math.random() - 0.5) * 3;
+    // More scattered Y positions - wider variation
+    const yOffset = (Math.random() - 0.5) * 8; // Increased from 3 to 8 for more scatter
 
     wall.position.set(
       xPosition,
-      baseY + yOffset,
+      baseY + yOffset + 2, // Added +2 to raise them up a bit
       zPosition
     );
 
@@ -248,8 +370,8 @@ export class HackScene extends SceneBase {
   createFloatingImage(texture, x, y, z, rotX, rotY, rotZ) {
     if (!texture) return;
 
-    // More varied sizes for scattered images
-    const sizeMultiplier = 0.3 + Math.random() * 2;
+    // Smaller, more varied sizes for scattered images
+    const sizeMultiplier = 0.4 + Math.random() * 0.8;
     const randomHeight = this.imageHeight * sizeMultiplier;
 
     const aspectRatio =
@@ -263,14 +385,10 @@ export class HackScene extends SceneBase {
 
     const geometry = new THREE.PlaneGeometry(width, randomHeight);
 
-    const material = new THREE.MeshStandardMaterial({
+    // Basic material with no brightness effects
+    const material = new THREE.MeshBasicMaterial({
       map: texture,
-      emissiveMap: texture,
-      emissive: 0xffffff,
-      emissiveIntensity: 0.8,
-      side: THREE.DoubleSide,
-      transparent: true,
-      opacity: 0.7 + Math.random() * 0.3
+      side: THREE.DoubleSide
     });
 
     const wall = new THREE.Mesh(geometry, material);
@@ -291,6 +409,9 @@ export class HackScene extends SceneBase {
 
     // Update subtitles based on camera position
     subtitleManager.update(userPosition.z);
+    
+    // Update audio based on camera position
+    sceneAudioManager.update(userPosition.z);
 
     // Update animated GIF textures
     this.imageTextures.forEach(texture => {
@@ -307,17 +428,20 @@ export class HackScene extends SceneBase {
   }
 
   setStartPosition(camera) {
-    camera.position.set(0, 5, 10);
+    camera.position.set(0, 5, 25);
     camera.rotation.set(0, 0, 0);
   }
 
   exit() {
-    if (this.videoElement) {
-      this.videoElement.pause();
-      this.videoElement.src = '';
-      this.videoElement.load();
-      this.videoElement = null;
-    }
+    // Clean up all video elements (background videos and corridor videos)
+    this.backgroundVideoElements.forEach(video => {
+      if (video) {
+        video.pause();
+        video.src = '';
+        video.load();
+      }
+    });
+    this.backgroundVideoElements = [];
 
     // Clean up GIF image elements from DOM
     this.imageTextures.forEach(texture => {
@@ -330,6 +454,9 @@ export class HackScene extends SceneBase {
 
     // Clear subtitles when exiting scene
     subtitleManager.clear();
+    
+    // Stop all audio when exiting scene
+    sceneAudioManager.stopAll();
 
     super.exit();
   }

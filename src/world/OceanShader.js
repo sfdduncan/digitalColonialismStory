@@ -158,8 +158,10 @@ export class OceanShader {
     const geometry = new THREE.PlaneGeometry(100, 100, 64, 64);
     this.mesh = new THREE.Mesh(geometry, material);
     
-    this.mesh.rotation.x = -Math.PI / 2;
+    // Rotated 90 degrees along x-axis from original position
+    this.mesh.rotation.x = Math.PI / 2;
     this.mesh.position.x = 0;
+    this.mesh.position.y = 0;
     this.mesh.position.z = -450;
   }
 

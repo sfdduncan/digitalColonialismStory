@@ -13,11 +13,12 @@ export function initializeTimeline() {
   // Create timeline points for each scene
 const scenes = [
   { id: 1, label: 'Scene 1', position: 0 },      // 0/5
-  { id: 2, label: 'Scene 2', position: 20 },     // 1/5
-  { id: 3, label: 'Scene 3', position: 40 },     // 2/5
-  { id: 4, label: 'Scene 4', position: 60 },     // 3/5
-  { id: 5, label: 'Scene 5', position: 80 },     // 4/5
-  { id: 6, label: 'Scene 6', position: 100 },    // 5/5
+  { id: 2, label: 'Scene 2', position: 16.67 },     // 1/5
+  { id: 3, label: 'Scene 3', position: 33.33 },     // 2/5
+  { id: 4, label: 'Scene 4', position: 50 },     // 3/5
+  { id: 5, label: 'Scene 5', position: 66.67 },     // 4/5
+  { id: 6, label: 'Scene 6', position: 83.33 },    // 5/5
+  { id: 7, label: 'Scene 7', position: 100 }     // 
 ];
   
   scenes.forEach((scene) => {
@@ -70,12 +71,13 @@ export function updateTimelineProgress(zPosition, totalScenes = 3) {
     { start: -200, end: -300 } , // Scene 3
     { start: -300, end: -400 } , // Scene 4 
     { start: -400, end: -500 } , // Scene 5
-    { start: -500, end: -600 }   // Scene 6
+    { start: -500, end: -600 } ,  // Scene 6
+    { start: -600, end: -700 }   // Scene 7
   ];
   
   // Total z range
   const totalStart = 0;
-  const totalEnd = -300;
+  const totalEnd = -700;
   const totalRange = Math.abs(totalEnd - totalStart);
   
   // Clamp position to valid range

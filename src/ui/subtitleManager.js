@@ -7,6 +7,7 @@ export class SubtitleManager {
     this.subtitleElement = null;
     this.fadeTimeout = null;
     this.isVisible = false;
+    this.enabled = true; // Flag to enable/disable subtitle display
     
     this.createSubtitleElement();
   }
@@ -27,7 +28,7 @@ export class SubtitleManager {
   
   // Update based on camera position (z-coordinate)
   update(cameraZ) {
-    if (!this.currentSubtitles || this.currentSubtitles.length === 0) return;
+    if (!this.enabled || !this.currentSubtitles || this.currentSubtitles.length === 0) return;
     
     // Find the most recent subtitle that should be displayed
     let activeSubtitle = null;
@@ -56,8 +57,8 @@ export class SubtitleManager {
       clearTimeout(this.fadeTimeout);
     }
     
-    // Set text and show
-    this.subtitleElement.textContent = text;
+    // Set text with highlight span and show
+    this.subtitleElement.innerHTML = `<span class="highlight">${text}</span>`;
     this.subtitleElement.className = 'subtitle-visible';
     this.isVisible = true;
     
@@ -98,6 +99,16 @@ export class SubtitleManager {
         this.hide();
       }, duration);
     }
+  }
+  
+  // Enable subtitle display
+  enable() {
+    this.enabled = true;
+  }
+  
+  // Disable subtitle display (prevents update() from showing new subtitles)
+  disable() {
+    this.enabled = false;
   }
 }
 

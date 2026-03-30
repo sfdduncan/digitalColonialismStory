@@ -11,7 +11,7 @@ export class SceneManager {
     this.camera = camera;
     this.controls = controls;
     this.isTransitioning = false;
-    this.maxSceneNumber = 6;
+    this.maxSceneNumber = 7;
     this.pendingSceneJump = null;
     
     // Aerial view toggle state
@@ -25,6 +25,11 @@ export class SceneManager {
     // Start with hack scene
     this.currentScene = this.hackScene;
     this.hackScene.setStartPosition(this.camera);
+    
+    // Enable automatic movement for hack scene
+    if (this.controls.setAutoMoveEnabled) {
+      this.controls.setAutoMoveEnabled(true);
+    }
 
     // Failsafe: number keys jump to scenes
     this.handleNumericSceneJump = this.handleNumericSceneJump.bind(this);
@@ -47,6 +52,11 @@ export class SceneManager {
       
       const result = this.currentScene.update(this.camera.position, deltaTime, renderer);
       
+      // Update vertical timeline based on camera position
+      if (window.updateVerticalTimeline) {
+        window.updateVerticalTimeline(this.camera.position.z);
+      }
+      
       // Handle scene transitions
       if (result && result.transition) {
         this.handleSceneTransition(result.nextScene);
@@ -67,10 +77,13 @@ export class SceneManager {
         window.triggerFlashTransition();
       }
       
+      // Clear hackScene subtitles immediately
+      if (window.subtitleManager) {
+        window.subtitleManager.clear();
+      }
+      
       // Wait briefly before switching (switch during flash)
       setTimeout(() => {
-        // Exit current scene FIRST so its subtitleManager.clear() doesn't
-        // wipe the subtitles that MainScene loads in its constructor below.
         if (this.currentScene.exit) {
           this.currentScene.exit();
         }
@@ -78,11 +91,19 @@ export class SceneManager {
         // Create main scene (loads its own subtitles after hackScene has cleared)
         this.mainScene = new MainScene(this.camera);
         
+        // Disable automatic movement and re-enable user controls
+        if (this.controls.setAutoMoveEnabled) {
+          this.controls.setAutoMoveEnabled(false);
+        }
+        if (this.controls.setControlsEnabled) {
+          this.controls.setControlsEnabled(true);
+        }
+        
         // Switch to main scene
         this.currentScene = this.mainScene;
         
         // Set camera position for main scene (at the igloo)
-        this.camera.position.set(0, 10, 10);
+        this.camera.position.set(0, 1.7, -5);
 
         // Apply pending scene jump from numeric failsafe (if any)
         if (this.pendingSceneJump !== null) {
@@ -90,14 +111,19 @@ export class SceneManager {
           this.pendingSceneJump = null;
         }
         
-        // Show UI elements (timeline, help button, hamburger)
+        // Disable subtitles until help menu is closed
+        if (window.subtitleManager) {
+          window.subtitleManager.disable();
+        }
+        
+        // Show UI elements (timeline, help button, hamburger) and help overlay
         if (window.showMainSceneUI) {
           window.showMainSceneUI();
         }
         
         console.log('Transitioned to MainScene');
         this.isTransitioning = false;
-      }, 200); // Switch scene at peak of flash (25% of 800ms)
+      }, 600); // Switch scene at peak of flash (30% of 2000ms)
     }
   }
 
@@ -190,13 +216,18 @@ export class SceneManager {
       this.mainScene.buildScene6();
     }
 
+    if (sceneNumber >= 7 && !this.mainScene.scene7Generated) {
+      this.mainScene.buildScene7();
+    }
+
     const sceneZPositions = {
-      1: 10,
-      2: -150,
-      3: -250,
-      4: -350,
-      5: -450,
-      6: -550
+      1: -5,
+      2: -100,
+      3: -200,
+      4: -300,
+      5: -400,
+      6: -500,
+      7: -600
     };
 
     this.camera.position.x = 0;
