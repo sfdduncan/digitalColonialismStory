@@ -72,9 +72,9 @@ export function initializeHelpUI() {
     }
   });
 
-  // Close with Escape key
+  // Close with any key press
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && helpOverlay.classList.contains('active')) {
+    if (helpOverlay.classList.contains('active')) {
       toggleHelp();
     }
   });

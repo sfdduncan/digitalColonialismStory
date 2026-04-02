@@ -21,7 +21,7 @@ export class HackScene extends SceneBase {
     this.wallDistance = 5;
     this.imageSpacing = 8;
     this.imageHeight = 5;
-    this.transitionZone = 85;
+    this.transitionZone = 60;
 
     this.setupScene();
   }

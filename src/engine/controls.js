@@ -117,6 +117,9 @@ export function createControls(camera, domElement) {
   });
 
   function update() {
+    // Path boundaries (10 units wide)
+    const pathHalfWidth = 5;
+    
     // Check if movement is paused (for text displays)
     // When paused, forward/backward movement is blocked but mouse look and breathing continue
     if (!movementPaused) {
@@ -127,16 +130,17 @@ export function createControls(camera, domElement) {
       }
       // Manual movement (for main scene)
       else if (moveForward) {
-        controls.moveForward(0.025); // Slightly slower speed for main scene
+        // Move straight down the path (negative Z direction)
+        // Mouse controls view angle only, not movement direction
+        camera.position.z -= 0.025;
+        
+        // Clamp X position to keep user on path
+        camera.position.x = Math.max(-pathHalfWidth, Math.min(pathHalfWidth, camera.position.x));
       }
     }
 
     // Mouse look is always active (even when movement paused)
     clampRotation();
-    
-    // Keep user on path (10 units wide)
-    const pathHalfWidth = 5;
-    camera.position.x = Math.max(-pathHalfWidth, Math.min(pathHalfWidth, camera.position.x));
 
     if (controls.aerialViewActive) return;
 

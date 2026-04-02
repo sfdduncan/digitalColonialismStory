@@ -171,17 +171,18 @@ export class MainScene extends SceneBase {
 
     // Load subtitles for Scene 1 (Arctic/Igloo area)
     subtitleManager.loadSubtitles(subtitles.scene1);
-    subtitleManager.update(camera.position.z);
+    // Note: Don't call update() here - will be called in game loop with correct camera position
     
     // Load audio zones for MainScene
     sceneAudioManager.loadAudioZones(mainSceneAudioZones);
-    sceneAudioManager.update(camera.position.z);
+    // Note: Don't call update() here - will be called in game loop with correct camera position
     
     // Initialize and load archive images for MainScene
     archiveImagesManager.clear(); // Clear any previous state
     archiveImagesManager.init(this); // Pass the scene to the manager
     archiveImagesManager.loadImages(archiveImages.mainScene);
-    archiveImagesManager.update(camera.position.z);
+    // Note: Don't call update() here - camera position will be reset after transition
+    // The first update() will be called in the game loop with the correct camera position
     
     // Initialize text display manager
     textDisplayManager.init(this, camera);

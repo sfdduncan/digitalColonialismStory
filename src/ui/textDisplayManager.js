@@ -16,7 +16,7 @@ export class TextDisplayManager {
     // Animation configuration
     this.tileSize = 0.1; // Size of each square tile in world units
     this.animInDuration = 5; // Duration of flow-in animation in seconds
-    this.displayTime = 8000; // Time to pause and display (4 seconds for reading)
+    this.displayTime = 6000; // Time to pause and display (4 seconds for reading)
     this.animOutDuration = 5; // Duration of flow-out animation in seconds
     this.postAnimDelay = 500; // Delay after animation before resuming movement
     
