@@ -1,7 +1,3 @@
-// ================================
-// SCENE MANAGER
-// Manages scene transitions
-// ================================
 
 import { HackScene } from '../scenes/hackScene.js';
 import { MainScene } from '../scenes/mainScene.js';
@@ -13,6 +9,8 @@ export class SceneManager {
     this.isTransitioning = false;
     this.maxSceneNumber = 7;
     this.pendingSceneJump = null;
+    this.pendingCreditsPreview = false;
+    this.hackSceneMovementTimeout = null;
     
     // Aerial view toggle state
     this.isAerialView = false;
@@ -25,15 +23,44 @@ export class SceneManager {
     // Start with hack scene
     this.currentScene = this.hackScene;
     this.hackScene.setStartPosition(this.camera);
-    
-    // Enable automatic movement for hack scene
-    if (this.controls.setAutoMoveEnabled) {
-      this.controls.setAutoMoveEnabled(true);
-    }
+    // Auto-move is NOT started here — it's triggered via startHackSceneMovement()
+    // after the fade-in completes, so the camera floats in place first
 
     // Failsafe: number keys jump to scenes
     this.handleNumericSceneJump = this.handleNumericSceneJump.bind(this);
     window.addEventListener('keydown', this.handleNumericSceneJump);
+  }
+
+  // Called after the fade-in completes — camera floats in place for 4 seconds then moves
+  startHackSceneMovement() {
+    this.cancelHackSceneMovement();
+
+    this.hackSceneMovementTimeout = setTimeout(() => {
+      this.hackSceneMovementTimeout = null;
+
+      if (this.currentScene !== this.hackScene) {
+        return;
+      }
+
+      if (this.controls.setAutoMoveEnabled) {
+        this.controls.setAutoMoveEnabled(true);
+      }
+      // Start hack scene audio now that movement has begun
+      if (this.hackScene.startAudio) {
+        this.hackScene.startAudio();
+      }
+    }, 4000);  // Adjust this value (ms) to change how long camera floats before moving
+  }
+
+  cancelHackSceneMovement() {
+    if (this.hackSceneMovementTimeout !== null) {
+      clearTimeout(this.hackSceneMovementTimeout);
+      this.hackSceneMovementTimeout = null;
+    }
+
+    if (this.controls.setAutoMoveEnabled) {
+      this.controls.setAutoMoveEnabled(false);
+    }
   }
 
   async update(renderer) {
@@ -71,6 +98,7 @@ export class SceneManager {
 
     if (nextSceneName === 'MainScene' && !this.mainScene) {
       this.isTransitioning = true;
+      this.cancelHackSceneMovement();
 
       // Trigger initial flash transition effect
       if (window.triggerFlashTransition) {
@@ -92,9 +120,7 @@ export class SceneManager {
         this.mainScene = new MainScene(this.camera);
         
         // Disable automatic movement and re-enable user controls
-        if (this.controls.setAutoMoveEnabled) {
-          this.controls.setAutoMoveEnabled(false);
-        }
+        this.cancelHackSceneMovement();
         if (this.controls.setControlsEnabled) {
           this.controls.setControlsEnabled(true);
         }
@@ -110,6 +136,11 @@ export class SceneManager {
           this.jumpToMainSceneSection(this.pendingSceneJump);
           this.pendingSceneJump = null;
         }
+
+        if (this.pendingCreditsPreview && window.showCreditsOverlay) {
+          window.showCreditsOverlay();
+          this.pendingCreditsPreview = false;
+        }
         
         // Disable subtitles until help menu is closed
         if (window.subtitleManager) {
@@ -121,7 +152,6 @@ export class SceneManager {
           window.showMainSceneUI();
         }
         
-        console.log('Transitioned to MainScene');
         this.isTransitioning = false;
       }, 600); // Switch scene at peak of flash (30% of 2000ms)
     }
@@ -132,6 +162,19 @@ export class SceneManager {
 
     const target = event.target;
     if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+      return;
+    }
+
+    if (event.key.toLowerCase() === 'c') {
+      if (this.currentScene !== this.mainScene) {
+        this.pendingCreditsPreview = true;
+        this.handleSceneTransition('MainScene');
+        return;
+      }
+
+      if (window.showCreditsOverlay) {
+        window.showCreditsOverlay();
+      }
       return;
     }
 
@@ -174,7 +217,6 @@ export class SceneManager {
       this.camera.rotation.set(-Math.PI / 2, 0, 0); // Look straight down
       
       this.isAerialView = true;
-      console.log('Aerial view enabled');
     } else {
       // Re-enable camera position overrides in controls
       if (this.controls) {
@@ -188,12 +230,13 @@ export class SceneManager {
       }
       
       this.isAerialView = false;
-      console.log('Aerial view disabled');
     }
   }
 
   jumpToMainSceneSection(sceneNumber) {
     if (!this.mainScene) return;
+
+    this.cancelHackSceneMovement();
 
     // Build scenes progressively
     if (sceneNumber >= 2 && !this.mainScene.scene2Generated) {

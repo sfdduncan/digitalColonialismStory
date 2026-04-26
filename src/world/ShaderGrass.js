@@ -11,7 +11,7 @@ export class ShaderGrass {
     this.time = 0;
     
     // Grass configuration
-    this.grassCount = 250000; // Number of grass blades
+    this.grassCount = 80000; // Number of grass blades
     this.grassHeight = 0.6;
     this.grassWidth = 0.12;
     
@@ -28,7 +28,7 @@ export class ShaderGrass {
     const material = this.createGrassMaterial();
     
     this.mesh = new THREE.InstancedMesh(geometry, material, this.grassCount);
-    this.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    this.mesh.instanceMatrix.setUsage(THREE.StaticDrawUsage);
     
     // Position each grass blade
     this.positionGrassBlades();
@@ -213,7 +213,7 @@ export class HillyShaderGrass {
     this.time = 0;
     
     // Grass configuration
-    this.grassCount = 200000; // Number of grass blades (increased for complete coverage)
+    this.grassCount = 60000; // Number of grass blades (increased for complete coverage)
     this.grassHeight = 1.0; // Taller grass for better visibility
     this.grassWidth = 0.12; // Wider blades for better coverage
     
@@ -233,7 +233,7 @@ export class HillyShaderGrass {
     const material = this.createGrassMaterial();
     
     this.mesh = new THREE.InstancedMesh(geometry, material, this.grassCount);
-    this.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    this.mesh.instanceMatrix.setUsage(THREE.StaticDrawUsage);
     
     // Position each grass blade on the hills
     this.positionGrassBlades();
@@ -243,7 +243,7 @@ export class HillyShaderGrass {
   
   createTerrain() {
     // Create hilly ground with displacement
-    const geometry = new THREE.PlaneGeometry(this.width, this.length, 100, 100);
+    const geometry = new THREE.PlaneGeometry(this.width, this.length, 50, 50);
     
     // Displace vertices to create hills
     const positions = geometry.attributes.position.array;

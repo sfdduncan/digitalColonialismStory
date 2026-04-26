@@ -42,12 +42,16 @@ export class HackScene extends SceneBase {
     
     this.loadImages();
     
-    // Load subtitles for this scene
-    subtitleManager.loadSubtitles(subtitles.hackScene);
-    
-    // Load audio zones for this scene
+    // Delay subtitles to sync with camera movement start (4-5 seconds)
+    setTimeout(() => {
+      subtitleManager.loadSubtitles(subtitles.hackScene);
+    }, 4500);
+    // Audio is started via startAudio(), called by SceneManager when movement begins
+  }
+
+  // Called by SceneManager exactly when auto-move begins so audio is tied to movement
+  startAudio() {
     sceneAudioManager.loadAudioZones(hackSceneAudioZones);
-  
   }
 
   async createBackgroundVideoWalls() {
@@ -64,10 +68,7 @@ export class HackScene extends SceneBase {
 
     try {
       await bgVideo.play();
-      console.log('Background video loaded:', hackBackgroundVideo);
-    } catch (err) {
-      console.warn('Background video autoplay failed:', err);
-    }
+    } catch (_) {}
 
     const bgVideoTexture = new THREE.VideoTexture(bgVideo);
     bgVideoTexture.minFilter = THREE.LinearFilter;
@@ -198,9 +199,7 @@ export class HackScene extends SceneBase {
 
       try {
         await video.play();
-      } catch (err) {
-        console.warn(`Video autoplay failed for ${videoPath}:`, err);
-      }
+      } catch (_) {}
 
       const videoTexture = new THREE.VideoTexture(video);
       videoTexture.minFilter = THREE.LinearFilter;
@@ -212,8 +211,6 @@ export class HackScene extends SceneBase {
     }));
 
     this.imageTextures = [...loadedTextures, ...videoTextures];
-
-    console.log(`Loaded ${loadedTextures.length} images and ${videoTextures.length} videos for hack corridor`);
 
     this.generateImageWalls();
   }
@@ -428,7 +425,7 @@ export class HackScene extends SceneBase {
   }
 
   setStartPosition(camera) {
-    camera.position.set(0, 5, 25);
+    camera.position.set(0, 5, 35);  // Z increased to move camera further back
     camera.rotation.set(0, 0, 0);
   }
 

@@ -15,6 +15,8 @@ export function createControls(camera, domElement) {
   
   // Movement pause for text displays
   let movementPaused = false;
+  let photoInteractionMode = false;
+  let photoInteractionSuppressed = false;
   
   // Create rotation limit fog overlays
   const leftFogOverlay = document.createElement('div');
@@ -35,13 +37,8 @@ export function createControls(camera, domElement) {
   
   // Breathing animation
   let breathingTime = 0;
-  const breathingSpeed = 2;
-  const breathingAmount = 0.03;
-  
-  // Idle sway animation
-  let swayTime = 0;
-  const swaySpeed = 0.5;
-  const swayAmount = 0.008;
+  const breathingSpeed = 2;  // Increase this value for faster breathing
+  const breathingAmount = 0.05;  // Increase this value for stronger wobble effect
 
   // Rotation detection for memory text trigger
   let memoryTextShowing = false; // Track if memory text is currently displayed
@@ -110,9 +107,13 @@ export function createControls(camera, domElement) {
     }
   }
 
-  document.addEventListener('mousemove', () => {
+  document.addEventListener('mousemove', (event) => {
     if (controls.isLocked) {
       requestAnimationFrame(clampRotation);
+    }
+
+    if (photoInteractionMode && controls.isLocked) {
+      archiveImagesManager.nudgePointer(event.movementX, event.movementY);
     }
   });
 
@@ -144,16 +145,15 @@ export function createControls(camera, domElement) {
 
     if (controls.aerialViewActive) return;
 
-    // Breathing and sway animations - always active (even when movement paused)
+    // Breathing animation - always active (even when movement paused)
     breathingTime += 0.016;
-    swayTime += 0.016;
     const breathingOffset = Math.sin(breathingTime * breathingSpeed) * breathingAmount;
-    const swayOffset = Math.sin(swayTime * swaySpeed) * swayAmount;
     
-    camera.position.y = cameraHeight + breathingOffset + swayOffset;
+    camera.position.y = cameraHeight + breathingOffset;
     
     // Detect rotation and trigger memory text
     checkRotationForMemoryText();
+    updatePhotoInteractionMode();
   }
 
   controls.update = update;
@@ -207,6 +207,74 @@ export function createControls(camera, domElement) {
       }
     }
   }
+
+  function isWithinArchivePhotoZone() {
+    return camera.position.z <= 0 && camera.position.z > -600;
+  }
+
+  function setPhotoInteractionMode(enabled, options = {}) {
+    const { relock = false, suppressUntilRotateAway = false } = options;
+
+    if (photoInteractionMode === enabled) {
+      if (!enabled && relock && controlsEnabled && !controls.isLocked) {
+        controls.lock();
+      }
+      return;
+    }
+
+    photoInteractionMode = enabled;
+    document.body.classList.toggle('photo-pointer-mode', enabled);
+
+    if (enabled) {
+      archiveImagesManager.resetPointer();
+    }
+
+    if (!enabled && suppressUntilRotateAway) {
+      photoInteractionSuppressed = true;
+    }
+
+    if (!enabled && relock && controlsEnabled && !controls.isLocked) {
+      controls.lock();
+    }
+
+    if (!enabled && window.setArchivePhotoFocusState) {
+      window.setArchivePhotoFocusState(false, null);
+    }
+  }
+
+  function updatePhotoInteractionMode() {
+    if (!controlsEnabled || autoMoveEnabled || movementPaused || controls.aerialViewActive) {
+      if (photoInteractionMode) {
+        setPhotoInteractionMode(false);
+      }
+      return;
+    }
+
+    if (!archiveImagesManager.hasDisplayedAnyPhotos() || !isWithinArchivePhotoZone()) {
+      if (photoInteractionMode) {
+        setPhotoInteractionMode(false);
+      }
+      return;
+    }
+
+    const normalizedRotation = Math.abs(camera.rotation.y) / HORIZONTAL_LIMIT;
+    const atPhotoWall = normalizedRotation >= LIMIT_THRESHOLD;
+
+    if (!atPhotoWall) {
+      photoInteractionSuppressed = false;
+    }
+
+    if (photoInteractionSuppressed) {
+      if (photoInteractionMode) {
+        setPhotoInteractionMode(false);
+      }
+      return;
+    }
+
+    if (controls.isLocked && atPhotoWall) {
+      setPhotoInteractionMode(true);
+    }
+  }
   
   // Aerial view flag (used to disable position overrides)
   controls.aerialViewActive = false;
@@ -222,14 +290,21 @@ export function createControls(camera, domElement) {
   let controlsEnabled = true;
   function setControlsEnabled(enabled) {
     controlsEnabled = enabled;
+    if (!enabled && photoInteractionMode) {
+      setPhotoInteractionMode(false);
+    }
     if (!enabled && controls.isLocked) {
       controls.unlock();
     }
   }
 
   document.addEventListener('click', () => {
-    // Don't lock pointer when auto-move is enabled
-    if (controlsEnabled && !autoMoveEnabled) {
+    if (photoInteractionMode) {
+      return;
+    }
+
+    // Allow pointer lock in hackScene (auto-move) too, so user can look around
+    if (controlsEnabled || autoMoveEnabled) {
       controls.lock();
     }
   });
@@ -244,6 +319,8 @@ export function createControls(camera, domElement) {
 
   controls.setControlsEnabled = setControlsEnabled;
   controls.getControlsEnabled = () => controlsEnabled;
+  controls.setPhotoInteractionMode = setPhotoInteractionMode;
+  controls.isPhotoInteractionMode = () => photoInteractionMode;
   
   // Expose pause movement function globally for text display manager
   window.pauseUserMovement = function(shouldPause) {

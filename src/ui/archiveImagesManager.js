@@ -8,13 +8,51 @@ export class ArchiveImagesManager {
     this.displayedImages = new Set();
     this.activeImageMeshes = [];
     this.scene = null;
+    this.camera = null;
     this.imageHeight = 2; // Base height for images
     this.wallDistance = 4; // Distance from center path
+    this.raycaster = new THREE.Raycaster();
+    this.pointer = new THREE.Vector2(2, 2);
+    this.focusedMesh = null;
+    this.isModalOpen = false;
+    this.domElement = null;
+    this.boundHandleClick = this.handleClick.bind(this);
+    this.boundHandlePointerMove = this.handlePointerMove.bind(this);
   }
   
   // Initialize with a Three.js scene
-  init(scene) {
+  init(scene, camera) {
     this.scene = scene;
+    this.camera = camera;
+    this.domElement = document.querySelector('canvas');
+    this.resetPointer();
+    document.removeEventListener('click', this.boundHandleClick);
+    window.removeEventListener('mousemove', this.boundHandlePointerMove);
+    document.addEventListener('click', this.boundHandleClick);
+    window.addEventListener('mousemove', this.boundHandlePointerMove);
+  }
+
+  syncPointerCursor() {
+    const x = `${((this.pointer.x + 1) * 50).toFixed(2)}%`;
+    const y = `${((1 - this.pointer.y) * 50).toFixed(2)}%`;
+    document.documentElement.style.setProperty('--archive-photo-cursor-x', x);
+    document.documentElement.style.setProperty('--archive-photo-cursor-y', y);
+  }
+
+  resetPointer() {
+    this.pointer.set(0, 0);
+    this.syncPointerCursor();
+  }
+
+  nudgePointer(deltaX, deltaY) {
+    if (!this.domElement) {
+      return;
+    }
+
+    const rect = this.domElement.getBoundingClientRect();
+    this.pointer.x = THREE.MathUtils.clamp(this.pointer.x + ((deltaX / rect.width) * 2), -1, 1);
+    this.pointer.y = THREE.MathUtils.clamp(this.pointer.y - ((deltaY / rect.height) * 2), -1, 1);
+    this.syncPointerCursor();
   }
   
   // Load images configuration for a specific scene
@@ -54,8 +92,10 @@ export class ArchiveImagesManager {
   
   // Show a new image as a Three.js plane
   showImage(imageConfig, cameraZ) {
-    if (!this.scene) {
-      console.warn('Archive images manager: Scene not initialized');
+    if (!this.scene) return;
+
+    if (!imageConfig?.src) {
+      this.displayedImages.add(imageConfig.trigger);
       return;
     }
     
@@ -99,9 +139,7 @@ export class ArchiveImagesManager {
     video.setAttribute('webkit-playsinline', 'true');
     
     // Try to play the video
-    video.play().catch(err => {
-      console.warn('Archive video autoplay failed:', err);
-    });
+    video.play().catch(() => {});
     
     const videoTexture = new THREE.VideoTexture(video);
     videoTexture.minFilter = THREE.LinearFilter;
@@ -162,6 +200,7 @@ export class ArchiveImagesManager {
     
     // Store metadata for updates
     mesh.userData = {
+      imageConfig,
       trigger: imageConfig.trigger,
       side: side,
       baseY: yPosition,
@@ -169,7 +208,9 @@ export class ArchiveImagesManager {
       zOffsetFromCamera: zOffsetFromCamera, // Store offset to follow camera
       time: 0,
       fadeInProgress: 0, // Track fade-in animation (0 to 1)
-      videoElement: videoElement // Store video element if it's a video
+      videoElement: videoElement, // Store video element if it's a video
+      focusAmount: 0,
+      baseScale: new THREE.Vector3(1, 1, 1)
     };
     
     this.scene.add(mesh);
@@ -204,7 +245,82 @@ export class ArchiveImagesManager {
       } else {
         mesh.position.x = userData.baseX + horizontalSway;
       }
+
+      const isFocused = this.focusedMesh === mesh;
+      userData.focusAmount += ((isFocused ? 1 : 0) - userData.focusAmount) * 0.12;
+      const focusScale = 1 + userData.focusAmount * 0.08;
+      mesh.scale.setScalar(focusScale);
+      mesh.material.emissiveIntensity = 0.6 + userData.focusAmount * 0.55;
     });
+
+    this.updateFocusedMesh();
+  }
+
+  updateFocusedMesh() {
+    if (!this.camera || this.isModalOpen || this.activeImageMeshes.length === 0) {
+      this.setFocusedMesh(null);
+      return;
+    }
+
+    if (!window.isArchivePhotoPointerMode || !window.isArchivePhotoPointerMode()) {
+      this.setFocusedMesh(null);
+      return;
+    }
+
+    this.raycaster.setFromCamera(this.pointer, this.camera);
+    const intersections = this.raycaster.intersectObjects(this.activeImageMeshes, false);
+    this.setFocusedMesh(intersections[0]?.object || null);
+  }
+
+  handlePointerMove(event) {
+    if (!this.domElement || !window.isArchivePhotoPointerMode || !window.isArchivePhotoPointerMode()) {
+      return;
+    }
+
+    if (document.pointerLockElement === this.domElement) {
+      return;
+    }
+
+    const rect = this.domElement.getBoundingClientRect();
+    this.pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    this.pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    this.syncPointerCursor();
+  }
+
+  setFocusedMesh(mesh) {
+    this.focusedMesh = mesh;
+
+    if (window.setArchivePhotoFocusState) {
+      window.setArchivePhotoFocusState(Boolean(mesh), mesh?.userData?.imageConfig || null);
+    }
+  }
+
+  handleClick(event) {
+    if (!window.isArchivePhotoPointerMode || !window.isArchivePhotoPointerMode() || this.isModalOpen) {
+      return;
+    }
+
+    if (!this.focusedMesh) {
+      window.setArchivePhotoPointerMode?.(false, { relock: true, suppressUntilRotateAway: true });
+      return;
+    }
+
+    const { imageConfig } = this.focusedMesh.userData;
+    if (!imageConfig || !window.showArchivePhotoOverlay) {
+      return;
+    }
+
+    this.isModalOpen = true;
+    this.setFocusedMesh(null);
+    window.showArchivePhotoOverlay(imageConfig);
+  }
+
+  setModalOpen(isOpen) {
+    this.isModalOpen = isOpen;
+
+    if (!isOpen) {
+      this.updateFocusedMesh();
+    }
   }
   
   // Check if any photos have been displayed
@@ -215,6 +331,12 @@ export class ArchiveImagesManager {
   // Clear all images
   clear() {
     if (!this.scene) return;
+
+    document.removeEventListener('click', this.boundHandleClick);
+    window.removeEventListener('mousemove', this.boundHandlePointerMove);
+    this.setModalOpen(false);
+    this.setFocusedMesh(null);
+    this.resetPointer();
     
     this.currentImages = [];
     this.displayedImages.clear();

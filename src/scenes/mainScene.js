@@ -72,6 +72,7 @@ export class MainScene extends SceneBase {
     this.scene5Generated = false;
     this.scene6Generated = false;
     this.scene7Generated = false;
+    this.endCreditsShown = false;
     this.treeBatches = {};
     this.tropicalTreeBatches = {}; // Unused for Scene 5 (ocean) - kept for compatibility
     this.scene6TreeBatches = {}; // Batches for tropical trees in Scene 6
@@ -179,31 +180,37 @@ export class MainScene extends SceneBase {
     
     // Initialize and load archive images for MainScene
     archiveImagesManager.clear(); // Clear any previous state
-    archiveImagesManager.init(this); // Pass the scene to the manager
+    archiveImagesManager.init(this, camera); // Pass the scene and camera to the manager
     archiveImagesManager.loadImages(archiveImages.mainScene);
     // Note: Don't call update() here - camera position will be reset after transition
     // The first update() will be called in the game loop with the correct camera position
     
     // Initialize text display manager
     textDisplayManager.init(this, camera);
+
+    const getBreakText = (key, fallbackSceneKey) => {
+      const bulkEntry = subtitles[key]?.[0]?.text;
+      const fallbackEntry = subtitles[fallbackSceneKey]?.[0]?.text;
+      return bulkEntry || fallbackEntry || '';
+    };
     
     // Load bulk text displays with trigger points
     const bulkTextDisplays = [
       {
         trigger: -100, // Between Scene 1 and 2
-        text: subtitles.bulkText1[0].text,
+        text: getBreakText('bulkText1', 'scene2'),
         direction: 'left',
         image: './imgs/breakText1.png'
       },
       {
         trigger: -200, // Between Scene 2 and 3
-        text: subtitles.bulkText2[0].text,
+        text: getBreakText('bulkText2', 'scene3'),
         direction: 'right',
         image: './imgs/breakText2.png'
       },
       {
         trigger: -300, // Between Scene 3 and 4
-        text: subtitles.bulkText3[0].text,
+        text: getBreakText('bulkText3', 'scene4'),
         direction: 'left',
         image: './imgs/breakText3.png'
       }
@@ -521,12 +528,9 @@ export class MainScene extends SceneBase {
           volcano.scale.set(config.scale.x, config.scale.y, config.scale.z);
           this.add(volcano);
           this.scene5Objects.push(volcano);
-          console.log(`Loaded ${config.file} successfully at`, volcano.position);
         },
         undefined,
-        (error) => {
-          console.error(`Error loading ${config.file}:`, error);
-        }
+        () => {}
       );
     });
   }
@@ -776,9 +780,7 @@ export class MainScene extends SceneBase {
 
       try {
         await video.play();
-      } catch (err) {
-        console.warn(`Scene 7 video autoplay failed for ${videoPath}:`, err);
-      }
+      } catch (_) {}
 
       const videoTexture = new THREE.VideoTexture(video);
       videoTexture.minFilter = THREE.LinearFilter;
@@ -790,8 +792,6 @@ export class MainScene extends SceneBase {
     }));
 
     this.scene7ImageTextures = [...loadedTextures, ...videoTextures];
-
-    console.log(`Scene 7: Loaded ${loadedTextures.length} images and ${videoTextures.length} videos`);
 
     // Generate image walls
     this.generateScene7ImageWalls(scene7Start, corridorLength, wallDistance, imageSpacing, imageHeight);
@@ -811,10 +811,7 @@ export class MainScene extends SceneBase {
 
     try {
       await bgVideo.play();
-      console.log('Scene 7 background video loaded:', hackBackgroundVideo);
-    } catch (err) {
-      console.warn('Scene 7 background video autoplay failed:', err);
-    }
+    } catch (_) {}
 
     const bgVideoTexture = new THREE.VideoTexture(bgVideo);
     bgVideoTexture.minFilter = THREE.LinearFilter;
@@ -1064,8 +1061,6 @@ export class MainScene extends SceneBase {
     if (this.scene1Disposed) return;
     this.scene1Disposed = true;
     
-    console.log('Disposing Scene 1 objects');
-    
     // Dispose polar bears
     this.polarBears.forEach(bear => {
       this.disposeObject(bear.mesh);
@@ -1080,8 +1075,6 @@ export class MainScene extends SceneBase {
   disposeScene2() {
     if (this.scene2Disposed) return;
     this.scene2Disposed = true;
-    
-    console.log('Disposing Scene 2 objects');
     
     // Dispose trees
     this.trees.forEach(tree => this.disposeObject(tree));
@@ -1102,8 +1095,6 @@ export class MainScene extends SceneBase {
     if (this.scene3Disposed) return;
     this.scene3Disposed = true;
     
-    console.log('Disposing Scene 3 objects');
-    
     // Dispose hilly shader grass
     if (this.hillyShaderGrass) {
       const terrain = this.hillyShaderGrass.getTerrain();
@@ -1122,8 +1113,6 @@ export class MainScene extends SceneBase {
     if (this.scene4Disposed) return;
     this.scene4Disposed = true;
     
-    console.log('Disposing Scene 4 objects');
-    
     // Dispose all tracked Scene 4 objects
     this.scene4Objects.forEach(obj => this.disposeObject(obj));
     this.scene4Objects = [];
@@ -1132,8 +1121,6 @@ export class MainScene extends SceneBase {
   disposeScene5() {
     if (this.scene5Disposed) return;
     this.scene5Disposed = true;
-    
-    console.log('Disposing Scene 5 objects');
     
     // Dispose ocean shader
     if (this.oceanShader) {
@@ -1155,8 +1142,6 @@ export class MainScene extends SceneBase {
   disposeScene6() {
     if (this.scene6Disposed) return;
     this.scene6Disposed = true;
-    
-    console.log('Disposing Scene 6 objects');
     
     // Dispose tropical trees
     this.scene6Trees.forEach(tree => this.disposeObject(tree));
@@ -1301,14 +1286,14 @@ export class MainScene extends SceneBase {
     if (this.currentScene >= 7) this.disposeScene5();
 
     // Generate Scene 2 when approaching (10 units before boundary)
-    if (!this.scene2Generated && userPosition.z < -90) {
+    if (!this.scene2Generated && userPosition.z < -50) {
       this.buildScene2();
       // Load Scene 2 subtitles
       subtitleManager.loadSubtitles(subtitles.scene2);
     }
 
     // Generate Scene 3 when approaching (10 units before boundary)
-    if (!this.scene3Generated && userPosition.z < -190) {
+    if (!this.scene3Generated && userPosition.z < -150) {
       this.buildScene3();
       // Load Scene 3 subtitles
       subtitleManager.loadSubtitles(subtitles.scene3);
@@ -1469,6 +1454,14 @@ export class MainScene extends SceneBase {
           texture.needsUpdate = true;
         }
       });
+    }
+
+    if (!this.endCreditsShown && userPosition.z < -690) {
+      this.endCreditsShown = true;
+
+      if (window.showCreditsOverlay) {
+        window.showCreditsOverlay();
+      }
     }
   }
 }

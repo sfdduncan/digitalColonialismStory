@@ -1,33 +1,16 @@
-// Scene Audio Manager - handles background audio with z-index zones and crossfading
+// Scene Audio Manager - handles background audio with z-position zones and crossfading
 
 export class SceneAudioManager {
   constructor() {
     this.audioZones = [];
-    this.activeAudioElements = new Map(); // Track playing audio by zone id
+    this.activeAudioElements = new Map();
     this.currentZoneId = null;
-    
-   
     this.masterVolume = 0.7;
-    
-    // Fade distance in world units
-    // LINE TO EDIT: How far before/after zone boundary should crossfade occur
-    // Larger = smoother/longer fade, Smaller = quicker transition
     this.fadeDistance = 15;
-    
-    // Fade curve type: 'linear', 'exponential', or 'cosine'
-    // LINE TO EDIT: Change fade curve for different feel
-    // 'linear' = constant fade rate
-    // 'exponential' = quick start, slow end (more natural)
-    // 'cosine' = smooth S-curve (smoothest)
     this.fadeCurve = 'cosine';
   }
   
-  // ========================================
-  // AUDIO ZONES SETUP
-  // Call this to define your scene audio zones
-  // ========================================
   loadAudioZones(zonesConfig) {
-    
     this.audioZones = zonesConfig || [];
     this.preloadAudio();
   }
@@ -76,9 +59,7 @@ export class SceneAudioManager {
         
         // Start playback if not already playing
         if (audio.paused) {
-          audio.play().catch(err => {
-            console.warn(`Auto-play blocked for ${zone.id}. User interaction may be required.`, err);
-          });
+          audio.play().catch(() => {});
         }
       } else {
         // This zone should be silent/stopped
@@ -129,61 +110,32 @@ export class SceneAudioManager {
     return 0.0;
   }
   
-  // Apply fade curve to normalized value (0-1)
   applyFadeCurve(value) {
-    // LINE TO EDIT: Modify fade curve behavior here if needed
     switch (this.fadeCurve) {
-      case 'linear':
-        return value;
-      
-      case 'exponential':
-        // Exponential curve (ease-in-out)
-        return value * value;
-      
-      case 'cosine':
-        // Smooth cosine curve
-        return (1 - Math.cos(value * Math.PI)) / 2;
-      
-      default:
-        return value;
+      case 'linear': return value;
+      case 'exponential': return value * value;
+      case 'cosine': return (1 - Math.cos(value * Math.PI)) / 2;
+      default: return value;
     }
   }
   
-  // Set audio volume with smooth transitions
   setAudioVolume(audio, targetVolume) {
-    // Clamp volume between 0 and 1
     targetVolume = Math.max(0, Math.min(1, targetVolume));
-    
-    // Smooth volume changes to avoid clicking
     const currentVolume = audio.volume;
-    const volumeDiff = targetVolume - currentVolume;
-    const smoothingFactor = 0.1; // LINE TO EDIT: Lower = smoother but slower response
-    
-    audio.volume = currentVolume + (volumeDiff * smoothingFactor);
-    
-    // Snap to target if very close
-    if (Math.abs(audio.volume - targetVolume) < 0.01) {
-      audio.volume = targetVolume;
-    }
+    const smoothingFactor = 0.1;
+    audio.volume = currentVolume + ((targetVolume - currentVolume) * smoothingFactor);
+    if (Math.abs(audio.volume - targetVolume) < 0.01) audio.volume = targetVolume;
   }
   
-  
-  // Set master volume
   setMasterVolume(volume) {
-    // LINE TO EDIT: Call this method to change master volume at runtime
     this.masterVolume = Math.max(0, Math.min(1, volume));
   }
-  
-  // Mute/unmute all audio
+
   muteAll() {
-    this.activeAudioElements.forEach(audio => {
-      audio.volume = 0;
-    });
+    this.activeAudioElements.forEach(audio => { audio.volume = 0; });
   }
-  
-  unmuteAll() {
-    // Volumes will restore on next update() call
-  }
+
+  unmuteAll() {}
   
   // Stop all audio and reset
   stopAll() {

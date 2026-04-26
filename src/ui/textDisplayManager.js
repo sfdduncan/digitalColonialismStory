@@ -169,7 +169,6 @@ export class TextDisplayManager {
         // Store reference for later updates
         material.userData.shader = shader;
 
-        // ── VERTEX SHADER ──────────────────────────────────────────────
 
         // 1. Declare our own UV varying alongside Three's built-in uv pars
         shader.vertexShader = shader.vertexShader.replace(
@@ -232,7 +231,6 @@ export class TextDisplayManager {
           `
         );
 
-        // ── FRAGMENT SHADER ────────────────────────────────────────────
 
         // 5. Declare the matching varying in the fragment shader
         shader.fragmentShader = shader.fragmentShader.replace(

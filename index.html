@@ -42,6 +42,81 @@
   <!-- Flash transition overlay -->
   <div id="flash-transition"></div>
 
+  <!-- Fade to scene transition -->
+  <div id="fade-to-scene"></div>
+
+  <!-- Content warning screen overlay -->
+  <div id="content-warning-overlay">
+    <div class="content-warning-container">
+      <p class="warning-intro fade-in-line" style="animation-delay: 0s;">
+        This experience attempts to grapple with decolonial hacktivism as a form of resistance,<br>
+        connected to a larger history of Indigenous refusal against colonial structures<br>
+        that has manifested and continues to manifest today.
+      </p>
+      
+      <div class="warning-item fade-in-line" style="animation-delay: 1s;">
+        <div class="warning-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <p class="warning-text">
+          It will take about 10 minutes<br>
+          of your time.
+        </p>
+      </div>
+      
+
+      <div class="warning-item fade-in-line" style="animation-delay: 2.4s;">
+        <div class="warning-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+            <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+          </svg>
+        </div>
+        <p class="warning-text">
+          The use of headphones<br>
+          is highly recommended for this experience.
+        </p>
+      </div>
+      
+      <p class="press-key-continue fade-in-line" style="animation-delay: 3.2s;">
+        Press any key to continue
+      </p>
+    </div>
+  </div>
+
+  <div id="credits-overlay" aria-hidden="true">
+    <button id="credits-close" aria-label="Close credits">&times;</button>
+    <div class="credits-window">
+      <div id="credits-roll" class="credits-roll"></div>
+    </div>
+    <p class="credits-hint">Press Escape to close</p>
+  </div>
+
+  <div id="photo-focus-reticle" aria-hidden="true">
+    <span class="photo-focus-dot"></span>
+  </div>
+
+  <div id="archive-photo-overlay" aria-hidden="true">
+    <div class="archive-photo-window">
+      <button id="archive-photo-close" aria-label="Close photo details">&times;</button>
+      <div class="archive-photo-media-panel">
+        <img id="archive-photo-image" alt="" />
+      </div>
+      <div class="archive-photo-text-panel">
+        <p id="archive-photo-kicker">Archival image</p>
+        <h2 id="archive-photo-title"></h2>
+        <p id="archive-photo-meta"></p>
+        <p id="archive-photo-citation" hidden>
+          Citation: <a id="archive-photo-citation-link" href="#" target="_blank" rel="noopener noreferrer"></a>
+        </p>
+        <p id="archive-photo-description"></p>
+      </div>
+    </div>
+  </div>
+
 <script type="module">
   import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js';
 </script>
