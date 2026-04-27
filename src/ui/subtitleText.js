@@ -60,7 +60,7 @@ export const subtitles = {
     },
     {
       trigger: -170,
-      text: "As Glen Sean Coulthard has argued, colonial domination has always been structurally committed to maintaining access to Indigenous land and resources, whether through force, fraud, or the more conciliatory politics of recognition. The mechanisms changed. The underlying logic did not."
+      text: "As Glen Sean Coulthard has argued, colonial domination has always been structurally committed to maintaining access to Indigenous land and resources, whether through force, fraud, or the more conciliatory politics of recognition. Despite changing mechanisms, the underlying logic continued."
     },
     {
       trigger: -200,

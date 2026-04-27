@@ -421,7 +421,7 @@
     width: 44px;
     height: 44px;
     border: none;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.01);
     color: #ffffff;
     font-size: 2rem;
     line-height: 1;
@@ -440,7 +440,7 @@
     align-items: stretch;
     justify-content: center;
     min-height: 100%;
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.01);
   }
 
   #archive-photo-image {
@@ -708,6 +708,32 @@
 
 .credits-roll.animate {
   animation: creditsRollUp 42s linear forwards;
+}
+
+#credits-thankyou {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: absolute;
+  inset: 0;
+  opacity: 1;
+  transition: opacity 1.2s ease;
+}
+
+#credits-thankyou.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.credits-thankyou-text {
+  font-family: 'Host Grotesk', sans-serif;
+  font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  color: #ffffff;
+  text-align: center;
+  animation: fadeInUp 1.8s ease forwards;
 }
 
 .credits-heading {

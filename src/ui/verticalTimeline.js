@@ -15,87 +15,87 @@ const timelineEvents = [
     title: "European Colonization",
     description: "European powers begin systematic dismantling of Indigenous life, land, and knowledge across the Americas",
     side: "right",
-    revealTrigger: -60
+    revealTrigger: -95
   },
   {
     id: 3,
-    year: "Late 1800s",
-    title: "United Fruit Company",
-    description: "Maya Q'eqchi' communities dispossessed as United Fruit Company accumulates vast tracts of territory in Guatemala",
+    year: "1866",
+    title: "Red Cloud's War",
+    description: "Lakota, Cheyenne, and Arapaho forces compel the US to sign the Fort Laramie Treaty on Indigenous terms",
     side: "left",
-    revealTrigger: -110
+    revealTrigger: -225
   },
   {
     id: 4,
-    year: "1866",
-    title: "Fort Laramie Treaty",
-    description: "Red Cloud's alliance of Lakotas, Cheyennes, and Arapahos compels US to sign treaty on Indigenous terms",
+    year: "1890",
+    title: "Wounded Knee Massacre",
+    description: "US forces massacre Lakota people amid repression of the Ghost Dance movement",
     side: "right",
-    revealTrigger: -210
+    revealTrigger: -263
   },
   {
     id: 5,
-    year: "1954",
-    title: "CIA Coup in Guatemala",
-    description: "CIA removes President Jacobo Árbenz at behest of corporate interests",
+    year: "1969",
+    title: "Occupation of Alcatraz",
+    description: "Native activists from multiple nations occupy Alcatraz, building community institutions and asserting sovereignty",
     side: "left",
-    revealTrigger: -130
+    revealTrigger: -275
   },
   {
     id: 6,
-    year: "1960s",
-    title: "Mining Concession",
-    description: "Canadian company obtains Fenix mine concession by lobbying Guatemalan military to suspend constitution",
+    year: "1973",
+    title: "Wounded Knee Occupation",
+    description: "AIM and Oglala Lakota activists hold Wounded Knee for 71 days under treaty-based claims",
     side: "right",
-    revealTrigger: -120
+    revealTrigger: -305
   },
   {
     id: 7,
-    year: "1968",
-    title: "American Indian Movement",
-    description: "AIM founded in Minneapolis to combat police violence and assert Indigenous sovereignty",
+    year: "1977",
+    title: "Indigenous Delegates at the UN",
+    description: "Delegates across the Americas address the UN, demanding recognition of Indigenous peoples and inherent rights",
     side: "left",
-    revealTrigger: -310
+    revealTrigger: -350
   },
   {
     id: 8,
-    year: "1973",
-    title: "Wounded Knee Occupation",
-    description: "AIM and Oglala Sioux stage 71-day armed occupation, declaring independent nation under 1868 Fort Laramie Treaty",
+    year: "2016",
+    title: "Standing Rock",
+    description: "Water protectors from more than 200 tribes mobilize to defend water, land, and sacred sites",
     side: "right",
-    revealTrigger: -330
+    revealTrigger: -405
   },
   {
     id: 9,
-    year: "May 29, 1978",
-    title: "Panzós Massacre",
-    description: "Guatemalan Army murders at least 140 Maya Q'eqchi' people marching to demand land rights",
+    year: "1960s",
+    title: "Fenix Mining Concession",
+    description: "Open-pit nickel extraction is legalized on Maya Q'eqchi' territory through military-state power",
     side: "left",
-    revealTrigger: -160
+    revealTrigger: -472
   },
   {
     id: 10,
-    year: "2016",
-    title: "Standing Rock",
-    description: "Water protectors gather to stop Dakota Access Pipeline using encampment, legal challenge, prayer, and coordinated action",
+    year: "May 29, 1978",
+    title: "Panzós Massacre",
+    description: "Guatemalan Army opens fire on Maya Q'eqchi' marchers demanding recognition of land title",
     side: "right",
-    revealTrigger: -360
+    revealTrigger: -500
   },
   {
     id: 11,
-    year: "Late 1990s-2000s",
-    title: "Digital Extraction",
-    description: "Internet, cloud computing, and AI introduce new dimensions of colonial extraction targeting Indigenous knowledge and data",
+    year: "2010-2013",
+    title: "Hudbay Lawsuits",
+    description: "Maya Q'eqchi' survivors pursue landmark cases in Canadian courts; Ontario allows claims to proceed",
     side: "left",
-    revealTrigger: -410
+    revealTrigger: -540
   },
   {
     id: 12,
     year: "March 2022",
     title: "Guacamaya Breach",
-    description: "Hacktivist collective breaches Fenix nickel project networks, exposing four terabytes of data on working conditions, environmental damage, and corporate violence",
+    description: "Hacktivist collective breaches extractive and military networks, exposing surveillance and violence across Abya Yala",
     side: "right",
-    revealTrigger: -550
+    revealTrigger: -698
   }
 ];
 

@@ -112,10 +112,17 @@
 
   <div id="credits-overlay" aria-hidden="true">
     <button id="credits-close" aria-label="Close credits">&times;</button>
-    <div class="credits-window">
+
+    <!-- Thank you slide (shown first) -->
+    <div id="credits-thankyou">
+      <p class="credits-thankyou-text">Thank You</p>
+    </div>
+
+    <!-- Rolling credits (shown after thank-you auto-transitions) -->
+    <div class="credits-window" id="credits-window" style="display:none;">
       <div id="credits-roll" class="credits-roll"></div>
     </div>
-    <p class="credits-hint">Press Escape to close</p>
+    <p class="credits-hint" id="credits-hint" style="display:none;">Press Escape to close</p>
   </div>
 
   <div id="photo-focus-reticle" aria-hidden="true">

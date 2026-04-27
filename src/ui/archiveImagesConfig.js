@@ -32,18 +32,18 @@ export const archiveImages = {
       description: 'Thule culture evidenced by bow-drill handle found near Arctic Bay, Baffin Island and swimming bird and birdwoman figurines found in the Eastern Arctic.'
     },
 
-    // Scene 2 - Colonial Disruption / Forest Area (z=-100 to z=-200)
+    // Scene 2  
     {
       trigger: -110,
-      src: './imgs/archive_imgs/80sResidentialSchoolProtest.jpeg',
+      src: './imgs/archive_imgs/severedTies.png',
       side: 'left',
       verticalOffset: '50%',
       alt: '',
-      title: '1980s Residential School',
-      artist: '',
-      medium: 'Archival photograph',
-      source: 'https://example.com/citation/trigger--110',
-      description: ''
+      title: 'Severed Ties',
+      artist: 'Avis Charley (Diné/Spirit Lake Dakota)',
+      medium: 'Illustration',
+      source: 'https://www.hcn.org/issues/51-17/',
+      description: 'An original illustration by Spirit Dakota/Navajo artist Avis Charley from High Country News.'
     },
     {
       trigger: -150,

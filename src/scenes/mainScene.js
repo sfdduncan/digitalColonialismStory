@@ -1460,7 +1460,7 @@ export class MainScene extends SceneBase {
       });
     }
 
-    if (!this.endCreditsShown && userPosition.z < -690) {
+    if (!this.endCreditsShown && userPosition.z < -825) {
       this.endCreditsShown = true;
 
       if (window.showCreditsOverlay) {

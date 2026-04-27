@@ -132,11 +132,31 @@ function showCreditsOverlay() {
     window.subtitleManager.hide();
   }
 
-  if (creditsRoll) {
-    creditsRoll.classList.remove('animate');
-    void creditsRoll.offsetWidth;
-    creditsRoll.classList.add('animate');
-  }
+  // Phase 1: show thank-you slide, then auto-transition to rolling credits
+  const thankyouEl = document.getElementById('credits-thankyou');
+  const creditsWindow = document.getElementById('credits-window');
+  const creditsHint = document.getElementById('credits-hint');
+
+  if (thankyouEl) thankyouEl.classList.remove('fade-out');
+  if (creditsWindow) creditsWindow.style.display = 'none';
+  if (creditsHint) creditsHint.style.display = 'none';
+
+  // After 4 seconds fade out the thank-you and start the roll
+  setTimeout(() => {
+    if (thankyouEl) thankyouEl.classList.add('fade-out');
+
+    setTimeout(() => {
+      if (thankyouEl) thankyouEl.style.display = 'none';
+      if (creditsWindow) creditsWindow.style.display = 'flex';
+      if (creditsHint) creditsHint.style.display = 'block';
+
+      if (creditsRoll) {
+        creditsRoll.classList.remove('animate');
+        void creditsRoll.offsetWidth;
+        creditsRoll.classList.add('animate');
+      }
+    }, 1300); // wait for fade-out to finish
+  }, 4000);
 }
 
 function hideCreditsOverlay() {
@@ -202,7 +222,7 @@ function showArchivePhotoOverlay(imageConfig) {
   }
 
   if (archivePhotoKicker) {
-    archivePhotoKicker.textContent = imageConfig.side === 'left' ? 'Left wall archive' : 'Right wall archive';
+    archivePhotoKicker.textContent = '';
   }
 
   if (archivePhotoTitle) {
@@ -274,7 +294,7 @@ function hideArchivePhotoOverlay() {
 renderCredits();
 
 // Load PNG into the container
-fetch('imgs/title_card.png')
+fetch('imgs/titleCardFinal.jpg')
   .then(r => r.blob())
   .then(blob => {
     const url = URL.createObjectURL(blob);

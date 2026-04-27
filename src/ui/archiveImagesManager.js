@@ -187,8 +187,7 @@ export class ArchiveImagesManager {
     const yPosition = height / 2 + (verticalOffsetPercent * 10 - 2) + 2; // +3 makes images higher in scene (ADJUST THIS NUMBER to change height)
     
     // Calculate z offset from camera (how far behind/ahead of camera this should stay)
-    const zOffsetFromCamera = imageConfig.trigger - cameraZ - 2.5; // +3 makes images float alongside/slightly behind camera (ADJUST THIS NUMBER to change forward/backward distance)
-    
+    const zOffsetFromCamera = imageConfig.trigger - cameraZ + 3; // Positive value keeps images slightly ahead so they are easier to notice.
     mesh.position.set(
       xPosition,
       yPosition,
