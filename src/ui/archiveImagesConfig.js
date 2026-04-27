@@ -95,6 +95,20 @@ export const archiveImages = {
       description: 'Ledger art drawn over repurposed historical payroll documents, depicting a traditional dance scene of the Assiniboine and Sioux peoples of the Fort Peck Reservation in Montana. Also titled in Lakota as Wahcinca Wakpa ekta wacipi, the piece layers vibrant indigenous imagery atop the remnants of Western record-keeping, celebrating living cultural tradition on the very paper once used to document and administer reservation life.'
     },
 
+    {
+      trigger: -180, 
+      src: './imgs/archive_imgs/stateNamesII_JaneQuickToSeeSmith.png',
+      side: 'left',
+      verticalOffset: '50%',
+      alt: 'State Names II',
+      title: 'State Names II',
+      artist: 'Jane Quick-To-See Smith (Salish/Kootenai)',
+      medium: 'Oil, collage and mixed media on canvas',
+      source: 'https://americanart.si.edu/artwork/state-names-73858',
+      description: 'Dripping paint and newspaper clippings obscure a map of North America in State Names. The only names left visible are those that stem from indigenous sources. The collaged layers act as sequences of time, partially eclipsing the past while highlighting the injustices endured by Native Americans throughout history.'
+
+    },
+
 
     // Scene 3 - Resistance in Many Forms / Hilly Grassland (z=-200 to z=-300)
     {
@@ -321,27 +335,27 @@ export const archiveImages = {
     },
     {
       trigger: -542,
-      src: '',
-      side: 'left',
-      verticalOffset: '55%',
-      alt: 'Adolfo Ich',
-      title: 'SUGGESTION: Adolfo Ich, community leader and teacher killed September 27 2009. A face, a name, the human cost the subtitles are naming.',
-      artist: 'Archival source',
-      medium: 'Portrait photograph',
-      source: 'https://example.com/citation/trigger--542',
-      description: 'Adolfo Ich Chamán, murdered in front of his family by mine security personnel. One of three cases brought against Hudbay in Canadian courts.'
+      src: 'imgs/hack/FotoEstor.png',
+      side: 'right',
+      verticalOffset: '30%',
+      alt: 'Additional photo of armed protest in El Estor, Guatemala',
+      title: 'Community Leaders in El Estor',
+      artist: 'Maya Pocomam',
+      medium: 'Archival Photograph',
+      source: 'https://www.culturalsurvival.org/news/repression-indigenous-community-leaders-continues-el-estor-guatemala',
+      description: 'Maya Q\'eqchi\' community leaders in El Estor, Guatemala, stand together in solidarity and to discuss the repression they face at the hands of the Fenix Nickel Mine and the Guatemalan government.'
     },
     {
       trigger: -562,
-      src: '',
+      src: 'imgs/archive_imgs/fotoEstor2.png',
       side: 'right',
       verticalOffset: '45%',
-      alt: 'Hudbay lawsuits',
-      title: 'SUGGESTION: Canadian court filing or headline related to Caal v. Hudbay, Choc v. Hudbay, or Chub v. Hudbay. Legislation as resistance.',
+      alt: 'Community meeting in El Estor, Guatemala',
+      title: 'Community meeting in El Estor, Guatemala',
       artist: 'Archival source',
-      medium: 'Documentary image',
-      source: 'https://example.com/citation/trigger--562',
-      description: 'The three lawsuits brought against Hudbay Minerals, the first time a Canadian corporation faced Canadian courts for the actions of its overseas subsidiaries.'
+      medium: 'Archival Photograph',
+      source: 'https://www.culturalsurvival.org/news/repression-indigenous-community-leaders-continues-el-estor-guatemala',
+      description: 'Members of the Maya Q\'eqchi\' community in El Estor, Guatemala, gather for a community meeting.'
     },
 
     // Scene 6 - Guacamaya / Tropical Rainforest (z=-600 to z=-700)
