@@ -38,12 +38,12 @@ export const archiveImages = {
       src: './imgs/archive_imgs/80sResidentialSchoolProtest.jpeg',
       side: 'left',
       verticalOffset: '50%',
-      alt: 'Colonial era image 2',
-      title: 'SUGGESTION: Residential/boarding school exterior or classroom. Aligns with the subtitle about punishing children for speaking their languages.',
-      artist: 'Archival source',
-      medium: 'Colonial-era photograph',
+      alt: '',
+      title: '1980s Residential School',
+      artist: '',
+      medium: 'Archival photograph',
       source: 'https://example.com/citation/trigger--110',
-      description: 'Another colonial image that extends the archive of occupation, categorization, and imposed order across Indigenous land.'
+      description: ''
     },
     {
       trigger: -150,
@@ -157,6 +157,33 @@ export const archiveImages = {
     },
 
     // Scene 4 - Hemispheric / Mountain Pass (z=-300 to z=-400)
+    { 
+      trigger: -305,
+      src: './imgs/archive_imgs/dickBancroftUN2.jpg',
+      side: 'left',
+      verticalOffset: '20%',
+      alt: '', 
+      title: '1977 UN Geneva Conference, Photo 1',
+      artist: 'Dick Bancroft',
+      medium: 'Archival photograph',
+      source: 'https://alleynews.org/2018/10/1977-un-geneva-conference-dick-bancroft-champion-with-a-camera/',
+      description: "Ted Means, Pat Bellanger, and Bill Wahpepah standing at the podium where speeches and over a hundred testimonies of abuse and exploitation were given at the 1977 UN Geneva Conference."
+    }, 
+
+
+    { 
+      trigger: -310,
+      src: './imgs/archive_imgs/dickBancroftUN.jpg',
+      side: 'left',
+      verticalOffset: '20%',
+      alt: '', 
+      title: '1977 UN Geneva Conference, Photo 2',
+      artist: 'Dick Bancroft',
+      medium: 'Archival photograph',
+      source: 'https://alleynews.org/2018/10/1977-un-geneva-conference-dick-bancroft-champion-with-a-camera/',
+      description: "These men photographed and documented by Dick Bancroft are a few of the many representatives attending the 1977 UN Geneva Conference. Left to right Ted Means, Greg Zephier, Russell Means, Oren R. Lyons, Jr., Larry Red Shirt, and Francis Andrew He Crow"
+    }, 
+
     {
       trigger: -315,
       src: './imgs/archive_imgs/zapatista.png',
