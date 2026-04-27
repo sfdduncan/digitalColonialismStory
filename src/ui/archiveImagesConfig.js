@@ -10,56 +10,31 @@ export const archiveImages = {
     // Scene 1 - Precolonial Knowledge / Snowy Area (z=0 to z=-100)
     {
       trigger: -20,
-      src: './imgs/archive_imgs/arctic_precolonial.jpg',
+      src: './imgs/archive_imgs/circleOfLife_QavavauManumie.jpg',
       side: 'left',
       verticalOffset: '20%',
       alt: 'Arctic precolonial landscape',
-      title: 'SUGGESTION: Inuit or Alaska Native people actively on the land, traveling, fishing, or in ceremony. People in relation to place, not empty landscape.',
-      artist: 'Archival source',
+      title: 'Circle of Life',
+      artist: 'Qavavau Manumie',
       medium: 'Historical landscape photograph',
-      source: 'https://example.com/citation/trigger--20',
-      description: 'An expansive Arctic view that frames the land before colonial extraction reshaped the region and its relationships to place.'
+      source: 'https://nativecanadianarts.com/gallery/circle-of-life/',
+      description: 'Drawing by Qavavau Manumie with hunters teaching the young that life is about respect and reciprocity.  Respect animals and they will respect and provide when needed in return.  Good respectful relationship with whales will preserve both continued survival.  Taboos and cultural behaviors are built around this belief.'
     },
     {
       trigger: -40,
-      src: './imgs/archive_imgs/HudsonRiver_Precolonial.jpg',
+      src: './imgs/archive_imgs/thuleCulture.jpg',
       side: 'right',
       verticalOffset: '30%',
-      alt: 'Hudson River precolonial',
-      title: 'SUGGESTION: Indigenous peoples in active relation to a river or waterway. The water as kin, not resource.',
-      artist: 'Archival source',
-      medium: 'Historical landscape image',
-      source: 'https://example.com/citation/trigger--40',
-      description: 'A river landscape presented as part of a world that predates colonial mapping, ownership, and industrial transformation.'
-    },
-    {
-      trigger: -60,
-      src: './imgs/archive_imgs/precolonial_nature.jpg',
-      side: 'left',
-      verticalOffset: '40%',
-      alt: 'Precolonial nature',
-      title: 'SUGGESTION: Indigenous agricultural practice or land stewardship. Knowledge as land management, people as caretakers of specific ecologies.',
-      artist: 'Archival source',
-      medium: 'Historical environmental photograph',
-      source: 'https://example.com/citation/trigger--60',
-      description: 'Dense, living ecologies appear here as a reminder that land held memory, kinship, and governance long before settler narratives.'
+      alt: '',
+      title: 'Thule Culture',
+      medium: 'Drawing',
+      source: 'https://katilvik.com/inuit-art-timeline/',
+      description: 'Thule culture evidenced by bow-drill handle found near Arctic Bay, Baffin Island and swimming bird and birdwoman figurines found in the Eastern Arctic.'
     },
 
     // Scene 2 - Colonial Disruption / Forest Area (z=-100 to z=-200)
     {
       trigger: -110,
-      src: './imgs/archive_imgs/colonial_1.jpg',
-      side: 'right',
-      verticalOffset: '35%',
-      alt: 'Colonial era image 1',
-      title: 'SUGGESTION: Colonial-era land survey, map, or Doctrine of Discovery document. The bureaucratic machinery of dispossession made visible.',
-      artist: 'Archival source',
-      medium: 'Colonial-era photograph',
-      source: 'https://example.com/citation/trigger--110',
-      description: 'A documentary fragment from the colonial period, held here as evidence of how conquest was recorded and normalized visually.'
-    },
-    {
-      trigger: -130,
       src: './imgs/archive_imgs/80sResidentialSchoolProtest.jpeg',
       side: 'left',
       verticalOffset: '50%',
@@ -67,7 +42,7 @@ export const archiveImages = {
       title: 'SUGGESTION: Residential/boarding school exterior or classroom. Aligns with the subtitle about punishing children for speaking their languages.',
       artist: 'Archival source',
       medium: 'Colonial-era photograph',
-      source: 'https://example.com/citation/trigger--130',
+      source: 'https://example.com/citation/trigger--110',
       description: 'Another colonial image that extends the archive of occupation, categorization, and imposed order across Indigenous land.'
     },
     {
@@ -81,18 +56,6 @@ export const archiveImages = {
       medium: 'Historical documentary image',
       source: 'https://example.com/citation/trigger--150',
       description: 'This image marks the Missouri region within a wider geography of settlement, extraction, and displacement.'
-    },
-    {
-      trigger: -170,
-      src: './imgs/archive_imgs/spain_colonial_freeWomen.jpg',
-      side: 'left',
-      verticalOffset: '30%',
-      alt: 'Spanish colonial free women',
-      title: 'SUGGESTION: Indigenous women in collective life under colonial conditions. Everyday persistence as political act.',
-      artist: 'Archival source',
-      medium: 'Historical photograph reproduction',
-      source: 'https://example.com/citation/trigger--170',
-      description: 'A colonial-era image that points to gendered lives and constrained forms of autonomy inside imperial systems.'
     },
 
     // Scene 3 - Resistance in Many Forms / Hilly Grassland (z=-200 to z=-300)
@@ -119,6 +82,18 @@ export const archiveImages = {
       medium: 'Historical photograph or illustration',
       source: 'https://example.com/citation/trigger--240',
       description: 'The Ghost Dance as vision and renewal, a movement the US government feared enough to answer with massacre.'
+    },
+    {
+      trigger: -240,
+      src: './imgs/archive_imgs/ghostDanceDrum_1890s.jpg',
+      side: 'left',
+      verticalOffset: '25%',
+      alt: 'Ghost Dance Drum',
+      title: 'Ghost Dance Drum',
+      artist: 'George Beaver',
+      medium: 'Artifact photograph',
+      source: 'https://www.worldhistory.org/image/18059/ghost-dance-drum/',
+      description: 'a rare artifact from the Ghost Dance movement made by George Beaver (Chahiksichahiks).'
     },
     {
       trigger: -253,
@@ -196,7 +171,7 @@ export const archiveImages = {
     },
     {
       trigger: -330,
-      src: './imgs/archive_imgs/keystone_xl.jpg',
+      src: './imgs/archive_imgs/dapl_proposed_route-650x508.jpg',
       side: 'left',
       verticalOffset: '45%',
       alt: 'Keystone XL protest',
@@ -208,7 +183,7 @@ export const archiveImages = {
     },
     {
       trigger: -348,
-      src: './imgs/archive_imgs/DefendTheSacred.png',
+      src: './imgs/archive_imgs/DefendTheSacre.png',
       side: 'right',
       verticalOffset: '35%',
       alt: 'Defend the Sacred at Standing Rock',

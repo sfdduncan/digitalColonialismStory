@@ -48,42 +48,65 @@
   <!-- Content warning screen overlay -->
   <div id="content-warning-overlay">
     <div class="content-warning-container">
-      <p class="warning-intro fade-in-line" style="animation-delay: 0s;">
-        This experience attempts to grapple with decolonial hacktivism as a form of resistance,<br>
-        connected to a larger history of Indigenous refusal against colonial structures<br>
-        that has manifested and continues to manifest today.
-      </p>
-      
-      <div class="warning-item fade-in-line" style="animation-delay: 1s;">
-        <div class="warning-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/>
-            <polyline points="12 6 12 12 16 14"/>
-          </svg>
+      <div class="content-warning-slide active" data-slide="0">
+        <div class="warning-step active" data-step="0">
+          <p class="warning-note-p">
+            This experience attempts to grapple with decolonial hacktivism as a form of resistance, connected to a larger history of Indigenous refusal against colonial structures that has manifested and continues to manifest today.
+          </p>
         </div>
-        <p class="warning-text">
-          It will take about 10 minutes<br>
-          of your time.
-        </p>
-      </div>
-      
 
-      <div class="warning-item fade-in-line" style="animation-delay: 2.4s;">
-        <div class="warning-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
-            <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
-          </svg>
+        <div class="warning-step" data-step="1">
+          <p class="warning-note-p">
+            This work uses archival images with care and caution. Archives have often recorded Native and Indigenous peoples through colonial lenses that flatten difference, stage people as objects of study, or detach them from the living relations that give those images meaning. Here, the archive is not presented as neutral truth. It is treated critically: as a record of colonial looking, but also as a site where fragments of presence, struggle, memory, and self-representation can still be encountered.
+          </p>
         </div>
-        <p class="warning-text">
-          The use of headphones<br>
-          is highly recommended for this experience.
+
+        <div class="warning-step" data-step="2">
+          <p class="warning-note-p">
+            Some archival material reproduced in this project uses the term &ldquo;Indian.&rdquo; Although that word carries the weight of colonial classification, it is retained only when directly referencing specific archival titles, captions, organizations, or historical documents. At the same time, some people and movements have continued to use the term as an act of reclamation and as a political signifier within their own grounded histories.
+          </p>
+        </div>
+
+        <div class="warning-step" data-step="3">
+          <p class="warning-note-p">
+            The resistance movements invoked here are not interchangeable. Each emerges from distinct lands, nations, languages, legal orders, and histories that remain complex and specific to the people who live them. What can be recognized across them is not sameness, but a recurring commitment to defending land, water, non-human relations, and the Indigenous peoples who continue to live despite sustained colonial attempts to erase them.
+          </p>
+        </div>
+
+        <p class="press-key-continue" id="warning-step-continue">Press any key to continue</p>
+      </div>
+
+      <div class="content-warning-slide" data-slide="1">
+        <div class="warning-item fade-in-line" style="animation-delay: 0s;">
+          <div class="warning-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <p class="warning-text">
+            It will take about 10 minutes<br>
+            of your time.
+          </p>
+        </div>
+
+        <div class="warning-item fade-in-line" style="animation-delay: 0.45s;">
+          <div class="warning-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+              <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+            </svg>
+          </div>
+          <p class="warning-text">
+            The use of headphones<br>
+            is highly recommended for this experience.
+          </p>
+        </div>
+
+        <p class="press-key-continue fade-in-line" style="animation-delay: 0.9s;">
+          Press any key to begin
         </p>
       </div>
-      
-      <p class="press-key-continue fade-in-line" style="animation-delay: 3.2s;">
-        Press any key to continue
-      </p>
     </div>
   </div>
 
@@ -117,10 +140,6 @@
     </div>
   </div>
 
-<script type="module">
-  import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js';
-</script>
-  
   <!-- Entry point -->
     <script type="module" src="main.js"></script>
 

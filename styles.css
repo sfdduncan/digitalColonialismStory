@@ -630,11 +630,12 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.98);
+  background: #000000;
   z-index: 10000;
   display: none;
   align-items: center;
   justify-content: center;
+  overflow-y: auto;
   opacity: 0;
   transition: opacity 0.5s ease-in-out;
 }
@@ -657,7 +658,7 @@
     rgba(0, 0, 0, 0.97);
   color: #fff;
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity 1.5s ease;
 }
 
 #credits-overlay.active {
@@ -768,7 +769,8 @@
 
 .content-warning-container {
   max-width: 800px;
-  padding: 4rem;
+  padding: 4rem 4rem 5rem;
+  margin: 0 auto;
   color: #ffffff;
   font-family: "Host Grotesk", sans-serif;
   display: flex;
@@ -776,13 +778,74 @@
   align-items: center;
 }
 
+.content-warning-slide {
+  display: none;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+}
+
+.content-warning-slide.active {
+  display: flex;
+}
+
 .warning-intro {
-  font-size: 1.25rem;
-  line-height: 1.6;
+  font-size: 1.5rem;
+  line-height: 2;
   margin-bottom: 1rem;
   font-weight: 300;
   letter-spacing: 0.02em;
   text-align: center;
+  color: #ffffff;
+}
+
+.warning-step {
+  display: none;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+}
+
+.warning-step.active {
+  display: flex;
+  animation: fadeInUp 1.2s ease forwards;
+}
+
+#warning-step-continue {
+  opacity: 0;
+  animation: fadeInUp 1s ease 1.4s forwards;
+}
+
+.warning-note-p {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 0 1rem;
+  font-size: 1.15rem;
+  line-height: 1.9;
+  font-weight: 300;
+  letter-spacing: 0.015em;
+  text-align: center;
+  color: #ffffff;
+}
+
+.warning-note {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 0 1rem;
+  font-size: 0.98rem;
+  line-height: 1.8;
+  font-weight: 300;
+  letter-spacing: 0.015em;
+  text-align: center;
+  color: #ffffff;
+}
+
+.warning-note p {
+  margin: 0 0 1rem;
+}
+
+.warning-note p:last-child {
+  margin-bottom: 0;
 }
 
 .warning-item {
@@ -815,15 +878,37 @@
   text-align: left;
   font-weight: 300;
   letter-spacing: 0.02em;
+  color: #ffffff;
 }
 
 .press-key-continue {
   font-size: 1rem;
   margin-top: 4rem;
-  opacity: 0.7;
+  opacity: 1;
   font-weight: 300;
   letter-spacing: 0.05em;
   text-align: center;
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .content-warning-container {
+    padding: 2rem 1.5rem 3rem;
+  }
+
+  .warning-intro {
+    font-size: 1.05rem;
+  }
+
+  .warning-note {
+    font-size: 0.92rem;
+    line-height: 1.7;
+  }
+
+  .warning-item {
+    margin-left: 0;
+    gap: 1rem;
+  }
 }
 
 /* Fade-in animation for each line */

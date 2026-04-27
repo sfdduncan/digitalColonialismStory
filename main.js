@@ -332,10 +332,43 @@ window.isArchivePhotoPointerMode = isArchivePhotoPointerMode;
 
 // --- Content warning screen logic ---
 const contentWarningOverlay = document.getElementById('content-warning-overlay');
+const contentWarningSlides = Array.from(document.querySelectorAll('.content-warning-slide'));
+const warningSteps = Array.from(document.querySelectorAll('.warning-step'));
+const warningStepContinue = document.getElementById('warning-step-continue');
 let contentWarningActive = false;
+let currentContentWarningSlide = 0;
+let currentWarningStep = 0;
+
+function setWarningStep(index) {
+  currentWarningStep = index;
+  warningSteps.forEach((step, i) => {
+    step.classList.toggle('active', i === index);
+  });
+  // Re-trigger the continue hint animation
+  if (warningStepContinue) {
+    warningStepContinue.style.animation = 'none';
+    warningStepContinue.offsetHeight; // reflow
+    warningStepContinue.style.animation = '';
+  }
+}
+
+function setContentWarningSlide(index) {
+  currentContentWarningSlide = index;
+  contentWarningSlides.forEach((slide, slideIndex) => {
+    slide.classList.toggle('active', slideIndex === index);
+  });
+}
 
 function showContentWarning() {
+  if (!contentWarningOverlay) {
+    startGame();
+    return;
+  }
+
   contentWarningActive = true;
+  currentWarningStep = 0;
+  setWarningStep(0);
+  setContentWarningSlide(0);
   contentWarningOverlay.classList.add('active');
 }
 
@@ -374,7 +407,17 @@ window.addEventListener('keydown', (e) => {
   }
   
   if (contentWarningActive) {
-    hideContentWarning();
+    if (currentContentWarningSlide === 0) {
+      if (currentWarningStep < warningSteps.length - 1) {
+        setWarningStep(currentWarningStep + 1);
+      } else {
+        setContentWarningSlide(1);
+      }
+    } else if (currentContentWarningSlide < contentWarningSlides.length - 1) {
+      setContentWarningSlide(currentContentWarningSlide + 1);
+    } else {
+      hideContentWarning();
+    }
     return;
   }
 });
