@@ -12,7 +12,7 @@ export class HackScene extends SceneBase {
     this.camera = camera;
     this.imageWalls = [];
     this.imageTextures = [];
-    this.lastUsedTextures = new Map();
+    this.usedTexturePaths = new Set();
     this.backgroundVideoElements = []; // Track video elements for cleanup
 
     // Scene configuration
@@ -216,6 +216,8 @@ export class HackScene extends SceneBase {
   }
 
   generateImageWalls() {
+    this.usedTexturePaths.clear();
+
     // Calculate positions to span full corridor length
     const corridorStart = 40; // Behind camera
     const corridorEnd = -120; // End of corridor
@@ -225,15 +227,19 @@ export class HackScene extends SceneBase {
     // Start images from beginning of corridor
     const imageStartZ = corridorStart;
 
-    // Place videos prominently near the front of the corridor first
-    // This ensures videos are visible early and not buried under photos
+    // Place each video once near the front so videos are visible and never duplicated.
     const videoTextures = this.imageTextures.filter(t => t.userData.isVideo);
-    if (videoTextures.length > 0) {
-      const videoTexture = videoTextures[0];
-      this.createImageWall(videoTexture, -this.wallDistance - 1, 20, 'left');
-      this.createImageWall(videoTexture, this.wallDistance + 1, 10, 'right');
-      this.createImageWall(videoTexture, -this.wallDistance - 1.5, 0, 'left');
-    }
+    const videoSlots = [
+      { x: -this.wallDistance - 1, z: 20, side: 'left' },
+      { x: this.wallDistance + 1, z: 10, side: 'right' },
+      { x: -this.wallDistance - 1.5, z: 0, side: 'left' },
+      { x: this.wallDistance + 1.5, z: -10, side: 'right' }
+    ];
+    videoTextures.slice(0, videoSlots.length).forEach((videoTexture, index) => {
+      const slot = videoSlots[index];
+      this.createImageWall(videoTexture, slot.x, slot.z, slot.side);
+      this.usedTexturePaths.add(videoTexture.userData.imagePath);
+    });
 
     // Generate corridor wall images (on the sides)
     for (let i = 0; i < numPositions; i++) {
@@ -245,7 +251,7 @@ export class HackScene extends SceneBase {
       const placeRight = Math.random() > 0.2;
 
       if (placeLeft) {
-        const leftTexture = this.getRandomTexture('left-' + i);
+        const leftTexture = this.getRandomTexture();
         if (leftTexture) {
           // Keep images on the left wall, not in the path
           const leftX = -this.wallDistance - Math.random() * 2;
@@ -254,7 +260,7 @@ export class HackScene extends SceneBase {
       }
 
       if (placeRight) {
-        const rightTexture = this.getRandomTexture('right-' + i);
+        const rightTexture = this.getRandomTexture();
         if (rightTexture) {
           // Keep images on the right wall, not in the path
           const rightX = this.wallDistance + Math.random() * 2;
@@ -282,7 +288,7 @@ export class HackScene extends SceneBase {
     const totalRange = imageStartZ - imageEndZ;
 
     for (let i = 0; i < numBeyondImages; i++) {
-      const texture = this.getRandomTexture('beyond-' + i);
+      const texture = this.getRandomTexture();
       if (!texture) continue;
 
       // Position images beyond the corridor walls (far left and right)
@@ -298,25 +304,19 @@ export class HackScene extends SceneBase {
     }
   }
 
-  getRandomTexture(positionKey) {
-    if (this.imageTextures.length === 0) return null;
-    
-    // Get the last used image path for this position
-    const lastPath = this.lastUsedTextures.get(positionKey);
-    let attempts = 0;
-    let texture;
-    
-    // Try to get a texture with a different filename (max 10 attempts)
-    do {
-      const randomIndex = Math.floor(
-        Math.random() * this.imageTextures.length
-      );
-      texture = this.imageTextures[randomIndex];
-      attempts++;
-    } while (texture.userData.imagePath === lastPath && attempts < 10 && this.imageTextures.length > 1);
-    
-    // Store the image path (not the texture object) for comparison
-    this.lastUsedTextures.set(positionKey, texture.userData.imagePath);
+  getRandomTexture() {
+    const availableTextures = this.imageTextures.filter(texture => {
+      const path = texture?.userData?.imagePath;
+      return path && !this.usedTexturePaths.has(path);
+    });
+
+    if (availableTextures.length === 0) {
+      return null;
+    }
+
+    const randomIndex = Math.floor(Math.random() * availableTextures.length);
+    const texture = availableTextures[randomIndex];
+    this.usedTexturePaths.add(texture.userData.imagePath);
     return texture;
   }
 

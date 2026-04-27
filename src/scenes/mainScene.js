@@ -194,7 +194,10 @@ export class MainScene extends SceneBase {
       return bulkEntry || fallbackEntry || '';
     };
     
-    // Load bulk text displays with trigger points
+    // Bulk text overlays are temporarily disabled.
+    // Restore the commented entries below to re-enable between-scene break text.
+    const bulkTextDisplays = [];
+    /*
     const bulkTextDisplays = [
       {
         trigger: -100, // Between Scene 1 and 2
@@ -215,6 +218,7 @@ export class MainScene extends SceneBase {
         image: './imgs/breakText3.png'
       }
     ];
+    */
     textDisplayManager.loadTextDisplays(bulkTextDisplays);
   }
 
