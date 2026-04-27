@@ -31,10 +31,23 @@ export const archiveImages = {
       source: 'https://katilvik.com/inuit-art-timeline/',
       description: 'Thule culture evidenced by bow-drill handle found near Arctic Bay, Baffin Island and swimming bird and birdwoman figurines found in the Eastern Arctic.'
     },
+    {
+      trigger: -60,
+      src: './imgs/archive_imgs/ravenStealstheSun_PresontSingeltary.jpg',
+      side: 'right',
+      verticalOffset: '30%',
+      alt: '',
+      title: 'Raven Steals the Sun',
+      artist: 'Preston Singeltary (Tlingit)',
+      medium: 'Sculpture',
+      source: 'https://www.prestonsingletary.com/commissions/detail/national-museum-of-the-american-indian-raven-steals-the-sun',
+      description: 'The sculpture represents the tribe’s story about the origins of the celestial bodies, in which the trickster animal captures the sun, moon and stars from a greedy chief and releases them into the world. This account emphasizes the importance of oral history among Native American tribes like the Tlingit.'
+    },
+
 
     // Scene 2  
     {
-      trigger: -110,
+      trigger: -100,
       src: './imgs/archive_imgs/severedTies.png',
       side: 'left',
       verticalOffset: '50%',
@@ -46,17 +59,42 @@ export const archiveImages = {
       description: 'An original illustration by Spirit Dakota/Navajo artist Avis Charley from High Country News.'
     },
     {
-      trigger: -150,
-      src: './imgs/archive_imgs/Missouri_Colonial.jpg',
+      trigger: -120,
+      src: './imgs/archive_imgs/nativeHostforWashingtonDC_EdgarHeapOfBirds.jpg',
+      side: 'right',
+      verticalOffset: '40%',
+      alt: '',
+      title: 'Native Host for Alaska',
+      artist: 'Edgar Heap of Birds (Cheyenne/Arapaho)',
+      source: 'https://www.nga.gov/exhibitions/land-carries-our-ancestors-contemporary-art-native-americans',
+      description: 'Edgar Heap of Birds uses language as one of his primary mediums. Their work calls attention to what they call "a past that is no longer visible to us". As part of a larger series of signs across the country, this piece was installed in Alaska in 1988.'
+    },
+    {
+      trigger: -140,
+      src: './imgs/archive_imgs/mountainChief_Blackfeet.jpg',
+      side: 'left',
+      verticalOffset: '45%',
+      alt: 'Mountain Chief, Blackfeet War Leader',
+      title: 'Mountain Chief, Blackfeet War Leader',
+      artist: 'Terrance Guardipee (Blackfeet)',
+      medium: 'Mixed media collage',
+      source: 'https://hoodmuseum.dartmouth.edu/objects/2008.60',
+      description: 'A work of ledger art that layers vibrant Blackfoot imagery, symbols, and the figure of the historic Blackfoot chief Mountain Chief atop a commercial Montana road map and historical American documents. The work is an act of indigenous counter-mapping, reclaiming Blackfoot identity and territory by superimposing cultural stories and cosmology over the Western cartographic materials that once erased them.'
+    },
+
+    {
+      trigger: -160,
+      src: './imgs/archive_imgs/dancingAtPoplarRiver.jpg',
       side: 'right',
       verticalOffset: '45%',
-      alt: 'Missouri colonial',
-      title: 'SUGGESTION: Indigenous community continuing ceremony or daily life during the colonial period. Survival as the counter-image to the school and the map.',
-      artist: 'Archival source',
-      medium: 'Historical documentary image',
-      source: 'https://example.com/citation/trigger--150',
-      description: 'This image marks the Missouri region within a wider geography of settlement, extraction, and displacement.'
+      alt: 'Dancing at Poplar River',
+      title: 'Dancing at Poplar River',
+      artist: 'Darryl Growing Thunder (Assiniboine, Nakota)',
+      medium: 'Colored Pencil and ink on eight page ledger pages',
+      source: 'https://hoodmuseum.dartmouth.edu/objects/2008.61',
+      description: 'Ledger art drawn over repurposed historical payroll documents, depicting a traditional dance scene of the Assiniboine and Sioux peoples of the Fort Peck Reservation in Montana. Also titled in Lakota as Wahcinca Wakpa ekta wacipi, the piece layers vibrant indigenous imagery atop the remnants of Western record-keeping, celebrating living cultural tradition on the very paper once used to document and administer reservation life.'
     },
+
 
     // Scene 3 - Resistance in Many Forms / Hilly Grassland (z=-200 to z=-300)
     {
@@ -66,9 +104,8 @@ export const archiveImages = {
       verticalOffset: '20%',
       alt: 'Red Cloud war',
       title: 'The Indian Battle and Massacre near Fort Philip Kearney',
-      artist: 'Harper Weekly',
-      source: 'https://loc.getarchive.net/media/the-indian-battle-and-massacre-near-fort-philip-kearney-dacotah-sic-territory',
-      citationLabel: 'Library of Congress / GetArchive',
+      artist: 'Library of Congress Prints and Photographs Division',
+      source: 'https://www.loc.gov/pictures/item/2001700334/',
       description: 'Large group of Native Americans on horseback surrounding United States Army soldiers. Illus. in: Harperweekly, v. 11, no. 534 (1867 March 23), p. 180.'
     },
     {
@@ -79,8 +116,8 @@ export const archiveImages = {
       alt: 'Ghost Dance',
       title: 'Ghost Dance',
       artist: 'Frederic Remington',
-      medium: 'Historical photograph or illustration',
-      source: 'https://example.com/citation/trigger--240',
+      medium: 'Historical photograph',
+      source: 'https://www.theatlantic.com/books/archive/2022/12/native-american-history-indigenous-continent-pekka-hamalainen/672600/',
       description: 'The Ghost Dance as vision and renewal, a movement the US government feared enough to answer with massacre.'
     },
     {
@@ -104,7 +141,7 @@ export const archiveImages = {
       title: 'Indian occupiers moments after their removal from Alcatraz',
       artist: 'Ilka Hartmann',
       medium: 'Documentary photograph',
-      source: 'https://example.com/citation/trigger--253',
+      source: 'https://thenaturalhistorymuseum.org/events/the-occupation-of-alcatraz/',
       description: 'On Nov. 20, 1969, 78 Indians landed on Alcatraz Island in San Francisco Bay and occupied the island. They called themselves "Indians of All Tribes" and issued a proclamation, "We Hold the Rock." Left: Oohosis, Cree from Canada. Right: Peggy Lee Ellenwood, Sioux from Wolf Point, Montana.'
     },
     {
@@ -116,7 +153,7 @@ export const archiveImages = {
       title: 'Moment from American Indian Movement',
       artist: 'American Indian Movement',
       medium: 'Movement photograph',
-      source: 'https://example.com/citation/trigger--263',
+      source: 'https://americanindian.si.edu/collections-search/edan-record/ead_collection%3Asova-nmai-ac-449',
       description: 'The American Indian Movement, also known as AIM, was founded in July 1968 in Minneapolis, Minnesota by Dennis Banks, Clyde Bellecourt, Vernon Bellecourt, and Russell Means. The civil rights group focused on the violence, discrimination, and poverty faced by American Indians as well as larger tribal issues including treaty rights and cultural preservation. This image portrays AIM Leonard Crow Dog, Dennis Banks, Leonard Peltier, and John Trudell.'
     },
     {
@@ -127,8 +164,8 @@ export const archiveImages = {
       alt: 'Wounded Knee',
       title: 'We Shall Remain: Wounded Knee',
       artist: 'Archival source',
-      medium: 'News photograph',
-      source: 'https://example.com/citation/trigger--275',
+      medium: 'Documentary photograph',
+      source: 'https://www.pbs.org/wgbh/americanexperience/films/weshallremain/',
       description: 'Protesters on the Pine Ridge Indian Reservation.'
     },
     {
@@ -139,8 +176,8 @@ export const archiveImages = {
       alt: 'The Longest Walk',
       title: 'The Longest Walk (1978)',
       artist: 'American Indian Movement',
-      medium: 'Documentary photograph',
-      source: 'https://example.com/citation/trigger--287',
+      medium: 'Archival photograph',
+      source: 'https://www.zinnedproject.org/news/tdih/longest-walk-ends/',
       description: 'The Longest Walk was a five month march from San Francisco, CA to Washington, D.C that took place in 1978 in protest of legislation that would revoke treaties, limit native american rights, and greatly decrease access to social services.'
     },
     {
@@ -152,8 +189,8 @@ export const archiveImages = {
       title: 'Group of Mohawk warriors during the Oka Crisis',
       artist: 'Canadian Encyclopedia',
       medium: 'Archival photograph',
-      source: 'https://example.com/citation/trigger--297',
-      description: 'The Oka Crisis as an assertion of Mohawk sovereignty and title, distinct in its legal and territorial grounding from other resistance movements. The photo depicts a group of Mohawk warriors cheering.'
+      source: 'https://www.thecanadianencyclopedia.ca/en/article/oka-crisis',
+      description: 'The Oka Crisis as an assertion of the Kanesatake Mohawk sovereignty and title, distinct in its legal and territorial grounding from other resistance movements. The photo depicts a group of Mohawk warriors cheering.'
     },
 
     // Scene 4 - Hemispheric / Mountain Pass (z=-300 to z=-400)
@@ -190,24 +227,13 @@ export const archiveImages = {
       side: 'right',
       verticalOffset: '30%',
       alt: 'Zapatista uprising',
-      title: 'SUGGESTION: Zapatista autonomous community life: school, cooperative, mural. Resistance as governance and institution, not only uprising.',
-      artist: 'Archival source',
-      medium: 'Movement image',
-      source: 'https://example.com/citation/trigger--315',
-      description: 'A visual link to anti-colonial organizing in Chiapas and the global circulation of Indigenous and autonomous struggle.'
+      title: 'Zapatista Uprising, 1994',
+      artist: 'Gerardo Magallon / AFP via Getty Images',
+      medium: 'Archival photograph',
+      source: 'https://therealnews.com/1994-zapatista-mexico-uprising-resisting-nafta-corporate-capitalism',
+      description: 'Zapatista National Liberation Army (EZLN) guerilleros stand, on January 03, 1994 in Altamira, Chiapas. Chiapas EZLN rebels launched a rebellion in January 1994 to end government oppression of Indigenous people.'
     },
-    {
-      trigger: -330,
-      src: './imgs/archive_imgs/dapl_proposed_route-650x508.jpg',
-      side: 'left',
-      verticalOffset: '45%',
-      alt: 'Keystone XL protest',
-      title: 'SUGGESTION: Indigenous-led legislative testimony or legal filing against Keystone XL. The courtroom as a front of resistance.',
-      artist: 'Archival source',
-      medium: 'Protest photograph',
-      source: 'https://example.com/citation/trigger--330',
-      description: 'The image traces environmental defense and land protection movements confronting extractive infrastructure.'
-    },
+
     {
       trigger: -348,
       src: './imgs/archive_imgs/DefendTheSacre.png',
@@ -216,44 +242,32 @@ export const archiveImages = {
       alt: 'Defend the Sacred at Standing Rock',
       title: 'Defend the Sacred at Standing Rock',
       medium: 'Archival Image',
-      source: 'https://example.com/citation/trigger--348',
+      source: 'https://news.asu.edu/20201119-discoveries-asu-project-humanities-indigenous-environmentalism-activism',
       description: 'Native Americans march to a sacred burial ground site that was disturbed by bulldozers building the Dakota Access Pipeline in North Dakota, where hundreds of people have gathered to join the Standing Rock Sioux Tribe\'s protest.'
     },
     {
       trigger: -362,
-      src: './imgs/archive_imgs/DAPL_Sioux.jpg',
+      src: './imgs/archive_imgs/standingrock_calexandra_nov24_28.png',
       side: 'left',
       verticalOffset: '25%',
       alt: 'Standing Rock water protectors',
-      title: 'SUGGESTION: Water protectors on horseback or in ceremony at Standing Rock. Resistance as prayer, not just protest.',
-      artist: 'Archival source',
-      medium: 'Documentary protest photograph',
-      source: 'https://example.com/citation/trigger--362',
-      description: 'A scene from Standing Rock that foregrounds collective refusal, ceremony, and defense of water.'
+      title: 'Protestors at Standing Rock Reservation',
+      artist: 'Cassi Alexandra for NPR',
+      medium: 'Archival Image',
+      source: 'https://www.nativeamericacalling.com/friday-july-21-2017-continuing-fight-dakota-access-pipeline/',
+      description: 'Protesters gather at Standing Rock Reservation on Thanksgiving Day to build a bridge to Turtle Island, which they consider sacred ground. Police are seen lining the island hill beyond them.'
     },
     {
       trigger: -375,
-      src: './imgs/archive_imgs/nodapl_crowd_closeup.jpg',
+      src: './imgs/archive_imgs/arcticClimateChangeProtest.jpg',
       side: 'right',
       verticalOffset: '40%',
       alt: 'NoDAPL crowd closeup',
-      title: 'SUGGESTION: Drumming or singing at Standing Rock. Sound as resistance, the encampment as a living community.',
-      artist: 'Archival source',
-      medium: 'Documentary protest photograph',
-      source: 'https://example.com/citation/trigger--375',
-      description: 'A close view of collective presence within the NoDAPL movement, emphasizing scale, solidarity, and urgency.'
-    },
-    {
-      trigger: -390,
-      src: '',
-      side: 'left',
-      verticalOffset: '35%',
-      alt: 'UN Indigenous delegates',
-      title: 'SUGGESTION: Indigenous delegates at the United Nations, 1977 or UNDRIP passage 2007. Sovereignty asserted in an international forum.',
-      artist: 'Archival source',
-      medium: 'Documentary photograph',
-      source: 'https://example.com/citation/trigger--390',
-      description: 'Indigenous delegates bringing centuries of articulated demand to an international stage.'
+      title: 'Keep It In the Ground Letter Delivery',
+      artist: 'Suchat Pederson',
+      medium: 'Archival Image',
+      source: 'https://www.flickr.com/photos/rainforestactionnetwork/21457484881/',
+      description: 'Allison Warden from Alaska speaks at a press conference in front of the White House as a coalition of more than 400 organizations and leaders deliver a historic letter to the White House on Tuesday calling on President Obama to stop new federal fossil fuel leasing on public lands and oceans in the United States.'
     },
 
     // Scene 5 - Maya Q\'eqchi\' and El Estor / Ocean (z=-400 to z=-600)
@@ -263,47 +277,47 @@ export const archiveImages = {
       side: 'left',
       verticalOffset: '40%',
       alt: 'Lake Izabal',
-      title: 'SUGGESTION: Lake Izabal, Guatemala. The specific body of water the Maya Q\'eqchi\' people have lived alongside and that the mine has threatened.',
-      artist: 'Archival source',
+      title: 'Protestors in El Estor, Guatemala',
+      artist: 'Baudilio Choc for Radio Victoria',
       medium: 'Landscape photograph',
-      source: 'https://example.com/citation/trigger--468',
-      description: 'Lake Izabal as the living territory at the center of the Maya Q\'eqchi\' land defense this documentary is grounded in.'
+      source: 'https://www.guatemalasolidarityproject.org/resistance-to-fenix-mine/',
+      description: 'Protestors in El Estor carry a banner that reads: “when will we have a just and equitable government? Every government has always favored the interests of the rich. For us, the indigenous Mayas, we have always been massacred and martyred only to please the foreigners.” Police later used tear gas to put down the protest.'
     },
     {
       trigger: -482,
-      src: '',
+      src: 'imgs/archive_imgs/protestors_Guatemala.png',
       side: 'right',
       verticalOffset: '35%',
       alt: 'Fenix mine aerial',
-      title: 'SUGGESTION: Aerial of the Fenix nickel mine open pit on Maya Q\'eqchi\' land. The wound in the territory the subtitles are describing.',
-      artist: 'Archival source',
-      medium: 'Aerial photograph',
-      source: 'https://example.com/citation/trigger--482',
-      description: 'The Fenix mine as physical fact on Maya Q\'eqchi\' territory, inseparable from the history of what it took to build it.'
+      title: 'Protest Against Guatemalan President Alejandro Giammatei',
+      artist: 'AFP',
+      medium: 'Archival Image',
+      source: 'https://www.swissinfo.ch/eng/business/swiss-mining-project-protest-triggers-regional-curfew-in-guatemala/47055280',
+      description: 'Protestors in Guatemala City demanding the resignation of President Alejandro Giammattei on October 20, 2021.'
     },
     {
       trigger: -502,
-      src: '',
+      src: 'imgs/hack/el_estorProtest1.png',
       side: 'left',
       verticalOffset: '50%',
-      alt: 'Panzós massacre',
-      title: 'SUGGESTION: Documentary image or memorial related to the Panzós massacre, May 29 1978. 700 people marched. At least 140 were killed.',
-      artist: 'Archival source',
-      medium: 'Documentary photograph',
-      source: 'https://example.com/citation/trigger--502',
-      description: 'The Panzós massacre as a direct consequence of resistance to the Fenix mine and land dispossession in El Estor.'
+      alt: 'Protestors in El Estor, Guatemala',
+      title: 'Protestors in El Estor, Guatemala',
+      artist: 'Nelton Rivera for Prensa Comunitaria',
+      medium: 'Archival Photograph',
+      source: 'https://theintercept.com/2022/03/27/solway-guatemala-nickel-mine/',
+      description: 'Police crack down on protesters blocking mine vehicles in El Estor, Guatemala, in October 2021.'
     },
     {
       trigger: -522,
-      src: '',
+      src: 'imgs/hack/image.png',
       side: 'right',
       verticalOffset: '30%',
-      alt: 'Maya Q\'eqchi\' community organizing',
-      title: 'SUGGESTION: Maya Q\'eqchi\' community assembly or gathering in El Estor. Collective organizing as the form of resistance surrounding the lawsuits.',
-      artist: 'Archival source',
-      medium: 'Documentary photograph',
-      source: 'https://example.com/citation/trigger--522',
-      description: 'Community assembly as one of many forms of resistance the Maya Q\'eqchi\' people sustained through each iteration of the mine\'s ownership.'
+      alt: 'Paulina Coc listens to Community Development Council leaders at a San Jorge neighborhood assempbly',
+      title: 'Community Assembly in San Jorge',
+      artist: 'Sandra Cuffee',
+      medium: 'Archival Photograph',
+      source: 'https://theintercept.com/2022/03/27/solway-guatemala-nickel-mine/',
+      description: 'Paulina Coc, member of Maya Q\'eqchi\' community, listens to Community Development Council leaders at a San Jorge neighborhood assembly in El Estor, Guatemala, on Jan. 23, 2022'
     },
     {
       trigger: -542,

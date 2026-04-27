@@ -64,7 +64,7 @@ export const subtitles = {
     },
     {
       trigger: -200,
-      text: "And yet Indigenous peoples remained, on their territories, in their languages, in their relations to the land. That presence was never passive. It was the ground on which every act of resistance that followed was built."
+      text: "And yet Indigenous peoples continued to fight to remain on their territories, with their languages, and in defense to and with their relations to the land. That presence was never passive. It was the ground on which every act of resistance that followed was built."
     }
   ],
 
