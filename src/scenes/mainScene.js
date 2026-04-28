@@ -125,14 +125,15 @@ export class MainScene extends SceneBase {
         zStart: -400,
         zEnd: -500
       },
-{
-  background: new THREE.Color(0x314776),
-  fog: new THREE.Color(0xb0bec5),   // Cool blue-gray white
-  fogNear: 1,
-  fogFar: 120,
-  zStart: -500,
-  zEnd: -600
-},
+      {
+        // Scene 6: Tropical Rainforest - Dusk
+        background: new THREE.Color(0x1a2d45),   // Deep navy, darker than ocean, trending toward Scene 7's black
+        fog: new THREE.Color(0x2a4a3a),          // Dark teal-green, feels like dense canopy mist
+        fogNear: 2,
+        fogFar: 55,                              // Tighter than other scenes — dense forest
+        zStart: -500,
+        zEnd: -600
+      },
       {
         // Scene 7: Dark corridor (hack scene) - Return to digital
         background: new THREE.Color(0x050505),
