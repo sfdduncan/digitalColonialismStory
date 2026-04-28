@@ -126,14 +126,13 @@ export class MainScene extends SceneBase {
         zEnd: -500
       },
 {
-        // Scene 6: Tropical Rainforest - Rainy blue/gray atmosphere
-        background: new THREE.Color(0x020818),
-        fog: new THREE.Color(0x020818),
-        fogNear: 10000,
-        fogFar: 10000,
-        zStart: -500,
-        zEnd: -600
-      },
+  background: new THREE.Color(0x314776),
+  fog: new THREE.Color(0xb0bec5),   // Cool blue-gray white
+  fogNear: 1,
+  fogFar: 120,
+  zStart: -500,
+  zEnd: -600
+},
       {
         // Scene 7: Dark corridor (hack scene) - Return to digital
         background: new THREE.Color(0x050505),
@@ -448,12 +447,12 @@ export class MainScene extends SceneBase {
     // Load cliff/mountain rock models for sides (similar to Scene 1 ice walls)
     const loader = new GLTFLoader();
     
-    loader.load('./models/cliff_rock_boulder_field.glb', (gltf) => {w
+    loader.load('./models/cliff_rock_boulder_field.glb', (gltf) => {
       // Left cliff - 7.5 units from center
       const cliffLeft = gltf.scene.clone();
       cliffLeft.position.set(-15, -4, -300);
       cliffLeft.rotation.y = Math.PI / 2 + 0.3;
-      cliffLeft.scale.set(0.25, 0.5, 0.25);
+      cliffLeft.scale.set(0.25, 0.65, 0.25);
       this.add(cliffLeft);
       this.scene4Objects.push(cliffLeft);
 
@@ -461,7 +460,7 @@ export class MainScene extends SceneBase {
       const cliffRight = gltf.scene.clone();
       cliffRight.position.set(15, -4, -400);
       cliffRight.rotation.y = -Math.PI / 2 + 0.3;
-      cliffRight.scale.set(0.25, 0.5, 0.25);
+      cliffRight.scale.set(0.25, 0.65, 0.25);
       this.add(cliffRight);
       this.scene4Objects.push(cliffRight);
     });
@@ -1304,7 +1303,7 @@ export class MainScene extends SceneBase {
     }
 
     // Generate Scene 4 when approaching (at 80% through Scene 3)
-    if (!this.scene4Generated && userPosition.z < -280) {
+    if (!this.scene4Generated && userPosition.z < -250) {
       this.buildScene4();
       // Load Scene 4 subtitles
       subtitleManager.loadSubtitles(subtitles.scene4);
