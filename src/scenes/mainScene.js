@@ -127,10 +127,10 @@ export class MainScene extends SceneBase {
       },
       {
         // Scene 6: Tropical Rainforest - Dusk
-        background: new THREE.Color(0x1a2d45),   // Deep navy, darker than ocean, trending toward Scene 7's black
-        fog: new THREE.Color(0x2a4a3a),          // Dark teal-green, feels like dense canopy mist
+        background: new THREE.Color(0x00021F),   // Deep navy trending toward Scene 7's black
+        fog: new THREE.Color(0x2a3a5a),          // 
         fogNear: 2,
-        fogFar: 55,                              // Tighter than other scenes — dense forest
+        fogFar: 200,                              // Tighter than other scenes — dense forest
         zStart: -500,
         zEnd: -600
       },
@@ -622,9 +622,9 @@ export class MainScene extends SceneBase {
 
     this.scene6TreeConfig = {
       models: [
-        { file: 'tropical_tree2.glb', yOffset: 0, scale: 0.25 },
-        { file: 'jungle_tree (2).glb', yOffset: -1, scale: 0.25 }, 
-        { file: 'bushes_tropical.glb', yOffset: 0, scale: 0.25 }
+        { file: 'tropical_tree2.glb', yOffset: 0, scale: 1.5 },
+        { file: 'jungle_tree (2).glb', yOffset: -1, scale: 1.1 }, 
+        { file: 'bushes_tropical.glb', yOffset: 0, scale: 0.5 }
       ],
       batchSize: batchSize,
       batchCount: batchCount,
@@ -644,11 +644,11 @@ export class MainScene extends SceneBase {
 
     models.forEach((modelConfig) => {
       loader.load(`./models/${modelConfig.file}`, (gltf) => {
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < 7; i++) {
           const placeOnLeft = Math.random() > 0.5;
           let x, z;
           
-          const wallWidth = 20;
+          const wallWidth = 10;
           
           if (placeOnLeft) {
             x = -(this.pathWidth / 2) - Math.random() * wallWidth;
@@ -656,7 +656,7 @@ export class MainScene extends SceneBase {
             x = (this.pathWidth / 2) + Math.random() * wallWidth;
           }
           
-          const baseZ = batchStartZ - (i * batchSize / 12);
+          const baseZ = batchStartZ - (i * batchSize / 7);
           const zOffset = (Math.random() - 0.5) * 4;
           z = baseZ + zOffset;
 
@@ -668,6 +668,7 @@ export class MainScene extends SceneBase {
           tree.scale.setScalar(treeScale);
           
           tree.userData.baseScale = treeScale;
+          tree.userData.isBush = modelConfig.file === 'bushes_tropical.glb';
           
           this.add(tree);
           this.scene6Trees.push(tree);
@@ -1439,15 +1440,18 @@ export class MainScene extends SceneBase {
 
     // Scale tropical trees based on proximity to user (Scene 6)
     this.scene6Trees.forEach((tree) => {
-      const distance = Math.abs(tree.position.z - userPosition.z);
       const baseScale = tree.userData.baseScale || 0.05;
-      const growthDistance = 20;
-
+      if (!tree.userData.isBush) {
+        tree.scale.setScalar(baseScale);
+        return;
+      }
+      const distance = Math.abs(tree.position.z - userPosition.z);
+      const growthDistance = 10;
       if (distance < growthDistance) {
         const scale = THREE.MathUtils.clamp(
-          baseScale + (1 - distance / growthDistance) * 0.2,
+          baseScale + (1 - distance / growthDistance) * 0.25,
           baseScale,
-          baseScale + 0.2
+          baseScale + 0.25
         );
         tree.scale.setScalar(scale);
       } else {
