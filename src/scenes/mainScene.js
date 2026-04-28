@@ -111,8 +111,8 @@ export class MainScene extends SceneBase {
         // Scene 4: Mountain pass
         background: new THREE.Color(0xe4faff),
         fog: new THREE.Color(0xe4faff),
-        fogNear: 10000, // Very far away
-        fogFar: 10000, // Very far away
+        fogNear: 10000,
+        fogFar: 10000,
         zStart: -300,
         zEnd: -400
       },
@@ -125,12 +125,12 @@ export class MainScene extends SceneBase {
         zStart: -400,
         zEnd: -500
       },
-      {
+{
         // Scene 6: Tropical Rainforest - Rainy blue/gray atmosphere
-        background: new THREE.Color(0x8b9da8),
-        fog: new THREE.Color(0x6b7d87),
-        fogNear: 2,
-        fogFar: 1200,
+        background: new THREE.Color(0x020818),
+        fog: new THREE.Color(0x020818),
+        fogNear: 10000,
+        fogFar: 10000,
         zStart: -500,
         zEnd: -600
       },
@@ -448,11 +448,11 @@ export class MainScene extends SceneBase {
     // Load cliff/mountain rock models for sides (similar to Scene 1 ice walls)
     const loader = new GLTFLoader();
     
-    loader.load('./models/cliff_rock_boulder_field.glb', (gltf) => {
+    loader.load('./models/cliff_rock_boulder_field.glb', (gltf) => {w
       // Left cliff - 7.5 units from center
       const cliffLeft = gltf.scene.clone();
       cliffLeft.position.set(-15, -4, -300);
-      cliffLeft.rotation.y = Math.PI / 2 + 0.3; // Rotated counterclockwise
+      cliffLeft.rotation.y = Math.PI / 2 + 0.3;
       cliffLeft.scale.set(0.25, 0.5, 0.25);
       this.add(cliffLeft);
       this.scene4Objects.push(cliffLeft);
@@ -460,7 +460,7 @@ export class MainScene extends SceneBase {
       // Right cliff - 7.5 units from center (mirrored)
       const cliffRight = gltf.scene.clone();
       cliffRight.position.set(15, -4, -400);
-      cliffRight.rotation.y = -Math.PI / 2 + 0.3; // Rotated counterclockwise
+      cliffRight.rotation.y = -Math.PI / 2 + 0.3;
       cliffRight.scale.set(0.25, 0.5, 0.25);
       this.add(cliffRight);
       this.scene4Objects.push(cliffRight);
@@ -622,9 +622,9 @@ export class MainScene extends SceneBase {
 
     this.scene6TreeConfig = {
       models: [
-        { file: 'tropical_tree2.glb', yOffset: 0, scale: 0.5 },
+        { file: 'tropical_tree2.glb', yOffset: 0, scale: 0.25 },
         { file: 'jungle_tree (2).glb', yOffset: -1, scale: 0.25 }, 
-        { file: 'bushes_tropical.glb', yOffset: 0, scale: 0.5 }
+        { file: 'bushes_tropical.glb', yOffset: 0, scale: 0.25 }
       ],
       batchSize: batchSize,
       batchCount: batchCount,
@@ -1441,10 +1441,14 @@ export class MainScene extends SceneBase {
     this.scene6Trees.forEach((tree) => {
       const distance = Math.abs(tree.position.z - userPosition.z);
       const baseScale = tree.userData.baseScale || 0.05;
-      
-      if (distance < 10) {
-        const growthMultiplier = 1 + (1 - distance / 10) * 3;
-        const scale = baseScale * growthMultiplier;
+      const growthDistance = 20;
+
+      if (distance < growthDistance) {
+        const scale = THREE.MathUtils.clamp(
+          baseScale + (1 - distance / growthDistance) * 0.2,
+          baseScale,
+          baseScale + 0.2
+        );
         tree.scale.setScalar(scale);
       } else {
         tree.scale.setScalar(baseScale);

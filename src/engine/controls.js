@@ -21,6 +21,7 @@ export function createControls(camera, domElement) {
   let movementPaused = false;
   let photoInteractionMode = false;
   let photoInteractionSuppressed = false;
+  let mainSceneActive = false; // W/↑ movement only allowed in MainScene
   
   // Create rotation limit fog overlays
   const leftFogOverlay = document.createElement('div');
@@ -62,6 +63,7 @@ export function createControls(camera, domElement) {
     }
     
     if (event.key === 'w' || event.key === 'W' || event.key === 'ArrowUp') {
+      if (!mainSceneActive) return;
       moveForward = true;
       mainSceneAutoWalk = false; // manual key overrides auto-walk
     }
@@ -148,10 +150,7 @@ export function createControls(camera, domElement) {
       }
       else if (moveForward) {
         // Move straight down the path (negative Z direction)
-        // Mouse controls view angle only, not movement direction
         camera.position.z -= 0.025;
-        
-        // Clamp X position to keep user on path
         camera.position.x = Math.max(-pathHalfWidth, Math.min(pathHalfWidth, camera.position.x));
       }
     }
@@ -338,6 +337,7 @@ export function createControls(camera, domElement) {
 
   controls.setControlsEnabled = setControlsEnabled;
   controls.getControlsEnabled = () => controlsEnabled;
+  controls.setMainSceneActive = (val) => { mainSceneActive = val; };
   controls.setPhotoInteractionMode = setPhotoInteractionMode;
   controls.isPhotoInteractionMode = () => photoInteractionMode;
   

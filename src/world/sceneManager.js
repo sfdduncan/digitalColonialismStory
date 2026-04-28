@@ -124,6 +124,9 @@ export class SceneManager {
         if (this.controls.setControlsEnabled) {
           this.controls.setControlsEnabled(true);
         }
+        if (this.controls.setMainSceneActive) {
+          this.controls.setMainSceneActive(true);
+        }
         
         // Switch to main scene
         this.currentScene = this.mainScene;

@@ -46,7 +46,7 @@ export const mainSceneAudioZones = [
     audioSrc: 'audio/desert_sanddunes.mp3',
     zStart: -300,
     zEnd: -400,
-    volume: 0.2
+    volume: 0.4
   },
 
   // ── Scene 5: Ocean / Fenix Mine / Panzós Massacre (z=-400 → -500) ──────────
@@ -57,7 +57,7 @@ export const mainSceneAudioZones = [
     audioSrc: 'audio/ocean_waves.mp3',
     zStart: -400,
     zEnd: -500,
-    volume: 0.2
+    volume: 0.3
   },
 
   // ── Scene 6: Tropical Rainforest / Guacamaya breach (z=-500 → -600) ────────
@@ -76,10 +76,10 @@ export const mainSceneAudioZones = [
   // Closes the story with collective, borderless resistance
   {
     id: 'scene7_finale',
-    audioSrc: 'audio_hacktivista/Voces Kontra el Kapital - Kontra el proyecto del capitalismo, acción sin fronteras..mp3',
+    audioSrc: 'audio_hacktivista/Voces Kontra el Kapital - Kontra el proyecto del capitalismo, acción sin fronteras.mp3',
     zStart: -600,
     zEnd: -700,
-    volume: 0.2
+    volume: 0.1
   }
 
 ];
@@ -94,7 +94,7 @@ export const hackSceneAudioZones = [
     audioSrc: 'audio_hacktivista/Hack Back! v2 (1).mp4',
     zStart: 35,
     zEnd: -100,
-    volume: 0.2
+    volume: 0.1
   },
 ];
 
