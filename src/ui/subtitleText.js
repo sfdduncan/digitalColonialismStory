@@ -22,7 +22,7 @@ export const subtitles = {
     },
     {
       trigger: -60,
-      text: "This documentary takes that claim seriously. It asks what it means to understand a network breach as an act of land defense, and in doing so, traces the longer tradition of refusal that Guacamaya is situating themselves within."
+      text: "What follows is an attempt to take that claim seriously, to trace the longer tradition of refusal that Guacamaya is situating themselves within."
     },
     {
       trigger: -73,
@@ -33,18 +33,22 @@ export const subtitles = {
   scene1: [
     {
       trigger: 0,
-      text: "To understand what is being refused, you have to understand what settler colonialism set out to eliminate. Across the Americas, Indigenous peoples are distinct from one another: different nations, different languages, different laws, different relationships to the lands they have stewarded for millennia."
+      text: "To understand what is being refused, you have to understand what settler colonialism set out to eliminate."
     },
     {
       trigger: -12,
-      text: "What they share is not a single identity but a common orientation, one that Vine Deloria Jr. described as existing within a web of relations extending beyond the human, bound to the land, the water, and the non-human elders who inhabited those territories alongside them."
+      text: "Across the Americas, Indigenous peoples within their distinct nations, languages, and laws have lived in reciprocity with their lands for millennia."
     },
     {
       trigger: -25,
-      text: "To care for those relations was not separate from governance. It was governance. That knowledge moved through language and ceremony, through song and story, through the practices of planting, fishing, burning, and tending that kept specific landscapes alive across generations. It was always of a particular place, a particular people, a particular set of relations."
+      text: "What they share is not a single identity but a common orientation, one that Vine Deloria Jr. described as existing within a web of relations extending beyond the human, bound to the land, the water, and the non-human elders who inhabited those territories alongside them."
     },
     {
-      trigger: -50,
+      trigger: -40,
+      text: "To care for those relations was not separate from governance. It was governance. That knowledge moved through language and ceremony, through song and story, through the practices of planting, fishing, burning, and tending that kept various landscapes alive across generations."
+    },
+    {
+      trigger: -55,
       text: "This is what settler colonialism targets: not only the land as territory, but the web of relations that makes the land meaningful, the languages that carry that meaning, the ceremonies that renew it, the peoples whose continued presence on that land constitutes a permanent challenge to the settler society's claim to be the only legitimate occupant."
     },
     {
@@ -83,62 +87,46 @@ export const subtitles = {
   scene3: [
     {
       trigger: -222,
-      text: "Refusal took many forms, and those forms were always rooted in specific nations, specific lands, specific histories. In 1866, Red Cloud's alliance of Lakotas, Cheyennes, and Arapahos expelled the US military from their territories entirely, compelling the United States to sign the Fort Laramie Treaty on Indigenous terms."
+      text: "Refusal is not only found in the dramatic or the visible. It is what takes form in treaty negotiations conducted on Indigenous terms, in spiritual movements that colonial governments feared enough to answer with massacre, in occupations that were also communities, in marches that were also legal demands."
     },
     {
-      trigger: -234,
-      text: "It was the assertion of a specific political and legal order rooted in Lakota sovereignty, conducted on Lakota terms. That treaty would be broken within a decade."
+      trigger: -248,
+      text: "When the US government massacred 300 Lakota at Wounded Knee in 1890, it was responding to the Ghost Dance, a vision of renewal, of the land and the people restored. A song was that threatening. When 90 Native Americans occupied Alcatraz in 1969, they ran a school, broadcast a radio station, and held ceremony inside a building the government wanted empty."
     },
     {
-      trigger: -245,
-      text: "The Ghost Dance, which spread across the Great Plains in the late 19th century, was something different: a vision of renewal specific to the nations who practiced it, of the land and the people restored. The US government feared it enough to massacre 300 Lakota at Wounded Knee in 1890. A song was that threatening."
+      trigger: -272,
+      text: "What settler colonialism could not tolerate was not any single tactic but the premise underlying all of them: that Indigenous peoples retained authority over their own lands, their own governance, and their own relations to the non-human world, regardless of what any colonial state had declared."
     },
     {
-      trigger: -263,
-      text: "In 1969, a group of 90 Native Americans from multiple nations occupied Alcatraz Island for 19 months, running a school, broadcasting a radio station, holding ceremony, and raising children on land declared federal surplus."
+      trigger: -295,
+      text: "As Nick Estes argues in Our History is the Future, these were not spontaneous uprisings. They were a tradition, each generation inheriting and adapting the forms of those who came before."
     },
     {
-      trigger: -275,
-      text: "In 1972, the Trail of Broken Treaties Caravan marched to Washington, presenting a 20-point manifesto demanding the restoration of treaty-making and Indigenous sovereignty."
-    },
-    {
-      trigger: -287,
-      text: "In 1973, AIM and Oglala Sioux activists occupied Wounded Knee for 71 days under the specific terms of the 1868 Fort Laramie Treaty."
-    },
-    {
-      trigger: -298,
-      text: "In 1990, Mohawk warriors and community members at Kanesatake defended a pine forest under Mohawk law and Mohawk title, against a Canadian state that had never recognized either. These were not the same struggle. They shared the same refusal."
-    },
-    {
-      trigger: -305,
-      text: "As Nick Estes argues in Our History is the Future, each of these was a tradition unto itself, each generation inheriting and adapting the specific forms developed by those who came before, on that land, in that language, against that particular configuration of colonial power."
-    },
-    {
-      trigger: -322,
-      text: "And alongside the marches and the occupations and the legal briefs, people were also raising children, practicing ceremony, speaking their languages, fishing the rivers, planting, singing. None of that was separate from the political. All of it was refusal: the ongoing insistence on a life and a set of relations that settler colonialism had declared finished."
+      trigger: -315,
+      text: "And alongside the marches and the occupations and the legal briefs, people were also raising children, practicing ceremony, speaking their languages, fishing the rivers, planting, singing. None of that was separate from the political. All of it was refusal."
     }
   ],
 
   scene4: [
     {
-      trigger: -348,
-      text: "In 1977, Indigenous delegates from across the Americas traveled to Geneva to address the United Nations for the first time, bringing a demand centuries in the making: that Indigenous peoples be recognized as peoples, with inherent rights to their lands, their governance, and their ways of life. The Declaration on the Rights of Indigenous Peoples passed in 2007. It took thirty years."
+      trigger: -345,
+      text: "That refusal has never been confined to a single form, or a single nation, or a single century. Across Abya Yala, Indigenous peoples have carried it into international forums and into encampments, into courtrooms and into ceremony, into legislation and into the land itself."
     },
     {
-      trigger: -368,
-      text: "In 1994, the Zapatista Army of National Liberation rose up in Chiapas on the day NAFTA came into effect, declaring it a death sentence for the communal land arrangements that had sustained Indigenous life in southern Mexico. They also built schools, cooperatives, and autonomous governance structures that have outlasted the headlines."
+      trigger: -365,
+      text: "In 1977, Indigenous delegates from across the Americas traveled to Geneva to address the United Nations for the first time. The Declaration on the Rights of Indigenous Peoples passed thirty years later. At Standing Rock in 2016, water protectors from more than 200 tribes held powwows and ran a school while fighting a pipeline in court. The form changed. The orientation did not."
     },
     {
-      trigger: -388,
-      text: "In 2016, water protectors from more than 200 tribes gathered at Standing Rock to stop the Dakota Access Pipeline from cutting through sacred sites and threatening the Missouri River. They used encampment, prayer, legal challenge, and coordinated social media. They held powwows and ran a school. They were met with militarized police, water cannons, and mass arrest. They did not leave."
+      trigger: -390,
+      text: "Sometimes that meant decades of legal challenge. Sometimes it meant building a school inside an occupation. Sometimes it meant simply continuing to exist, on the land, in the language, in relation, despite everything that had been done to make that existence impossible."
     },
     {
-      trigger: -410,
-      text: "What Standing Rock made visible was something that had always been true: that living on the land, praying on it, knowing it, was already a political act. The encampment was not only a blockade. It was a community, a ceremony, a school, a refusal to be gone."
+      trigger: -415,
+      text: "The colonial record has consistently tried to frame these acts as exceptional, as moments of crisis or disruption. They are not exceptional at all. They are the ongoing texture of Indigenous life under settler colonialism, the persistent refusal to accept the terms of elimination."
     },
     {
-      trigger: -430,
-      text: "Across Abya Yala, this was happening simultaneously, in different forms, on different territories, by peoples whose histories do not collapse into one another. The land, and the responsibility to it, was the thread running beneath all of them."
+      trigger: -438,
+      text: "That refusal is hemispheric. It has never stopped. And it has taken as many forms as there are peoples and places and moments in which it has been necessary."
     }
   ],
 
@@ -206,16 +194,16 @@ export const subtitles = {
       text: "To cut the rivers is to cut our veins. To poison the land is to poison our stomachs. To contaminate the air is to contaminate our lungs. — Guacamaya"
     },
     {
-      trigger: -750,
-      text: "From the Ghost Dance to the legal brief, from the march to Panzós to the occupation of Alcatraz, from the water protectors at Standing Rock to the breach of a corporate server in Guatemala City: these were not the same struggle. They were rooted in different places, different peoples, different histories of loss and continuity."
+      trigger: -748,
+      text: "Not to argue that all Indigenous struggles are the same, or that a network breach and a Ghost Dance are equivalent acts, but to make legible what connects them: centuries of distinct peoples, within their own nations and on their own lands, refusing the terms of their elimination."
     },
     {
-      trigger: -772,
-      text: "What they shared was not a unified movement or a single politics. It was a refusal: expressed in whatever form the moment made available, sustained across generations at enormous cost, oriented always toward the land, the water, the non-human relations that make life possible, and the peoples whose lives depend on them."
+      trigger: -770,
+      text: "What settler colonialism has always required is that Indigenous peoples disappear, from the land, from language, from governance, from relation. What these histories trace is the persistent, varied, costly refusal of that requirement, expressed differently by different peoples in different moments, but oriented always toward the same thing."
     },
     {
-      trigger: -795,
-      text: "Settler colonialism has spent five centuries trying to make that refusal impossible. It has not succeeded. That is the argument of this documentary. That is what Guacamaya is saying."
+      trigger: -792,
+      text: "The land. The water. The non-human relations that make life possible. The peoples whose lives and identities are bound to them. That kinship has never been fully severed. It is still being defended. Guacamaya is one of the latest in a long line of people who have said so."
     },
     {
       trigger: -815,

@@ -12,6 +12,7 @@ import { SceneManager } from './src/world/sceneManager.js'
 
 // UI
 import { initializeHelpUI } from './src/ui/helpUI.js'
+import { runUiTour } from './src/ui/uiTour.js'
 import { initializeTimeline, updateTimeline, updateTimelineProgress } from './src/ui/timeline.js'
 import { subtitleManager } from './src/ui/subtitleManager.js'
 import { initializeVerticalTimeline, updateVerticalTimeline } from './src/ui/verticalTimeline.js'
@@ -23,29 +24,70 @@ window.updateTimelineProgress = updateTimelineProgress;
 window.subtitleManager = subtitleManager;
 window.updateVerticalTimeline = updateVerticalTimeline;
 
-const creditsSections = [
-  {
-    title: 'Credits',
-    lines: [
-      'Replace this block with your project title, collaborators, or exhibition details.'
-    ]
-  },
-  {
-    title: 'Citations',
-    lines: [
-      'Add citation 1',
-      'Add citation 2',
-      'Add citation 3'
-    ]
-  },
-  {
-    title: 'Thank You',
-    lines: [
-      'Add your acknowledgements here.',
-      'Add community, mentors, and supporters here.'
-    ]
-  }
-];
+const bibliography = {
+  books: [
+    `Barker, Joanne. <em>Red Scare: The State's Indigenous Terrorist.</em> Oakland: University of California Press, 2021.`,
+    `Barnd, Natchee Blu. <em>Native Space: Geographic Strategies to Unsettle Settler Colonialism.</em> Corvallis: Oregon State University Press, 2017.`,
+    `Byrd, Jodi A. <em>Indigenomicon: American Indians, Video Games, and the Structures of Dispossession.</em> Durham: Duke University Press, 2025.`,
+    `Coulthard, Glen. <em>Red Skin, White Masks: Rejecting the Colonial Politics of Recognition.</em> Minneapolis: University of Minnesota Press, 2014.`,
+    `Deloria, Vine. <em>God Is Red: A Native View of Religion.</em> Golden, CO: Fulcrum Publishing, 1973.`,
+    `Estes, Nick. <em>Our History Is the Future: Standing Rock Versus the Dakota Access Pipeline, and the Long Tradition of Indigenous Resistance.</em> London: Verso, 2019.`,
+    `Miranda, Deborah. <em>Bad Indians: A Tribal Memoir.</em> Berkeley: Heyday Books, 2013.`,
+    `Simpson, Audra. <em>Mohawk Interruptus: Political Life Across the Borders of Settler States.</em> Durham: Duke University Press, 2014.`,
+    `Simpson, Leanne Betasamosake. <em>As We Have Always Done: Indigenous Freedom Through Radical Resistance.</em> Minneapolis: University of Minnesota Press, 2017.`,
+    `Stark, Heidi Kiiwetinepinesiik. "Criminal Empire: The Making of the Savage in a Lawless Land." <em>Theory & Event</em> 19, no. 4 (2016).`,
+    `Wolfe, Patrick. "Settler Colonialism and the Elimination of the Native." <em>Journal of Genocide Research</em> 8, no. 4 (2006): 387–409.`,
+  ],
+  online: [
+    `The Alley Newspaper. "1977 UN Geneva Conference—Dick Bancroft: Champion with a Camera." <em>The Alley,</em> October 2018. https://alleynews.org/2018/10/1977-un-geneva-conference-dick-bancroft-champion-with-a-camera.`,
+    `ArcGIS StoryMaps. "Indigenous Boarding Schools." Accessed April 2026. https://storymaps.arcgis.com/stories/d13c4bfd0ab64cddaf54da6695b654f0.`,
+    `Art Canada Institute. "Robert Houle: Biography." <em>Robert Houle: Life & Work.</em> Edited by Shirley Madill. Toronto: Art Canada Institute, n.d. https://www.aci-iac.ca/art-books/robert-houle/biography.`,
+    `BC Foster Parents Association. "Residential Schools." <em>BC Foster Parents.</em> Accessed April 2026. https://bcfosterparents.ca/project/residential-schools.`,
+    `Besaw, Mindy, and Beth Harris. "Hock E Aye Vi Edgar Heap of Birds, Native Hosts (Arkansas)." <em>Smarthistory,</em> March 7, 2020. https://smarthistory.org/hock-e-aye-vi-edgar-heap-of-birds-native-hosts-arkansas.`,
+    `CBC News. "Ashamed of My Faith: Catholics Battling Religion after Discovery." CBC, June 2021. https://www.cbc.ca/news/canada/saskatchewan/ashamed-my-faith-catholics-battling-religion-discovery-1.6081426.`,
+    `CBS News. "Canada Residential Schools: Unmarked Graves of Indigenous Children." <em>60 Minutes,</em> February 12, 2023. https://www.cbsnews.com/news/canada-residential-schools-unmarked-graves-indigenous-children-60-minutes-2023-02-12.`,
+    `Charley, Avis. <em>Avis Charley Art.</em> Accessed April 2026. https://www.avischarleyart.com.`,
+    `Enlace Hacktivista. "Extractivist Leaks." Accessed April 2026. https://enlacehacktivista.org/index.php/Extractivist_Leaks/es.`,
+    `Estes, Nick. "The U.S. Stole Generations of Indigenous Children to Open the West." <em>High Country News</em> 51, no. 17, September 2019. https://www.hcn.org/issues/51-17/indigenous-affairs-the-us-stole-generations-of-indigenous-children-to-open-the-west.`,
+    `Hood Museum of Art, Dartmouth. Object 2008.60. Accessed April 2026. https://hoodmuseum.dartmouth.edu/objects/2008.60.`,
+    `International Indian Treaty Council. "Historic News." Accessed April 2026. https://www.iitc.org/historic-news.`,
+    `International Peoples Democratic Uhuru Movement. "Geneva Conference." Accessed April 2026. https://ipdpowwow.org/geneva-conference.`,
+    `International People's Democratic Movement. "From Kanehsatake to Wetsuweten: Onwards for Self-Determination." Accessed April 2026. https://www.ipmsdl.org/statement/from-kanehsatake-to-wetsuweten-onwards-for-self-determination.`,
+    `Katilvik. "Inuit Art Timeline." Accessed April 2026. https://katilvik.com/inuit-art-timeline.`,
+    `KPBS. "We Shall Remain: Wounded Knee." KPBS, May 8, 2009. https://www.kpbs.org/news/arts-culture/2009/05/08/we-shall-remain-wounded-knee.`,
+    `Library of Congress. Photograph. Resource cph.3c25485. Washington, DC: Library of Congress Prints and Photographs Division. https://www.loc.gov/pictures/resource/cph.3c25485.`,
+    `Marin, Nicolas, and Melissa Vida. "'Hacking Should Be Used to Wake Up and Rebel,' Says Hacker Group Guacamaya." <em>Global Voices,</em> January 10, 2023. https://globalvoices.org/2023/01/10/hacking-should-be-used-to-wake-up-and-rebel-says-hacker-group-guacamaya.`,
+    `McQuillen, Charles. "George Catlin Indian Gallery: English Language Arts Lesson Plan." CharlesMcQuillen.com, August 21, 2019. https://charlesmcquillen.com/george-catlin-indian-gallery-english-language-arts-lesson-plan.`,
+    `The Metropolitan Museum of Art. "Native Perspectives." In conjunction with <em>Art of Native America: The Charles and Valerie Diker Collection.</em> New York: The Metropolitan Museum of Art, 2019. https://www.metmuseum.org/perspectives/native-perspectives.`,
+    `Minnesota Public Radio News. "From the Archives: The Sounds of the 1973 Wounded Knee Occupation." MPR News, March 7, 2017. https://www.mprnews.org/story/2017/03/07/history-wounded-knee.`,
+    `Moretti-Langholtz, Danielle. <em>Rising: The American Indian Movement and the Third Space of Sovereignty.</em> Virtual exhibition. Williamsburg, VA: Muscarelle Museum of Art, William & Mary, 2020. https://muscarelle.wm.edu/rising/shared-ideologies.`,
+    `Moretti-Langholtz, Danielle. <em>Shared Ideologies.</em> Williamsburg, VA: Muscarelle Museum of Art, William & Mary, 2021–2022. https://muscarelle.wm.edu/rising/shared-ideologies.`,
+    `National Gallery of Art. <em>The Land Carries Our Ancestors: Contemporary Art by Native Americans.</em> Curated by Jaune Quick-to-See Smith. Washington, DC: National Gallery of Art, September 22, 2023–January 15, 2024. https://www.nga.gov/exhibitions/land-carries-our-ancestors-contemporary-art-native-americans.`,
+    `National Museum of the American Indian. "American Indian Movement Photograph Collection." NMAI.AC.449. Washington, DC: Smithsonian Institution, processed 2024. https://americanindian.si.edu/collections-search/edan-record/ead_collection:sova-nmai-ac-449.`,
+    `National Museum of the American Indian. "AIM Collection Object." NMAI Object 280067. Washington, DC: Smithsonian Institution. https://americanindian.si.edu/collections-search/object/NMAI_280067.`,
+    `National Museum of the American Indian. "AIM Member Items." NMAI Object 280522. Washington, DC: Smithsonian Institution. https://americanindian.si.edu/collections-search/object/NMAI_280522.`,
+    `National Museum of the American Indian. "Boarding Schools." <em>Native Knowledge 360°.</em> Washington, DC: Smithsonian Institution. Accessed April 2026. https://americanindian.si.edu/nk360/code-talkers/boarding-schools.`,
+    `Native Movement. "Protect the Arctic Refuge." Accessed April 2026. https://www.nativemovement.org/protect-the-arctic-refuge.`,
+    `Newberry Library Digital Collections for the Classroom. "Representing Indigenous Peoples in the Archive." Chicago: Newberry Library. Accessed April 2026. https://dcc.newberry.org/?p=14422.`,
+    `New York Times. "August 30, 1964." TimesMachine, Page 72. Accessed April 2026. https://timesmachine.nytimes.com/timesmachine/1964/08/30/119440251.html.`,
+    `Outpost24. "Threat Actor Profile: Guacamaya." <em>Outpost24 Blog.</em> Accessed April 2026. https://outpost24.com/blog/threat-actor-profile-guacamaya.`,
+    `PBS American Experience. "The Lakota Ghost Dance and the Massacre at Wounded Knee." Accessed April 2026. https://www.pbs.org/wgbh/americanexperience/features/american-oz-lakota-ghost-dance-massacre-wounded-knee.`,
+    `Rainforest Action Network. "Extreme Energy Injustice." <em>The Understory.</em> Accessed April 2026. https://www.ran.org/the-understory/extreme_energy_injustice.`,
+    `Resilience Project. "Daphne Odjig, The Indian in Transition." Accessed April 2026. https://resilienceproject.ca/en/artists/daphne-odjig.`,
+    `Ricochet Media. "Kanehsatake: 35 Years Later, Remembering the Day Canada Sent in the Military to Clear Mohawk Land for a Golf Course." Accessed April 2026. https://ricochet.media/indigenous/landback/kanehsatake-35-years-later-remembering-the-day-canada-sent-in-the-military-to-violently-clear-mohawk-land-for-a-golf-course.`,
+    `Smithsonian Institution. "Chromolithograph Entitled Custer's Last Fight." Object nmah_326129. Washington, DC: National Museum of American History. https://www.si.edu/object/chromolithograph-entitled-custers-last-fight:nmah_326129.`,
+    `Smithsonian Institution. "Group Portrait, North American Indian Delegation." Object siris_arc_390669. Washington, DC: Smithsonian Institution. https://www.si.edu/object/group-portrait-north-american-indian-delegation:siris_arc_390669.`,
+    `Smithsonian Institution. "International Indian Council Held at Tallequah, Indian Territory, 1843." Object saam_1985.66.248_934B. Washington, DC: Smithsonian American Art Museum. https://www.si.edu/object/international-indian-council-held-tallequah-indian-territory-1843:saam_1985.66.248_934B.`,
+    `Smithsonian Institution. "Sioux Indian Drawing, Cowboy." Object nmah_1020097. Washington, DC: National Museum of American History. https://www.si.edu/object/sioux-indian-drawing-cowboy:nmah_1020097.`,
+    `Smithsonian Institution. "Sioux Indian Drawing, Joe Black Fox." Object nmah_1020058. Washington, DC: National Museum of American History. https://www.si.edu/object/sioux-indian-drawing-joe-black-fox:nmah_1020058.`,
+    `Smithsonian Institution. "Sioux Indian Drawing, Joe Black Fox." Object nmah_1020074. Washington, DC: National Museum of American History. https://www.si.edu/object/sioux-indian-drawing-joe-black-fox:nmah_1020074.`,
+    `Smithsonian Institution. "Sioux Indians, Dakota Plains." Object nmah_1004515. Washington, DC: National Museum of American History. https://www.si.edu/object/sioux-indians-dakota-plains:nmah_1004515.`,
+    `Smithsonian Institution. "Troop, Ninth U.S. Cavalry—Famous Indian Fighters." Object nmaahc_2011.155.175. Washington, DC: National Museum of African American History and Culture. https://www.si.edu/object/troop-ninth-us-cavalry-famous-indian-fighters:nmaahc_2011.155.175.`,
+    `Smithsonian Institution. "Zitkala-Ša, Sioux Indian and Activist." Object nmah_1006127. Washington, DC: National Museum of American History. https://www.si.edu/object/zitkala-sa-sioux-indian-and-activist:nmah_1006127.`,
+    `The Canadian Encyclopedia. "Oka Crisis Timeline." Accessed April 2026. https://www.thecanadianencyclopedia.ca/en/timeline/oka-crisis.`,
+    `Verso Books Blog. "The Wounded Knee Massacre and the Long Tradition of Indigenous Resistance." Accessed April 2026. https://www.versobooks.com/blogs/news/4520-the-wounded-knee-massacre-and-the-long-tradition-of-indigenous-resistance.`,
+  ]
+};
 
 
 
@@ -86,18 +128,21 @@ let archivePhotoOverlayActive = false;
 function renderCredits() {
   if (!creditsRoll) return;
 
-  creditsRoll.innerHTML = creditsSections.map((section, index) => {
-    const titleTag = index === 0 ? 'h1' : 'h2';
-    const titleClass = index === 0 ? 'credits-heading' : 'credits-section-title';
-    const lines = section.lines.map((line) => `<p class="credits-line">${line}</p>`).join('');
+  const bookEntries = bibliography.books
+    .map(entry => `<p class="bib-entry">${entry}</p>`)
+    .join('');
 
-    return `
-      <section class="credits-section">
-        <${titleTag} class="${titleClass}">${section.title}</${titleTag}>
-        ${lines}
-      </section>
-    `;
-  }).join('');
+  const onlineEntries = bibliography.online
+    .map(entry => `<p class="bib-entry">${entry}</p>`)
+    .join('');
+
+  creditsRoll.innerHTML = `
+    <h2 class="credits-heading">Bibliography</h2>
+    <h3 class="bib-section-title">Books and Journal Articles</h3>
+    <div class="bib-section">${bookEntries}</div>
+    <h3 class="bib-section-title">Online and Digital Sources</h3>
+    <div class="bib-section">${onlineEntries}</div>
+  `;
 }
 
 function setMainSceneUIVisibility(visible) {
@@ -130,6 +175,7 @@ function showCreditsOverlay() {
 
   if (window.subtitleManager) {
     window.subtitleManager.hide();
+    window.subtitleManager.disable();
   }
 
   // Phase 1: show thank-you slide, then auto-transition to rolling credits
@@ -155,6 +201,20 @@ function showCreditsOverlay() {
         void creditsRoll.offsetWidth;
         creditsRoll.classList.add('animate');
       }
+
+      // Let the camera drift forward while credits roll
+      if (window.pauseUserMovement) window.pauseUserMovement(false);
+      let creditsDriftInterval = setInterval(() => {
+        if (!creditsActive) { clearInterval(creditsDriftInterval); return; }
+        camera.position.z -= 0.012;
+      }, 16);
+
+      // Reload back to title after the roll finishes (70s animation)
+      setTimeout(() => {
+        clearInterval(creditsDriftInterval);
+        window.location.reload();
+      }, 71000);
+
     }, 1300); // wait for fade-out to finish
   }, 4000);
 }
@@ -321,9 +381,14 @@ function startGame() {
 // Show hamburger and help button when reaching MainScene
 function showMainSceneUI() {
   setMainSceneUIVisibility(true);
-  
-  // Automatically show help overlay when scene one starts
-  if (helpUI) helpUI.show();
+
+  // Wait for the flash transition to fully clear before showing the tour
+  setTimeout(() => {
+    // Run the UI tour first, then open the move guide
+    runUiTour(() => {
+      if (helpUI) helpUI.show();
+    });
+  }, 1600); // flash peaks at 600ms and fully fades by ~2000ms; 1600ms gives a clean gap
 }
 
 // Flash transition effect

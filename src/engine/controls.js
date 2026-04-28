@@ -12,6 +12,10 @@ export function createControls(camera, domElement) {
   // Automatic movement for hack scene
   let autoMoveEnabled = false;
   const autoMoveSpeed = 0.02; // Slow automatic movement speed
+
+  // Auto-walk toggle for main scene (F key)
+  let mainSceneAutoWalk = false;
+  const mainSceneAutoWalkSpeed = 0.018;
   
   // Movement pause for text displays
   let movementPaused = false;
@@ -32,7 +36,7 @@ export function createControls(camera, domElement) {
   // Create memory text display
   const memoryTextElement = document.createElement('div');
   memoryTextElement.id = 'memory-text-container';
-  memoryTextElement.innerHTML = '<span class="highlight-inverse">These memories of the past inform the present and always move alongside you</span>';
+  memoryTextElement.innerHTML = '<span class="highlight-inverse">The past informs the present and always moves alongside you</span>';
   document.body.appendChild(memoryTextElement);
   
   // Breathing animation
@@ -49,9 +53,17 @@ export function createControls(camera, domElement) {
   document.addEventListener('keydown', (event) => {
     // Don't allow manual movement when auto-move is enabled
     if (autoMoveEnabled) return;
+
+    if (event.key === 'f' || event.key === 'F') {
+      if (!movementPaused && controlsEnabled) {
+        mainSceneAutoWalk = !mainSceneAutoWalk;
+      }
+      return;
+    }
     
     if (event.key === 'w' || event.key === 'W' || event.key === 'ArrowUp') {
       moveForward = true;
+      mainSceneAutoWalk = false; // manual key overrides auto-walk
     }
   });
 
@@ -130,6 +142,10 @@ export function createControls(camera, domElement) {
         camera.position.z -= autoMoveSpeed;
       }
       // Manual movement (for main scene)
+      else if (mainSceneAutoWalk) {
+        camera.position.z -= mainSceneAutoWalkSpeed;
+        camera.position.x = Math.max(-pathHalfWidth, Math.min(pathHalfWidth, camera.position.x));
+      }
       else if (moveForward) {
         // Move straight down the path (negative Z direction)
         // Mouse controls view angle only, not movement direction
@@ -290,6 +306,9 @@ export function createControls(camera, domElement) {
   let controlsEnabled = true;
   function setControlsEnabled(enabled) {
     controlsEnabled = enabled;
+    if (!enabled) {
+      mainSceneAutoWalk = false;
+    }
     if (!enabled && photoInteractionMode) {
       setPhotoInteractionMode(false);
     }

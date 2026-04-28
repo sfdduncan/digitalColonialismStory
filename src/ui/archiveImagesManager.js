@@ -186,8 +186,9 @@ export class ArchiveImagesManager {
     const verticalOffsetPercent = parseFloat(imageConfig.verticalOffset) / 100;
     const yPosition = height / 2 + (verticalOffsetPercent * 10 - 2) + 2; // +3 makes images higher in scene (ADJUST THIS NUMBER to change height)
     
-    // Calculate z offset from camera (how far behind/ahead of camera this should stay)
-    const zOffsetFromCamera = imageConfig.trigger - cameraZ + 3; // Positive value keeps images slightly ahead so they are easier to notice.
+    // Calculate z offset from camera (how far ahead of camera this should stay).
+    // Camera moves in -Z direction, so a NEGATIVE offset places images ahead of the player.
+    const zOffsetFromCamera = imageConfig.trigger - cameraZ - 3;
     mesh.position.set(
       xPosition,
       yPosition,

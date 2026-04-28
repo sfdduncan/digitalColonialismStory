@@ -11,6 +11,12 @@ export class SceneAudioManager {
   }
   
   loadAudioZones(zonesConfig) {
+    // Stop and discard any existing audio elements before loading new zones
+    this.activeAudioElements.forEach(audio => {
+      audio.pause();
+      audio.src = '';
+    });
+    this.activeAudioElements.clear();
     this.audioZones = zonesConfig || [];
     this.preloadAudio();
   }

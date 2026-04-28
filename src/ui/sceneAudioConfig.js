@@ -10,10 +10,10 @@ export const mainSceneAudioZones = [
   // relationships to land before colonisation
   {
     id: 'scene1_stewardship',
-    audioSrc: 'audio_hacktivista/Bau lamgnen weichafe - Bau lamgnen weichafe.mp3',
+    audioSrc: 'audio/polar_wind.mp3',
     zStart: 0,
     zEnd: -100,
-    volume: 0.5
+    volume: 0.05
   },
 
   // ── Scene 2: Forest / European Colonisation begins (z=-100 → -200) ─────────
@@ -21,10 +21,10 @@ export const mainSceneAudioZones = [
   // in a Mayan language — directly mirrors the Maya Q'eqchi' narrative
   {
     id: 'scene2_colonization',
-    audioSrc: 'audio_hacktivista/Kixampe - Rebeca Lane ft Sara Curruchich - Kixampe (video oficial).mp3',
+    audioSrc: 'audio/forest_birds.mp3',
     zStart: -100,
     zEnd: -200,
-    volume: 0.5
+    volume: 0.2
   },
 
   // ── Scene 3: Grassland / Historical Resistance — AIM, Wounded Knee (z=-200 → -300)
@@ -32,10 +32,10 @@ export const mainSceneAudioZones = [
   // Pan-South solidarity anthem connecting Latin American and Palestinian struggles
   {
     id: 'scene3_resistance',
-    audioSrc: 'audio_hacktivista/Somos Sur - Ana Tijoux - Somos Sur (feat. Shadia Mansour).mp3',
+    audioSrc: 'audio/grass_rustle.mp3',
     zStart: -200,
     zEnd: -300,
-    volume: 0.5
+    volume: 0.2
   },
 
   // ── Scene 4: Mountain Pass / International Struggle — Standing Rock, UN (z=-300 → -400)
@@ -43,10 +43,10 @@ export const mainSceneAudioZones = [
   // (referencing Túpac Amaru II) and Black Mama, M. Ankayli, DJ Mic
   {
     id: 'scene4_struggle',
-    audioSrc: 'audio_hacktivista/Lucha Eterna - Lucha Eterna - CAYE CAYEJERA ft. BLACK MAMA ft. M. ANKAYLI ft. TAKI AMARU ft. DJMIC.mp3',
+    audioSrc: 'audio/desert_sanddunes.mp3',
     zStart: -300,
     zEnd: -400,
-    volume: 0.5
+    volume: 0.2
   },
 
   // ── Scene 5: Ocean / Fenix Mine / Panzós Massacre (z=-400 → -500) ──────────
@@ -54,10 +54,10 @@ export const mainSceneAudioZones = [
   // mirrors the scene where the Fenix mine history and 1978 massacre unfold
   {
     id: 'scene5_extractivism',
-    audioSrc: 'audio_hacktivista/Extractivismo - Grone Aukan - Extractivismo.mp3',
+    audioSrc: 'audio/ocean_waves.mp3',
     zStart: -400,
     zEnd: -500,
-    volume: 0.5
+    volume: 0.2
   },
 
   // ── Scene 6: Tropical Rainforest / Guacamaya breach (z=-500 → -600) ────────
@@ -65,10 +65,10 @@ export const mainSceneAudioZones = [
   // Captures the urgency that drives Guacamaya's decision to breach the networks
   {
     id: 'scene6_guacamaya',
-    audioSrc: 'audio_hacktivista/Muere la tierra mueres tu - niñx debacle - muere la tierra, mueres tu.mp3',
+    audioSrc: 'audio/rainforest.mp3',
     zStart: -500,
     zEnd: -600,
-    volume: 0.5
+    volume: 0.2
   },
 
   // ── Scene 7: Hack Corridor / Finale (z=-600 → -700) ────────────────────────
@@ -79,8 +79,8 @@ export const mainSceneAudioZones = [
     audioSrc: 'audio_hacktivista/Voces Kontra el Kapital - Kontra el proyecto del capitalismo, acción sin fronteras..mp3',
     zStart: -600,
     zEnd: -700,
-    volume: 0.55
-  },
+    volume: 0.2
+  }
 
 ];
 
