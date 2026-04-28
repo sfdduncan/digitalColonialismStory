@@ -13,7 +13,7 @@ export const mainSceneAudioZones = [
     audioSrc: 'audio/polar_wind.mp3',
     zStart: 0,
     zEnd: -100,
-    volume: 0.05
+    volume: 0.01
   },
 
   // ── Scene 2: Forest / European Colonisation begins (z=-100 → -200) ─────────
@@ -24,7 +24,7 @@ export const mainSceneAudioZones = [
     audioSrc: 'audio/forest_birds.mp3',
     zStart: -100,
     zEnd: -200,
-    volume: 0.2
+    volume: 0.1
   },
 
   // ── Scene 3: Grassland / Historical Resistance — AIM, Wounded Knee (z=-200 → -300)
@@ -35,7 +35,7 @@ export const mainSceneAudioZones = [
     audioSrc: 'audio/grass_rustle.mp3',
     zStart: -200,
     zEnd: -300,
-    volume: 0.2
+    volume: 0.1
   },
 
   // ── Scene 4: Mountain Pass / International Struggle — Standing Rock, UN (z=-300 → -400)
@@ -57,7 +57,7 @@ export const mainSceneAudioZones = [
     audioSrc: 'audio/ocean_waves.mp3',
     zStart: -400,
     zEnd: -500,
-    volume: 0.3
+    volume: 0.2
   },
 
   // ── Scene 6: Tropical Rainforest / Guacamaya breach (z=-500 → -600) ────────
@@ -68,7 +68,7 @@ export const mainSceneAudioZones = [
     audioSrc: 'audio/rainforest.mp3',
     zStart: -500,
     zEnd: -600,
-    volume: 0.2
+    volume: 0.1
   },
 
   // ── Scene 7: Hack Corridor / Finale (z=-600 → -700) ────────────────────────
