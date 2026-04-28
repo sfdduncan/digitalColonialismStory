@@ -12,6 +12,7 @@ import { hackImages, hackVideos, hackBackgroundVideo } from './hackImageConfig.j
 import { sceneAudioManager } from '../ui/sceneAudioManager.js';
 import { mainSceneAudioZones } from '../ui/sceneAudioConfig.js';
 import { textDisplayManager } from '../ui/textDisplayManager.js';
+import { ParticleWind } from '../world/particleWind.js';
 
 
 export class MainScene extends SceneBase {
@@ -38,6 +39,7 @@ export class MainScene extends SceneBase {
     this.oceanShader = null; // Ocean shader for Scene 5
     this.cloudShader = null; // Cloud shader for Scene 5
     this.rainSystem6 = null; // Rain particles for Scene 6
+    this.particleWind4 = null; // Sand wind particles for Scene 4
     this.houses = [];
     
     // Polar bear family (mom and two cubs)
@@ -466,6 +468,11 @@ export class MainScene extends SceneBase {
       this.scene4Objects.push(cliffRight);
     });
     
+    // Sand wind particle effect
+    this.particleWind4 = new ParticleWind(-350);
+    this.add(this.particleWind4.getMesh());
+    this.scene4Objects.push(this.particleWind4.getMesh());
+
     // Beach sand models at the end of Scene 4 (transition to ocean)
     loader.load('./models/beach_sand_photoscan.glb', (gltf) => {
       // Left beach sand
@@ -1117,6 +1124,12 @@ export class MainScene extends SceneBase {
   disposeScene4() {
     if (this.scene4Disposed) return;
     this.scene4Disposed = true;
+
+    // Dispose sand wind particles
+    if (this.particleWind4) {
+      this.particleWind4.dispose();
+      this.particleWind4 = null;
+    }
     
     // Dispose all tracked Scene 4 objects
     this.scene4Objects.forEach(obj => this.disposeObject(obj));
@@ -1386,6 +1399,11 @@ export class MainScene extends SceneBase {
       this.cloudShader.update(deltaTime);
     }
     
+    // Update sand wind particles (Scene 4)
+    if (this.particleWind4 && userPosition.z < -280 && userPosition.z > -420) {
+      this.particleWind4.update(deltaTime, userPosition);
+    }
+
     // Update rain effect (Scene 6)
     if (this.rainSystem6 && userPosition.z < -480 && userPosition.z > -620) {
       const positions = this.rainSystem6.geometry.attributes.position.array;
