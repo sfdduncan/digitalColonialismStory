@@ -94,7 +94,7 @@ export const hackSceneAudioZones = [
     audioSrc: 'audio_hacktivista/Hack Back! v2 (1).mp4',
     zStart: 35,
     zEnd: -100,
-    volume: 0.1
+    volume: 0.01
   },
 ];
 

@@ -5,7 +5,6 @@ export class SceneAudioManager {
     this.audioZones = [];
     this.activeAudioElements = new Map();
     this.currentZoneId = null;
-    this.masterVolume = 0.7;
     this.fadeDistance = 15;
     this.fadeCurve = 'cosine';
   }
@@ -60,7 +59,7 @@ export class SceneAudioManager {
       
       if (activeZone) {
         // This zone should be playing
-        const targetVolume = activeZone.fadeAmount * zone.volume * this.masterVolume;
+        const targetVolume = activeZone.fadeAmount * zone.volume;
         this.setAudioVolume(audio, targetVolume);
         
         // Start playback if not already playing
