@@ -7,25 +7,26 @@ export const archiveImages = {
     // citationLabel: 'Library of Congress'
     // Existing `source` is also supported as a URL fallback.
 
-    // Scene 1 - Precolonial Knowledge / Snowy Area (z=0 to z=-100)
+    // ─── Scene 1: Precolonial Knowledge / Snowy Area (z=0 to z=-100) ───
+    // Subtitles: land relations, governance through ceremony and song (z=0 to z=-70)
     {
       trigger: -20,
       src: './imgs/archive_imgs/circleOfLife_QavavauManumie.jpg',
-      side: 'left',
+      side: 'right',
       verticalOffset: '20%',
-      alt: 'Arctic precolonial landscape',
+      alt: 'Circle of Life',
       title: 'Circle of Life',
       artist: 'Qavavau Manumie',
-      medium: 'Historical landscape photograph',
+      medium: 'Drawing',
       source: 'https://nativecanadianarts.com/gallery/circle-of-life/',
-      description: 'Drawing by Qavavau Manumie with hunters teaching the young that life is about respect and reciprocity.  Respect animals and they will respect and provide when needed in return.  Good respectful relationship with whales will preserve both continued survival.  Taboos and cultural behaviors are built around this belief.'
+      description: 'Drawing by Qavavau Manumie with hunters teaching the young that life is about respect and reciprocity. Respect animals and they will respect and provide when needed in return. Good respectful relationship with whales will preserve both continued survival.'
     },
     {
-      trigger: -40,
+      trigger: -48,
       src: './imgs/archive_imgs/thuleCulture.jpg',
-      side: 'right',
+      side: 'left',
       verticalOffset: '30%',
-      alt: '',
+      alt: 'Thule Culture artifacts',
       title: 'Thule Culture',
       medium: 'Drawing',
       source: 'https://katilvik.com/inuit-art-timeline/',
@@ -45,18 +46,19 @@ export const archiveImages = {
     },
 
 
-    // Scene 2  
+    // ─── Scene 2: Colonization / Forested Hills (z=-100 to z=-200) ───
+    // Subtitles: Doctrine of Discovery, land seizure, boarding schools, cultural erasure (~z=-95 to z=-200)
     {
       trigger: -100,
       src: './imgs/archive_imgs/severedTies.png',
       side: 'left',
       verticalOffset: '50%',
-      alt: '',
+      alt: 'Severed Ties',
       title: 'Severed Ties',
       artist: 'Avis Charley (Diné/Spirit Lake Dakota)',
       medium: 'Illustration',
       source: 'https://www.hcn.org/issues/51-17/',
-      description: 'An original illustration by Spirit Dakota/Navajo artist Avis Charley from High Country News.'
+      description: 'An original illustration by Spirit Dakota/Navajo artist Avis Charley from High Country News, depicting the severing of Indigenous ties to land and family through colonial policy, depicting the severing of Indigenous ties to land and family through colonial policy.'
     },
     {
       trigger: -120,
@@ -70,7 +72,7 @@ export const archiveImages = {
       description: 'Edgar Heap of Birds uses language as one of his primary mediums. Their work calls attention to what they call "a past that is no longer visible to us". As part of a larger series of signs across the country, this piece was installed in Alaska in 1988.'
     },
     {
-      trigger: -140,
+      trigger: -130,
       src: './imgs/archive_imgs/mountainChief_Blackfeet.jpg',
       side: 'left',
       verticalOffset: '45%',
@@ -79,9 +81,8 @@ export const archiveImages = {
       artist: 'Terrance Guardipee (Blackfeet)',
       medium: 'Mixed media collage',
       source: 'https://hoodmuseum.dartmouth.edu/objects/2008.60',
-      description: 'A work of ledger art that layers vibrant Blackfoot imagery, symbols, and the figure of the historic Blackfoot chief Mountain Chief atop a commercial Montana road map and historical American documents. The work is an act of indigenous counter-mapping, reclaiming Blackfoot identity and territory by superimposing cultural stories and cosmology over the Western cartographic materials that once erased them.'
+      description: 'A work of ledger art that layers vibrant Blackfoot imagery and the figure of the historic chief Mountain Chief atop a commercial Montana road map. An act of indigenous counter-mapping, reclaiming Blackfoot identity over the Western cartographic materials that once erased them.'
     },
-
     {
       trigger: -160,
       src: './imgs/archive_imgs/dancingAtPoplarRiver.jpg',
@@ -90,13 +91,23 @@ export const archiveImages = {
       alt: 'Dancing at Poplar River',
       title: 'Dancing at Poplar River',
       artist: 'Darryl Growing Thunder (Assiniboine, Nakota)',
-      medium: 'Colored Pencil and ink on eight page ledger pages',
+      medium: 'Colored Pencil and ink on ledger pages',
       source: 'https://hoodmuseum.dartmouth.edu/objects/2008.61',
-      description: 'Ledger art drawn over repurposed historical payroll documents, depicting a traditional dance scene of the Assiniboine and Sioux peoples of the Fort Peck Reservation in Montana. Also titled in Lakota as Wahcinca Wakpa ekta wacipi, the piece layers vibrant indigenous imagery atop the remnants of Western record-keeping, celebrating living cultural tradition on the very paper once used to document and administer reservation life.'
+      description: 'Ledger art drawn over repurposed historical payroll documents, depicting a traditional dance scene of the Assiniboine and Sioux peoples of the Fort Peck Reservation in Montana — living cultural tradition drawn on the very paper once used to administer reservation life.'
     },
-
     {
-      trigger: -180, 
+      trigger: -176,
+      src: './imgs/archive_imgs/nativeHostforWashingtonDC_EdgarHeapOfBirds.jpg',
+      side: 'right',
+      verticalOffset: '40%',
+      alt: 'Native Host sign',
+      title: 'Native Host for Alaska',
+      artist: 'Edgar Heap of Birds (Cheyenne/Arapaho)',
+      source: 'https://www.nga.gov/exhibitions/land-carries-our-ancestors-contemporary-art-native-americans',
+      description: 'Edgar Heap of Birds uses language as one of his primary mediums, calling attention to "a past that is no longer visible to us." Part of a larger series of signs installed across the country, this piece was installed in Alaska in 1988.'
+    },
+    {
+      trigger: -191,
       src: './imgs/archive_imgs/stateNamesII_JaneQuickToSeeSmith.png',
       side: 'left',
       verticalOffset: '50%',
@@ -105,12 +116,14 @@ export const archiveImages = {
       artist: 'Jane Quick-To-See Smith (Salish/Kootenai)',
       medium: 'Oil, collage and mixed media on canvas',
       source: 'https://americanart.si.edu/artwork/state-names-73858',
-      description: 'Dripping paint and newspaper clippings obscure a map of North America in State Names. The only names left visible are those that stem from indigenous sources. The collaged layers act as sequences of time, partially eclipsing the past while highlighting the injustices endured by Native Americans throughout history.'
-
+      description: 'Dripping paint and newspaper clippings obscure a map of North America. The only names left visible are those that stem from indigenous sources — the collaged layers acting as sequences of time, partially eclipsing the past while highlighting injustices endured by Native Americans throughout history.'
     },
 
 
-    // Scene 3 - Resistance in Many Forms / Hilly Grassland (z=-200 to z=-300)
+    // ─── Scene 3: Resistance in Many Forms / Hilly Grassland (z=-200 to z=-300) ───
+    // Subtitles: Red Cloud\'s War (-225), Ghost Dance (-252), Wounded Knee 1890 (-263),
+    //            Alcatraz 1969 (-275), Trail of Broken Treaties 1972 (-290),
+    //            Wounded Knee occupation 1973 (-305), Oka Crisis 1990 (-315)
     {
       trigger: -225,
       src: './imgs/archive_imgs/redCloud_War.jpg',
@@ -120,10 +133,22 @@ export const archiveImages = {
       title: 'The Indian Battle and Massacre near Fort Philip Kearney',
       artist: 'Library of Congress Prints and Photographs Division',
       source: 'https://www.loc.gov/pictures/item/2001700334/',
-      description: 'Large group of Native Americans on horseback surrounding United States Army soldiers. Illus. in: Harperweekly, v. 11, no. 534 (1867 March 23), p. 180.'
+      description: 'Large group of Native Americans on horseback surrounding United States Army soldiers. Illus. in: Harpers Weekly, v. 11, no. 534 (1867 March 23), p. 180.'
     },
     {
-      trigger: -240,
+      trigger: -238,
+      src: './imgs/archive_imgs/ghostDanceDrum_1890s.jpg',
+      side: 'right',
+      verticalOffset: '25%',
+      alt: 'Ghost Dance Drum',
+      title: 'Ghost Dance Drum',
+      artist: 'George Beaver',
+      medium: 'Artifact photograph',
+      source: 'https://www.worldhistory.org/image/18059/ghost-dance-drum/',
+      description: 'A rare artifact from the Ghost Dance movement made by George Beaver (Chahiksichahiks). The Ghost Dance was a pan-Indigenous spiritual movement in the 1880s–90s preaching the peaceful end of colonial rule and the restoration of Indigenous land and life.'
+    },
+    {
+      trigger: -252,
       src: './imgs/archive_imgs/ghostDance.jpg',
       side: 'right',
       verticalOffset: '25%',
@@ -322,7 +347,7 @@ export const archiveImages = {
       description: 'Police crack down on protesters blocking mine vehicles in El Estor, Guatemala, in October 2021.'
     },
     {
-      trigger: -522,
+      trigger: -532,
       src: 'imgs/hack/image.png',
       side: 'right',
       verticalOffset: '30%',
@@ -334,7 +359,7 @@ export const archiveImages = {
       description: 'Paulina Coc, member of Maya Q\'eqchi\' community, listens to Community Development Council leaders at a San Jorge neighborhood assembly in El Estor, Guatemala, on Jan. 23, 2022'
     },
     {
-      trigger: -542,
+      trigger: -562,
       src: 'imgs/hack/FotoEstor.png',
       side: 'right',
       verticalOffset: '30%',
@@ -346,7 +371,7 @@ export const archiveImages = {
       description: 'Maya Q\'eqchi\' community leaders in El Estor, Guatemala, stand together in solidarity and to discuss the repression they face at the hands of the Fenix Nickel Mine and the Guatemalan government.'
     },
     {
-      trigger: -562,
+      trigger: -582,
       src: 'imgs/archive_imgs/fotoEstor2.png',
       side: 'right',
       verticalOffset: '45%',
@@ -361,51 +386,53 @@ export const archiveImages = {
     // Scene 6 - Guacamaya / Tropical Rainforest (z=-600 to z=-700)
     {
       trigger: -602,
-      src: '',
+      src: './imgs/hack/hack_back.jpg',
       side: 'left',
       verticalOffset: '40%',
       alt: 'Corporate extraction infrastructure',
-      title: 'SUGGESTION: Server farm, corporate communications infrastructure, or mining company HQ. The digital face of the same extractive logic.',
-      artist: 'Archival source',
-      medium: 'Documentary photograph',
-      source: 'https://example.com/citation/trigger--602',
-      description: 'The corporate and digital infrastructure through which colonial extraction now coordinates itself.'
+      title: 'Guacamaya\'s Online Guide to Hacking',
+      artist: 'Guacamaya',
+      medium: 'Website',
+      source: 'https://enlacehacktivista.org/index.php/Extractivist_Leaks/es',
+      description: 'Cover page of online tutorial created by Guacamaya demonstrating how they breached the networks of Pronico and CGN, the two companies responsible for the Fenix mine and its violence. The guide is a tool for other activists and land defenders to use hacking as a means of resistance.'
     },
     {
       trigger: -622,
-      src: '',
+      src: 'imgs/hack/wakamaya.png',
       side: 'right',
       verticalOffset: '35%',
       alt: 'Guacamaya leak documents',
-      title: 'SUGGESTION: Redacted or partially visible document from the Guacamaya leaks. What was hidden, now exposed.',
-      artist: 'Archival source',
-      medium: 'Documentary image',
-      source: 'https://example.com/citation/trigger--622',
-      description: 'The breach as act of witness, making visible the surveillance and coordination of violence the corporate infrastructure had been designed to hide.'
-    },
-    {
-      trigger: -645,
-      src: '',
-      side: 'left',
-      verticalOffset: '50%',
-      alt: 'Land defender with phone',
-      title: 'SUGGESTION: Land defender documenting extractive activity or state violence on their phone. The same body, the same territory, a new tool.',
-      artist: 'Archival source',
-      medium: 'Documentary photograph',
-      source: 'https://example.com/citation/trigger--645',
-      description: 'The continuity of land defense into the digital, a body on the land using the tools of this time.'
-    },
-    {
-      trigger: -665,
-      src: '',
-      side: 'right',
-      verticalOffset: '40%',
-      alt: 'Guacamaya communique',
-      title: 'SUGGESTION: Screenshot of Guacamaya\'s RESISTENCIA communique. Their own words as image.',
+      title: 'Guacamaya (Parrot) Illustration',
       artist: 'Guacamaya',
-      medium: 'Digital document',
-      source: 'https://example.com/citation/trigger--665',
-      description: 'Guacamaya\'s RESISTENCIA communique as artifact, their statement of purpose held alongside the quote the subtitle is displaying.'
+      medium: 'Illustration',
+      source: 'https://enlacehacktivista.org/index.php/Extractivist_Leaks/es',
+      description: 'Illustration of a parrot hacking produced by followers of the Guacamaya collective.'
+    },
+
+    {
+      trigger: -642,
+      src: 'imgs/hack/Fin_dela_mina.png',
+      side: 'left',
+      verticalOffset: '35%',
+      alt: 'Fin de la Mina Illustration',
+      title: 'Fin de la Mina Illustration',
+      artist: 'Guacamaya',
+      medium: 'Illustration',
+      source: 'https://enlacehacktivista.org/index.php/Extractivist_Leaks/es',
+      description: 'Illustration representing the end of the mine and ongoing environmental destruction.'
+    },
+
+    {
+      trigger: -662,
+      src: 'imgs/hack/Fin_dela_milicia.png',
+      side: 'right',
+      verticalOffset: '35%',
+      alt: 'Fin de la Milicia Illustration',
+      title: 'Fin de la Milicia Illustration',
+      artist: 'Guacamaya',
+      medium: 'Illustration',
+      source: 'https://enlacehacktivista.org/index.php/Extractivist_Leaks/es',
+      description: 'Illustration representing the end of the militia and ongoing settler colonialism.'
     },
 
     // Scene 7 - Dark Hack Corridor (z=-700 onwards)
