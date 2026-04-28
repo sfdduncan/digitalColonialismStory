@@ -27,7 +27,7 @@ export const archiveImages = {
       side: 'left',
       verticalOffset: '30%',
       alt: 'Thule Culture artifacts',
-      title: 'Thule Culture',
+      title: 'Thule Bow Drill Handle',
       medium: 'Drawing',
       source: 'https://katilvik.com/inuit-art-timeline/',
       description: 'Thule culture evidenced by bow-drill handle found near Arctic Bay, Baffin Island and swimming bird and birdwoman figurines found in the Eastern Arctic.'

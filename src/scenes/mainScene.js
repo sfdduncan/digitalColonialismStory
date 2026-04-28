@@ -1289,43 +1289,43 @@ export class MainScene extends SceneBase {
     if (this.currentScene >= 6) this.disposeScene4();
     if (this.currentScene >= 7) this.disposeScene5();
 
-    // Generate Scene 2 when approaching (10 units before boundary)
-    if (!this.scene2Generated && userPosition.z < -50) {
+    // Generate Scene 2 when approaching (at 80% through Scene 1)
+    if (!this.scene2Generated && userPosition.z < -70) {
       this.buildScene2();
       // Load Scene 2 subtitles
       subtitleManager.loadSubtitles(subtitles.scene2);
     }
 
-    // Generate Scene 3 when approaching (10 units before boundary)
-    if (!this.scene3Generated && userPosition.z < -150) {
+    // Generate Scene 3 when approaching (at 80% through Scene 2)
+    if (!this.scene3Generated && userPosition.z < -180) {
       this.buildScene3();
       // Load Scene 3 subtitles
       subtitleManager.loadSubtitles(subtitles.scene3);
     }
 
-    // Generate Scene 4 early (when entering Scene 3) so it's visible in the distance
-    if (!this.scene4Generated && userPosition.z < -210) {
+    // Generate Scene 4 when approaching (at 80% through Scene 3)
+    if (!this.scene4Generated && userPosition.z < -280) {
       this.buildScene4();
       // Load Scene 4 subtitles
       subtitleManager.loadSubtitles(subtitles.scene4);
     }
 
-    // Generate Scene 5 when approaching (10 units before boundary)
-    if (!this.scene5Generated && userPosition.z < -390) {
+    // Generate Scene 5 when approaching (at 80% through Scene 4)
+    if (!this.scene5Generated && userPosition.z < -380) {
       this.buildScene5();
       // Load Scene 5 subtitles
       subtitleManager.loadSubtitles(subtitles.scene5);
     }
 
-    // Generate Scene 6 when approaching (10 units before boundary)
-    if (!this.scene6Generated && userPosition.z < -490) {
+    // Generate Scene 6 when approaching (at 80% through Scene 5)
+    if (!this.scene6Generated && userPosition.z < -480) {
       this.buildScene6();
       // Load Scene 6 subtitles
       subtitleManager.loadSubtitles(subtitles.scene6);
     }
 
-    // Generate Scene 7 (hack corridor) when approaching
-    if (!this.scene7Generated && userPosition.z < -590) {
+    // Generate Scene 7 (hack corridor) when approaching (at 80% through Scene 6)
+    if (!this.scene7Generated && userPosition.z < -580) {
       this.buildScene7();
       // Load Scene 7 subtitles
       subtitleManager.loadSubtitles(subtitles.scene7);

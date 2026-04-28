@@ -403,12 +403,10 @@
   .archive-photo-window {
     position: relative;
     width: min(1200px, 100%);
-    min-height: min(78vh, 760px);
+    height: min(78vh, 760px);
     display: grid;
     grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr);
     gap: 0;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    background: rgba(0, 0, 0, 0.8);
     overflow: hidden;
   }
 
@@ -437,13 +435,14 @@
     display: flex;
     align-items: stretch;
     justify-content: center;
-    min-height: 100%;
+    overflow: hidden;
   }
 
   #archive-photo-image {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    background: white;
     display: block;
   }
 
@@ -462,36 +461,51 @@
     font-size: 0.82rem;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.6);
+    color: #ffffff;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.9), 0 0 8px rgba(0,0,0,0.7);
+  }
+
+  .archive-photo-title-wrap {
+    line-height: 1.35;
   }
 
   #archive-photo-title {
     margin: 0;
-    font-size: clamp(2rem, 3vw, 3.4rem);
-    line-height: 0.95;
+    font-size: 1.75rem;
+    line-height: 1.2;
     font-weight: 500;
+    display: inline;
+    background-color: black;
+    border-radius: 5px;
+    padding: 0.15rem 0.6rem;
+    color: #ffffff;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
   }
 
   #archive-photo-meta {
     margin: 0;
     font-size: 1rem;
     line-height: 1.5;
-    color: rgba(255, 255, 255, 0.75);
+    color: #ffffff;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.9), 0 0 1px rgba(0,0,0,0.9);
   }
 
   #archive-photo-description {
     margin: 0;
     font-size: 1.05rem;
     line-height: 1.75;
-    color: rgba(255, 255, 255, 0.88);
+    color: #ffffff;
     max-width: 32ch;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.9), 0 0 1px rgba(0,0,0,0.9);
   }
 
   #archive-photo-citation {
     margin: 0;
     font-size: 0.92rem;
     line-height: 1.5;
-    color: rgba(255, 255, 255, 0.72);
+    color: #ffffff;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.9), 0 0 1px rgba(0,0,0,0.9);
   }
 
   #archive-photo-citation-link {
@@ -649,9 +663,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  background:
-    radial-gradient(circle at top, rgba(255, 255, 255, 0.04), transparent 35%),
-    rgba(0, 0, 0, 0.72);
+  background: rgba(0,0,0,.5);
   color: #fff;
   opacity: 0;
   transition: opacity 1.5s ease;
@@ -719,7 +731,14 @@
   font-weight: 300;
   letter-spacing: 0.18em;
   text-align: center;
-  color: rgba(255, 255, 255, 0.9);
+  color: #ffffff;
+  display: inline-block;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: black;
+  border-radius: 5px;
+  padding: 0.15rem 0.8rem;
 }
 
 .credits-section {
@@ -742,9 +761,12 @@
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.85);
+  color: #ffffff;
   margin: 2.8rem 0 1.4rem;
-  padding-bottom: 0.5rem;
+  padding: 0.15rem 0.6rem;
+  display: inline-block;
+  background-color: black;
+  border-radius: 5px;
 }
 
 .bib-section {
