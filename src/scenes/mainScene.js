@@ -1207,8 +1207,9 @@ export class MainScene extends SceneBase {
   // Sky color transition - Smoothly interpolates background and fog colors between scenes
   updateSkyColors(zPosition) {
     // Find which scene transition zone we're in
-    let currentZoneIndex = 0;
-    let nextZoneIndex = 1;
+    // Default to last zone so colours stay correct past the final boundary
+    let currentZoneIndex = this.sceneColors.length - 1;
+    let nextZoneIndex = this.sceneColors.length - 1;
     
     // Determine the current and next color zones
     for (let i = 0; i < this.sceneColors.length; i++) {
@@ -1504,7 +1505,7 @@ export class MainScene extends SceneBase {
       });
     }
 
-    if (!this.endCreditsShown && userPosition.z < -825) {
+    if (!this.endCreditsShown && userPosition.z < -715) {
       this.endCreditsShown = true;
 
       if (window.showCreditsOverlay) {
