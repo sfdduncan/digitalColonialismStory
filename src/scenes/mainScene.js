@@ -13,6 +13,7 @@ import { sceneAudioManager } from '../ui/sceneAudioManager.js';
 import { mainSceneAudioZones } from '../ui/sceneAudioConfig.js';
 import { textDisplayManager } from '../ui/textDisplayManager.js';
 import { ParticleWind } from '../world/particleWind.js';
+import { startCorridorCascade } from '../ui/imageCorridor.js';
 
 
 export class MainScene extends SceneBase {
@@ -825,6 +826,9 @@ export class MainScene extends SceneBase {
 
     // Generate image walls
     this.generateScene7ImageWalls(scene7Start, corridorLength, wallDistance, imageSpacing, imageHeight);
+
+    // Cascade-reveal images from nearest to farthest
+    startCorridorCascade(this.scene7ImageWalls);
   }
 
   async createScene7BackgroundVideoWalls() {
@@ -916,7 +920,7 @@ export class MainScene extends SceneBase {
 
   generateScene7ImageWalls(scene7Start, corridorLength, wallDistance, imageSpacing, imageHeight) {
     const corridorStart = scene7Start;
-    const corridorEnd = scene7Start - corridorLength - 20;
+    const corridorEnd = scene7Start - corridorLength; // stops exactly at -700
     const totalLength = corridorStart - corridorEnd;
     const numPositions = Math.floor(totalLength / imageSpacing) * 2;
 
@@ -960,8 +964,7 @@ export class MainScene extends SceneBase {
       }
     }
 
-    // Add images beyond the corridor walls
-    this.generateScene7BeyondImages(imageStartZ, corridorEnd, wallDistance);
+    // No beyond/floating images — all imagery stays within the wall corridor
   }
 
   generateScene7BeyondImages(imageStartZ, imageEndZ, wallDistance) {
@@ -1047,7 +1050,9 @@ export class MainScene extends SceneBase {
 
     const material = new THREE.MeshBasicMaterial({
       map: texture,
-      side: THREE.DoubleSide
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0, // cascade reveal will fade these in
     });
 
     const wall = new THREE.Mesh(geometry, material);
@@ -1505,7 +1510,7 @@ export class MainScene extends SceneBase {
       });
     }
 
-    if (!this.endCreditsShown && userPosition.z < -715) {
+    if (!this.endCreditsShown && userPosition.z < -700) {
       this.endCreditsShown = true;
 
       if (window.showCreditsOverlay) {

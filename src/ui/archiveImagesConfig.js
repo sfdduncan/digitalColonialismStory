@@ -371,9 +371,10 @@ export const archiveImages = {
       description: 'Members of the Maya Q\'eqchi\' community in El Estor, Guatemala, gather for a community meeting.'
     },
 
-    // Scene 6 - Guacamaya / Tropical Rainforest (z=-600 to z=-700)
+    // Scene 6 - Guacamaya / Tropical Rainforest (z=-500 to z=-600)
+    // These images reveal as the user moves through the late part of Scene 6
     {
-      trigger: -602,
+      trigger: -548,
       src: './imgs/hack/hack_back.jpg',
       side: 'left',
       verticalOffset: '40%',
@@ -385,7 +386,7 @@ export const archiveImages = {
       description: 'Cover page of online tutorial created by Guacamaya demonstrating how they breached the networks of Pronico and CGN, the two companies responsible for the Fenix mine and its violence. The guide is a tool for other activists and land defenders to use hacking as a means of resistance.'
     },
     {
-      trigger: -622,
+      trigger: -562,
       src: 'imgs/hack/wakamaya.png',
       side: 'right',
       verticalOffset: '35%',
@@ -398,7 +399,7 @@ export const archiveImages = {
     },
 
     {
-      trigger: -642,
+      trigger: -574,
       src: 'imgs/hack/Fin_dela_mina.png',
       side: 'left',
       verticalOffset: '35%',
@@ -411,7 +412,7 @@ export const archiveImages = {
     },
 
     {
-      trigger: -662,
+      trigger: -586,
       src: 'imgs/hack/Fin_dela_milicia.png',
       side: 'right',
       verticalOffset: '35%',

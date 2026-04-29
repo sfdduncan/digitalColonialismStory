@@ -65,11 +65,9 @@ export function initializeHelpUI() {
   const closeButton = document.getElementById('help-close');
   closeButton.addEventListener('click', toggleHelp);
 
-  // Close when clicking outside content
+  // Close when clicking anywhere on the overlay (backdrop or content)
   helpOverlay.addEventListener('click', (e) => {
-    if (e.target === helpOverlay) {
-      toggleHelp();
-    }
+    toggleHelp();
   });
 
   // Close with any key press
