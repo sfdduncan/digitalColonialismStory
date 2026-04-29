@@ -130,8 +130,8 @@ export const scholarAudioTriggers = [
     z: -7,
     audioSrc: 'scholars_audios/Vine Deloria on Native Americans (1972)_clips/settler_colonialism_process.mp3',
     volume: 0.85,
-    fadeInDuration: 1.5,
-    fadeOutDuration: 2.0,
+    fadeInDuration: .25,
+    fadeOutDuration: .25,
   },
 
   // ── Scene 2 ───────────────────────────────────────────────────────────────
@@ -141,8 +141,8 @@ export const scholarAudioTriggers = [
     z: -92,
     audioSrc: 'scholars_audios/YTDown_YouTube_Learn-about-settler-colonialism-with-Pat_Media_xrEBcQLd4Vc_007_128k_clips/settlerColonialism_LogicOfElimination_Wolfe.mp3',
     volume: 0.85,
-    fadeInDuration: 1.5,
-    fadeOutDuration: 2.0,
+    fadeInDuration: .25,
+    fadeOutDuration: .25,
   },
 
   // ── Scene 3 ───────────────────────────────────────────────────────────────
@@ -152,8 +152,8 @@ export const scholarAudioTriggers = [
     z: -216,
     audioSrc: 'scholars_audios/Vine Deloria on Native Americans (1972)_clips/onDefenseofLand_Deloria.mp3',
     volume: 0.85,
-    fadeInDuration: 1.5,
-    fadeOutDuration: 2.0,
+    fadeInDuration: .25,
+    fadeOutDuration: .25,
   },
   // After the Alcatraz occupation card (subtitle trigger z=-232)
   // Deloria reflecting on the moment before the narration moves to Zapatistas
@@ -161,8 +161,8 @@ export const scholarAudioTriggers = [
     z: -240,
     audioSrc: 'scholars_audios/Vine Deloria on Native Americans (1972)_clips/alcatraz_Deloria.mp3',
     volume: 0.85,
-    fadeInDuration: 1.5,
-    fadeOutDuration: 2.0,
+    fadeInDuration: .25,
+    fadeOutDuration: .25,
   },
 
   // ── Scene 4 ───────────────────────────────────────────────────────────────
@@ -172,8 +172,8 @@ export const scholarAudioTriggers = [
     z: -326,
     audioSrc: 'scholars_audios/Simpson_Mohawk_Interruptus_IGOV_clips/refusal_audra.mp3',
     volume: 0.85,
-    fadeInDuration: 1.5,
-    fadeOutDuration: 2.0,
+    fadeInDuration: .25,
+    fadeOutDuration: .25,
   },
   // After the grounded normativity card (subtitle trigger z=-338)
   // Coulthard naming the hemispheric, connected nature of Indigenous resistance
@@ -181,8 +181,8 @@ export const scholarAudioTriggers = [
     z: -346,
     audioSrc: 'scholars_audios/Coulthard_Fanonian_Antinomies_SFU_2017_clips/panIndianism_Coulthard.mp3',
     volume: 0.85,
-    fadeInDuration: 1.5,
-    fadeOutDuration: 2.0,
+    fadeInDuration: .25,
+    fadeOutDuration: .25,
   },
 
   // ── Scene 7 ───────────────────────────────────────────────────────────────
@@ -192,8 +192,8 @@ export const scholarAudioTriggers = [
     z: -686,
     audioSrc: 'scholars_audios/Indigenomicon and Speculative Relations： Indigenous Worlding and Repair_clips/onSpeculation_Pierce.mp3',
     volume: 0.85,
-    fadeInDuration: 1.5,
-    fadeOutDuration: 2.0,
+    fadeInDuration: .25,
+    fadeOutDuration: .25,
   },
 
 ];

@@ -23,8 +23,6 @@ export class SceneManager {
     // Start with hack scene
     this.currentScene = this.hackScene;
     this.hackScene.setStartPosition(this.camera);
-    // Auto-move is NOT started here — it's triggered via startHackSceneMovement()
-    // after the fade-in completes, so the camera floats in place first
 
     // Failsafe: number keys jump to scenes
     this.handleNumericSceneJump = this.handleNumericSceneJump.bind(this);

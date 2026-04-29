@@ -37,7 +37,7 @@ export function createControls(camera, domElement) {
   // Create memory text display
   const memoryTextElement = document.createElement('div');
   memoryTextElement.id = 'memory-text-container';
-  memoryTextElement.innerHTML = '<span class="highlight-inverse">The past informs the present and always moves alongside you</span>';
+  memoryTextElement.innerHTML = '<span class="highlight-inverse">Moments of the past work to inform the present</span>';
   document.body.appendChild(memoryTextElement);
   
   // Breathing animation
