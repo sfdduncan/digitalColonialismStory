@@ -47,7 +47,7 @@ export class SceneManager {
       if (this.hackScene.startAudio) {
         this.hackScene.startAudio();
       }
-    }, 4000);  // Adjust this value (ms) to change how long camera floats before moving
+    }, 2000);  // Adjust this value (ms) to change how long camera floats before moving
   }
 
   cancelHackSceneMovement() {

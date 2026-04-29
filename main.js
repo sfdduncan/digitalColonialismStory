@@ -109,6 +109,9 @@ const helpUI = initializeHelpUI();
 initializeTimeline();
 initializeVerticalTimeline();
 
+// Start the render loop immediately so the hack scene renders behind the title card overlay
+startLoop(renderer, camera, sceneManager, controls);
+
 const creditsOverlay = document.getElementById('credits-overlay');
 const creditsRoll = document.getElementById('credits-roll');
 const creditsClose = document.getElementById('credits-close');
@@ -360,29 +363,55 @@ function hideArchivePhotoOverlay() {
 
 renderCredits();
 
-// Load PNG into the container
-fetch('imgs/titleCardFinal.jpg')
+// Load title card PNG into the container
+fetch('imgs/title_card.png')
   .then(r => r.blob())
   .then(blob => {
     const url = URL.createObjectURL(blob);
     const img = document.createElement('img');
     img.src = url;
+    img.alt = 'Title card';
     starterSvgContainer.appendChild(img);
   });
+
+// When hack scene assets are ready, reveal the scene through the title card overlay
+window.addEventListener('hackSceneReady', () => {
+  if (starterActive && starterOverlay) {
+    starterOverlay.classList.add('scene-revealed');
+  }
+}, { once: true });
 
 function hideStarterScreen() {
   if (!starterActive) return;
   starterActive = false;
+
+  const fadeElement = document.getElementById('fade-to-scene');
+
+  // Fade out the starter overlay and fade to black simultaneously
   starterOverlay.style.opacity = 0;
+  if (fadeElement) {
+    fadeElement.style.transition = 'opacity 0.7s ease-in-out';
+    fadeElement.classList.add('fade-in');
+  }
+
   setTimeout(() => {
+    // Fully black now — swap to content warning (starts at opacity 0)
     starterOverlay.style.display = 'none';
-    // Show content warning before starting the game
     showContentWarning();
-  }, 500);
+
+    // Lift the black overlay so the content warning fades in beneath it
+    setTimeout(() => {
+      if (fadeElement) {
+        fadeElement.style.transition = 'opacity 0.6s ease-in-out';
+        fadeElement.classList.remove('fade-in');
+        fadeElement.classList.add('fade-out');
+      }
+    }, 150);
+  }, 700);
 }
 
 function startGame() {
-  startLoop(renderer, camera, sceneManager, controls);
+  // Loop already started at initialization; nothing extra needed here.
 }
 
 // Show hamburger and help button when reaching MainScene
@@ -472,24 +501,49 @@ function hideContentWarning() {
   if (AudioCtx) { const ctx = new AudioCtx(); ctx.resume().then(() => ctx.close()); }
 
   const fadeElement = document.getElementById('fade-to-scene');
-  if (fadeElement) fadeElement.classList.add('fade-in');
-  
+
+  // Step 1: Instantly put the black overlay behind the content warning (no transition)
+  if (fadeElement) {
+    fadeElement.style.transition = 'none';
+    fadeElement.classList.remove('fade-out');
+    fadeElement.classList.add('fade-in');
+    // Force reflow so the instant snap is applied before we re-enable transitions
+    fadeElement.offsetHeight; // eslint-disable-line no-unused-expressions
+    fadeElement.style.transition = '';
+  }
+
+  // Step 2: Fade the content warning out over 1s (text melts into black)
+  if (contentWarningOverlay) {
+    contentWarningOverlay.style.transition = 'opacity 1s ease-in-out';
+    contentWarningOverlay.style.opacity = '0';
+  }
+
   setTimeout(() => {
-    // Hide content warning once black
-    contentWarningOverlay.classList.remove('active');
-    // Start the game
-    startGame();
-    // Fade out (reveal scene)
-    setTimeout(() => {
-      if (fadeElement) {
-        fadeElement.classList.remove('fade-in');
-        fadeElement.classList.add('fade-out');
-      }
-      // Start camera moving after user has had time to orient (4 seconds after fade-in)
-      if (sceneManager) sceneManager.startHackSceneMovement();
-    }, 500);
-  }, 400);
+    // Content warning is now invisible — hide it properly
+    if (contentWarningOverlay) {
+      contentWarningOverlay.classList.remove('active');
+      contentWarningOverlay.style.transition = '';
+      contentWarningOverlay.style.opacity = '';
+    }
+
+    // Step 3: Reveal the scene by fading the black overlay out over 1s
+    if (fadeElement) {
+      fadeElement.style.transition = 'opacity 1s ease-in-out';
+      fadeElement.classList.remove('fade-in');
+      fadeElement.classList.add('fade-out');
+    }
+
+    // Start camera moving after the reveal begins
+    if (sceneManager) sceneManager.startHackSceneMovement();
+  }, 1000); // wait for the 1s fade-out to complete
 }
+
+// Dismiss the starter title card on any key or mouse click
+window.addEventListener('mousedown', (e) => {
+  if (starterActive) {
+    hideStarterScreen();
+  }
+});
 
 // Handle key press to dismiss screens
 window.addEventListener('keydown', (e) => {

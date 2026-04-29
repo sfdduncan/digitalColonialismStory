@@ -6,7 +6,13 @@ export const subtitles = {
     },
     {
       trigger: 10,
-      text: "Over the following months they would breach military institutions, law enforcement agencies, and extractive industries across nine Latin American countries, sharing everything publicly through whistleblower platforms and justifying their actions by rejecting the legitimacy of the legal systems that criminalized them. They understood themselves as acting first in defense of the Maya Q'eqchi', an Indigenous Maya people whose traditional territories in northeast Guatemala have been subject to mining extraction for decades, and more broadly in defense of all Indigenous peoples of Abya Yala, the Kuna term for the Americas meaning land in full maturity."
+      text: "Over the following months they would breach military institutions, law enforcement agencies, and extractive industries across nine Latin American countries, sharing everything publicly through whistleblower platforms and justifying their actions by rejecting the legitimacy of the legal systems that criminalized them."
+
+    },
+      
+    {
+      trigger: 0,
+      text: "They understood themselves as acting first in defense of the Maya Q'eqchi', an Indigenous Maya people whose traditional territories in northeast Guatemala have been subject to mining extraction for decades, and more broadly in defense of all Indigenous peoples of Abya Yala, the Kuna term for the Americas meaning land in full maturity."
     },
     {
       trigger: -15,
@@ -32,11 +38,6 @@ export const subtitles = {
       text: "Vine Deloria Jr. (Standing Rock Sioux) described Indigenous peoples as existing within a web of relations extending beyond the human, bound to the land, the water, and the non-human elders who inhabited those territories alongside them. To care for those relations was not separate from governance. It was governance."
     },
     // *** AUDIO: Vine Deloria Jr. — settler_colonialism_process.mp3 ***
-    // "Over a period of 300 years, the continent was systematically settled,
-    //  in many instances almost totally destroyed."
-    // Plays after Deloria's web of relations card, before the settler colonialism
-    // argument. His voice names the scale of what happened before the narration
-    // turns to what persisted despite it.
     {
       trigger: -15,
       text: "That web of relations is what settler colonialism set out to eliminate. Not simply land as territory, but the languages that named it, the ceremonies that renewed it, the governance systems grounded in it, and the peoples whose continued presence on that land constituted a permanent challenge to the settler claim of legitimate occupancy."

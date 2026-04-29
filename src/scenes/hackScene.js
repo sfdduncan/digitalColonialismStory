@@ -213,6 +213,9 @@ export class HackScene extends SceneBase {
     this.imageTextures = [...loadedTextures, ...videoTextures];
 
     this.generateImageWalls();
+
+    // Signal to main.js that the scene is ready to be revealed behind the title card
+    window.dispatchEvent(new CustomEvent('hackSceneReady'));
   }
 
   generateImageWalls() {
