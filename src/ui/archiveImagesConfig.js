@@ -196,6 +196,19 @@ export const archiveImages = {
       description: 'Protesters on the Pine Ridge Indian Reservation.'
     },
     {
+      trigger: -280,
+      src: './imgs/archive_imgs/deneDeclarationAssembly1975.jpg',
+      side: 'right',
+      verticalOffset: '25%',
+      alt: 'Dene Declaration Assembly 1975',
+      title: 'Dene Declaration Assembly in 1975',
+      artist: 'Archival source',
+      medium: 'Archival Photograph',
+      source: 'https://publicautonomy.org/2018/08/23/the-dene-declaration/',
+      description: 'Dene people gather for the Dene Declaration Assembly in 1975, where they declared their right to self-determination and control over their lands and resources. The declaration was a response to the Canadian government\'s plans to build a pipeline through Dene territory without their consent.'
+    },
+
+    {
       trigger: -287,
       src: './imgs/archive_imgs/LongestWalk.jpg',
       side: 'right',
@@ -221,6 +234,19 @@ export const archiveImages = {
     },
 
     // Scene 4 - Hemispheric / Mountain Pass (z=-300 to z=-400)
+
+    {
+      trigger: -310,
+      src: './imgs/archive_imgs/dickBancroftUN.jpg',
+      side: 'left',
+      verticalOffset: '20%',
+      alt: '', 
+      title: 'NARP (Native Alliance for Red Power) News Letter',
+      artist: 'NARP (Native Alliance for Red Power)',
+      medium: 'Archival Photograph',
+      source: 'https://disruptnow.org/subjectives-of-refusal/native-alliance-for-red-power-newsletter-1969',
+      description: 'This newsletter was published in June/July 1969 in Vancouver by the Native Alliance for Red Power (NARP). It includes writing from the NARP and the American Indian movement (AIM) about tactics of indigenous power such as patrols and confrontations with police, exploitation and dehumanization of indigenous peoples and their land, schooling, and more.'
+    },
     { 
       trigger: -305,
       src: './imgs/archive_imgs/dickBancroftUN2.jpg',

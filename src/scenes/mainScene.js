@@ -10,7 +10,8 @@ import { OceanShader } from '../world/OceanShader.js';
 import { CloudShader } from '../world/CloudShader.js';
 import { hackImages, hackVideos, hackBackgroundVideo } from './hackImageConfig.js';
 import { sceneAudioManager } from '../ui/sceneAudioManager.js';
-import { mainSceneAudioZones } from '../ui/sceneAudioConfig.js';
+import { mainSceneAudioZones, scholarAudioTriggers } from '../ui/sceneAudioConfig.js';
+import { scholarAudioManager } from '../ui/scholarAudioManager.js';
 import { textDisplayManager } from '../ui/textDisplayManager.js';
 import { ParticleWind } from '../world/particleWind.js';
 import { startCorridorCascade } from '../ui/imageCorridor.js';
@@ -177,9 +178,12 @@ export class MainScene extends SceneBase {
     subtitleManager.loadSubtitles(subtitles.scene1);
     // Note: Don't call update() here - will be called in game loop with correct camera position
     
-    // Load audio zones for MainScene
+    // Load ambient audio zones for MainScene
     sceneAudioManager.loadAudioZones(mainSceneAudioZones);
     // Note: Don't call update() here - will be called in game loop with correct camera position
+
+    // Load scholar / hacktivista one-shot triggers
+    scholarAudioManager.loadTriggers(scholarAudioTriggers);
     
     // Initialize and load archive images for MainScene
     archiveImagesManager.clear(); // Clear any previous state
@@ -1280,8 +1284,11 @@ export class MainScene extends SceneBase {
     // Update subtitles based on camera position while moving through MainScene.
     subtitleManager.update(userPosition.z);
     
-    // Update scene audio based on camera position
+    // Update ambient zone audio based on camera position
     sceneAudioManager.update(userPosition.z);
+
+    // Update scholar / hacktivista triggered clips (fade in/out)
+    scholarAudioManager.update(userPosition.z, deltaTime);
     
     // Update archive images based on camera position
     archiveImagesManager.update(userPosition.z);

@@ -6,7 +6,7 @@ export const subtitles = {
     },
     {
       trigger: 10,
-      text: "Over the following months they would breach military institutions, law enforcement agencies, and extractive industries across nine Latin American countries, sharing everything publicly through whistleblower platforms and justifying their actions by rejecting the legitimacy of the legal systems that criminalized them. They understood themselves as acting in defense of the Indigenous peoples of Abya Yala, the Kuna term for the Americas meaning land in full maturity."
+      text: "Over the following months they would breach military institutions, law enforcement agencies, and extractive industries across nine Latin American countries, sharing everything publicly through whistleblower platforms and justifying their actions by rejecting the legitimacy of the legal systems that criminalized them. They understood themselves as acting first in defense of the Maya Q'eqchi', an Indigenous Maya people whose traditional territories in northeast Guatemala have been subject to mining extraction for decades, and more broadly in defense of all Indigenous peoples of Abya Yala, the Kuna term for the Americas meaning land in full maturity."
     },
     {
       trigger: -15,
@@ -18,7 +18,7 @@ export const subtitles = {
     },
     {
       trigger: -48,
-      text: "Joseph M. Pierce, Cherokee Nation, offers a framework called speculative relations: linking moments of Indigenous resistance across time and space not to claim they are the same struggle, but to make visible the types of relations that make such resistance possible."
+      text: "Joseph M. Pierce (Cherokee Nation) offers a framework called speculative relations: linking moments of Indigenous resistance across time and space not to claim they are the same struggle, but to make visible the types of relations that make such resistance possible."
     },
     {
       trigger: -62,
@@ -29,8 +29,14 @@ export const subtitles = {
   scene1: [
     {
       trigger: 0,
-      text: "Vine Deloria Jr., Standing Rock Sioux, described Indigenous peoples as existing within a web of relations extending beyond the human, bound to the land, the water, and the non-human elders who inhabited those territories alongside them. To care for those relations was not separate from governance. It was governance."
+      text: "Vine Deloria Jr. (Standing Rock Sioux) described Indigenous peoples as existing within a web of relations extending beyond the human, bound to the land, the water, and the non-human elders who inhabited those territories alongside them. To care for those relations was not separate from governance. It was governance."
     },
+    // *** AUDIO: Vine Deloria Jr. — settler_colonialism_process.mp3 ***
+    // "Over a period of 300 years, the continent was systematically settled,
+    //  in many instances almost totally destroyed."
+    // Plays after Deloria's web of relations card, before the settler colonialism
+    // argument. His voice names the scale of what happened before the narration
+    // turns to what persisted despite it.
     {
       trigger: -15,
       text: "That web of relations is what settler colonialism set out to eliminate. Not simply land as territory, but the languages that named it, the ceremonies that renewed it, the governance systems grounded in it, and the peoples whose continued presence on that land constituted a permanent challenge to the settler claim of legitimate occupancy."
@@ -52,72 +58,95 @@ export const subtitles = {
   scene2: [
     {
       trigger: -85,
-      text: "The colonial archive has consistently tried to frame Indigenous peoples as past tense. From the late 19th century onward, photographs and ethnographic records were produced under the assumption that Indigenous peoples were vanishing, their cultures objects of study rather than living political realities."
+      text: "Settler colonialism enacted that elimination through many mechanisms across the Americas: military conquest, forced relocation, the reservation system, boarding schools where children were punished for speaking their languages, the criminalization of ceremony, the parceling of communal land into individual allotments that could then be sold. Each mechanism was different. Each served the same structural end."
     },
+    // *** AUDIO: Patrick Wolfe — [source TBD] ***
+    // "The logic of settler colonialism being a project of replacement is first
+    //  and foremost a project of elimination. It is not premised upon exploiting
+    //  the natives, it's premised upon removing them and taking their place."
+    // Plays after the first card on mechanisms of elimination. Wolfe's own voice
+    // naming the underlying logic before the narration turns to what persisted despite it.
     {
       trigger: -105,
-      text: "Joanne Barker theorizes this as the Murderable Indian: always already dying, always already concluded, a figure whose disappearance the archive records rather than questions. The salvageable Indian is the same fiction in a gentler register: preserved, not recognized; documented, not heard."
-    },
-    {
-      trigger: -125,
       text: "But Indigenous peoples did not disappear. Languages survived in the mouths of grandparents who refused to stop speaking them. Ceremonies continued in whatever space could be held. People maintained relationships to their territories even when those territories had been radically reduced, enclosed, or stolen outright."
     },
     {
-      trigger: -145,
+      trigger: -125,
       text: "That persistence was not incidental. It was, in itself, a form of land defense: the ongoing insistence on existing in relation to the land, to non-human life, and to one another, on terms that no colonial state has ever had the authority to extinguish."
     },
     {
-      trigger: -165,
-      text: "Glen Sean Coulthard, Yellowknives Dene, calls this the underlying logic of colonial domination: however the mechanisms change, whether force, fraud, or the more conciliatory politics of recognition, the structural commitment to maintaining access to Indigenous land and resources never does."
+      trigger: -145,
+      text: "Glen Sean Coulthard (Yellowknives Dene) calls this the underlying logic of colonial domination: however the mechanisms change, whether force, fraud, or the more conciliatory politics of recognition, the structural commitment to maintaining access to Indigenous land and resources never does."
     },
     {
-      trigger: -185,
-      text: "And because that logic has never stopped, neither has the defense against it. What follows are moments of that defense, put in conversation with one another across time and space, distinct in their histories and their forms, but oriented always toward the same thing: the land, the people, and the relations between them that settler colonialism has never been able to fully sever."
+      trigger: -165,
+      text: "And because that logic has never stopped, the defense against it has persisted with equal determination, through legislation and protest, through art and ceremony, through the daily act of living on and in relation to the land. What follows are moments of that defense, put in conversation with one another across time and space, distinct in their histories and their forms, but oriented always toward the same thing: the land, the people, and the relations between them that settler colonialism has never been able to fully sever."
     }
   ],
 
   scene3: [
     {
       trigger: -208,
-      text: "Acts of land defense span the length and breadth of Abya Yala. The Ghost Dance spreading across the Great Plains in the 1890s, a vision of renewal and return so threatening that the US government massacred 300 Lakota at Wounded Knee to suppress it. A song, a ceremony, a claim to the land. That threatening."
+      text: "Acts of land defense span the length and breadth of Abya Yala. The Ghost Dance, which spread across the Great Plains in the 1890s, was both a spiritual and political act: a collective assertion of Indigenous peoples' continued relation to their territories and to one another, practiced at a moment when those relations were being violently dismantled. The US government feared it enough to massacre 300 Lakota at Wounded Knee in 1890 to suppress it. A ceremony was that threatening."
+    },
+    // *** AUDIO: Vine Deloria Jr. — onDefenseofLand.mp3 ***
+    // "Now, if you look at the events of those three activist years,
+    //  almost everything that happened revolved around the concept of land."
+    // Plays after the Ghost Dance card. Deloria's voice names land as the
+    // through-line before the narration moves into the occupation of Alcatraz.
+    {
+      trigger: -232,
+      text: "The occupation of Alcatraz in 1969, where 90 Native Americans from multiple nations ran a school, broadcast a radio station, and held ceremony on land declared federal surplus, was simultaneously a political claim, a legal argument, and a cultural assertion, each form of resistance inseparable from the others. The Trail of Broken Treaties in 1972. The 71-day occupation of Wounded Knee in 1973, conducted under the specific terms of the 1868 Fort Laramie Treaty."
+    },
+    // *** AUDIO: Vine Deloria Jr. — alcatraz.mp3 ***
+    // "I think most of you finally became aware of Indians when Indian activists
+    //  took over Alcatraz and then we had a series of activist groups out west landing on islands."
+    // Plays after the Alcatraz card. Deloria's voice reflects on that moment
+    // before the narration moves to the Zapatistas and Standing Rock.
+    {
+      trigger: -255,
+      text: "The Zapatista uprising in Chiapas in 1994 was also the building of autonomous schools and cooperatives, a refusal of NAFTA as a death sentence for Indigenous communal land. The water protectors at Standing Rock in 2016 held powwows and ran a school while fighting a pipeline in court. In each case, the spiritual, the cultural, and the political were not separate registers. They were the same defense, expressed in every available form at once."
     },
     {
-      trigger: -228,
-      text: "The occupation of Alcatraz in 1969, where 90 Native Americans from multiple nations ran a school, broadcast a radio station, and held ceremony on land declared federal surplus. The Trail of Broken Treaties in 1972. The 71-day occupation of Wounded Knee in 1973, conducted under the specific terms of the 1868 Fort Laramie Treaty."
+      trigger: -275,
+      text: "None of these is the same struggle. As Nick Estes (Lower Brule Sioux) argues in Our History is the Future, they are a tradition: each generation inheriting and adapting the forms of those who came before, on that land, in that language, in defense of the same relations that settler colonialism has always tried to sever."
     },
     {
-      trigger: -248,
-      text: "The Zapatista uprising in Chiapas in 1994, which was also the building of autonomous schools and cooperatives, a refusal of NAFTA as a death sentence for Indigenous communal land. The water protectors at Standing Rock in 2016, who held powwows and ran a school while fighting a pipeline cutting through sacred sites and threatening the Missouri River."
-    },
-    {
-      trigger: -268,
-      text: "None of these is the same struggle. As Nick Estes, Lower Brule Sioux, argues in Our History is the Future, they are a tradition: each generation inheriting and adapting the forms of those who came before, on that land, in that language, in defense of the same relations that settler colonialism has always tried to sever."
-    },
-    {
-      trigger: -288,
+      trigger: -295,
       text: "And alongside the marches and the occupations and the legal briefs, people were also raising children, practicing ceremony, speaking their languages, fishing the rivers, planting, singing. None of that was separate from the political. All of it was land defense. All of it was the ongoing practice of reciprocal relations that settler colonialism has always needed to destroy, and has never managed to."
     }
   ],
 
   scene4: [
     {
-      trigger: -312,
-      text: "Audra Simpson, Mohawk, calls this refusal: not simply resistance to colonial demands but the ongoing insistence on existing as a people, on one's own terms, on one's own land, within and against a settler state that has never recognized the authority on which that existence rests."
+      trigger: -318,
+      text: "Audra Simpson (Mohawk) calls this refusal: not simply resistance to colonial demands but the ongoing insistence on existing as a people, on one's own terms, on one's own land, within and against a settler state that has never recognized the authority on which that existence rests."
     },
+    // *** AUDIO: Audra Simpson — refusal_audra.mp3 ***
+    // "Refusal comes with the requirement of having one's political sovereignty
+    //  and nationhood acknowledged and upheld."
+    // Plays after the Simpson refusal card. Her voice extends the definition
+    // before the narration moves to grounded normativity.
     {
-      trigger: -332,
-      text: "Glen Sean Coulthard, Yellowknives Dene, and Leanne Betasamosake Simpson, Michi Saagiig Nishnaabeg, call the ground of that refusal grounded normativity: the ethical frameworks and political relationships that emerge from sustained, reciprocal relations with the land, relations whose legitimacy does not depend on the recognition of any colonial state."
+      trigger: -338,
+      text: "Glen Sean Coulthard (Yellowknives Dene) and Leanne Betasamosake Simpson (Michi Saagiig Nishnaabeg) call the ground of that refusal grounded normativity: the ethical frameworks and political relationships that emerge from sustained, reciprocal relations with the land, relations whose legitimacy does not depend on the recognition of any colonial state."
     },
+    // *** AUDIO: Glen Sean Coulthard — panIndianism.mp3 ***
+    // "We were immersed in a global anti-colonial conversation, which included
+    //  not only ideational but material cross-fertilizations involved in these
+    //  types of struggles and movements over time and space."
+    // Plays after the grounded normativity card. Coulthard naming the hemispheric,
+    // connected nature of Indigenous resistance before the narration makes the present-tense argument.
     {
-      trigger: -352,
+      trigger: -358,
       text: "This is why the defense of the land has always been a threat to settler colonialism. Not only because the land is contested territory, but because Indigenous peoples' continued presence on it, their continued practice of those relations, constitutes a living refusal of the settler society's claim to be the only legitimate occupant."
     },
     {
-      trigger: -372,
+      trigger: -378,
       text: "The colonial record has consistently tried to frame acts of land defense as exceptional, as crises or disruptions. They are not exceptional. They are the ongoing texture of Indigenous life under settler colonialism, and they are happening now, across the length of Abya Yala, in every form the present moment makes available."
     },
     {
-      trigger: -392,
+      trigger: -395,
       text: "Land holds memory, even when humans forget. Land holds bodies and medicine and spirits, even when humans no longer see them. The reciprocal relations between Indigenous peoples and their territories have not been severed. They have been maintained, defended, enacted, and passed forward."
     }
   ],
@@ -167,7 +196,11 @@ export const subtitles = {
       text: "Guacamaya framed their actions in terms that made no distinction between the land, the body, and the struggle to defend them both, articulating a relationship to place and to refusal that would have been recognizable across every generation and every nation that had come before them across Abya Yala."
     },
     {
-      trigger: -595,
+      trigger: -590,
+      text: "Joanne Barker theorizes the colonial construction of the Murderable Indian as the figure whose defense of the land is criminalized in advance, whose resistance is framed as threat, whose death the law sanctions before it happens. Land defenders across the Americas have lived inside that construction for centuries."
+    },
+    {
+      trigger: -610,
       text: "This form of resistance is just one more tool of what we have been doing for more than five centuries. It is a tool of this time. Haven't Indigenous peoples' leaders been stigmatized for defending their territory for ages? Imprisonments, shootings, disappearances. It's always those who defend life, those who do not fit into their canons of normality and submission, who are stigmatized. — Guacamaya, 2023"
     },
     {
@@ -187,18 +220,28 @@ export const subtitles = {
     },
     {
       trigger: -678,
-      text: "What settler colonialism has always required is that Indigenous peoples be past tense. The Murderable Indian. The salvageable Indian. The figure frozen in the ethnographic archive, already gone, already concluded. The requirement has never stopped. Neither has the refusal of it."
+      text: "What settler colonialism has always required is that Indigenous peoples be past tense, that their defense of the land be framed as criminal, their continued existence as disruption. That requirement has persisted for five centuries. So has the refusal of it."
     },
+    // *** AUDIO: Joseph M. Pierce — onSpeculation.mp3 ***
+    // "So there's this double vision that is really crucial to speculation.
+    //  It's never just a flight of fancy. It always actually has something to do
+    //  with thinking beyond and thinking inside."
+    // Plays after this card. Pierce's voice on speculation before the narration
+    // applies kinstillation to Guacamaya's breach.
     {
       trigger: -698,
-      text: "Across Abya Yala, Indigenous peoples have continued to exist, to practice, to defend, to refuse. Not as a historical phenomenon. Now. In the maintenance of reciprocal relations with their lands, in the transmission of language and ceremony to the next generation, in every act of presence on territory that settler colonialism has declared its own."
+      text: "Pierce's framework of speculative relations reopens a dialogue that the Pan-Indian movements of the 20th century began: a hemispheric conversation about unified decolonial resistance across the Americas. What speculative relations makes possible that earlier Pan-Indianism sometimes struggled with is holding distinct histories in constellation without flattening them, honoring the specific land, language, and political context from which each movement emerged while making visible what they share."
     },
     {
       trigger: -718,
+      text: "Across Abya Yala, Indigenous peoples have continued to exist, to practice, to defend, to refuse. Not as a historical phenomenon. Now. In the maintenance of reciprocal relations with their lands, in the transmission of language and ceremony to the next generation, in every act of presence on territory that settler colonialism has declared its own."
+    },
+    {
+      trigger: -735,
       text: "These movements, held in speculative relation, do not flatten into a single story. They illuminate one another, linked by the orientation they share: toward the land, toward the kin, toward the relations that make life possible and that no colonial structure has ever fully managed to sever."
     },
     {
-      trigger: -738,
+      trigger: -752,
       text: "That is what Guacamaya named when they called their breach one more tool. Not a metaphor. A kinstillation: resistance enlivened rather than merely recalled, the argument of five centuries made legible in the form this moment made available."
     },
     {
