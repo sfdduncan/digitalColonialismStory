@@ -9,7 +9,7 @@ export class ArchiveImagesManager {
     this.activeImageMeshes = [];
     this.scene = null;
     this.camera = null;
-    this.imageHeight = 2; // Base height for images
+    this.imageHeight = 1.25; // Base height for images
     this.wallDistance = 4; // Distance from center path
     this.raycaster = new THREE.Raycaster();
     this.pointer = new THREE.Vector2(2, 2);

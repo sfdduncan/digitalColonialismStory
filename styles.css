@@ -410,6 +410,10 @@
     overflow: hidden;
   }
 
+  .archive-photo-window.is-portrait {
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 1fr);
+  }
+
   #archive-photo-close {
     position: absolute;
     top: 1rem;
@@ -442,7 +446,6 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
-    background: white;
     display: block;
   }
 

@@ -11,14 +11,15 @@ export function initializeTimeline() {
   timeline.appendChild(backgroundLine);
   
   // Create timeline points for each scene
+// 7 dots evenly spaced 0–100%; Scene 7 dot is the endpoint of the line
 const scenes = [
-  { id: 1, label: 'Scene 1', position: 0 },      // 0/5
-  { id: 2, label: 'Scene 2', position: 16.67 },     // 1/5
-  { id: 3, label: 'Scene 3', position: 33.33 },     // 2/5
-  { id: 4, label: 'Scene 4', position: 50 },     // 3/5
-  { id: 5, label: 'Scene 5', position: 66.67 },     // 4/5
-  { id: 6, label: 'Scene 6', position: 83.33 },    // 5/5
-  { id: 7, label: 'Scene 7', position: 100 }     // 
+  { id: 1, label: 'Scene 1', position: 0 },
+  { id: 2, label: 'Scene 2', position: 16.67 },
+  { id: 3, label: 'Scene 3', position: 33.33 },
+  { id: 4, label: 'Scene 4', position: 50 },
+  { id: 5, label: 'Scene 5', position: 66.67 },
+  { id: 6, label: 'Scene 6', position: 83.33 },
+  { id: 7, label: 'Scene 7', position: 100 }
 ];
   
   scenes.forEach((scene) => {
@@ -63,30 +64,18 @@ export function updateTimeline(sceneNumber) {
   });
 }
 
-export function updateTimelineProgress(zPosition, totalScenes = 3) {
-  // Scene boundaries
-  const sceneBoundaries = [
-    { start: 0, end: -100 },    // Scene 1
-    { start: -100, end: -200 }, // Scene 2
-    { start: -200, end: -300 } , // Scene 3
-    { start: -300, end: -400 } , // Scene 4 
-    { start: -400, end: -500 } , // Scene 5
-    { start: -500, end: -600 } ,  // Scene 6
-    { start: -600, end: -700 }   // Scene 7
-  ];
-  
-  // Total z range
+export function updateTimelineProgress(zPosition) {
+  // Range: z=0 (Scene 1 start) to z=-600 (Scene 7 start = last dot)
   const totalStart = 0;
-  const totalEnd = -700;
+  const totalEnd = -600;
   const totalRange = Math.abs(totalEnd - totalStart);
-  
-  // Clamp position to valid range
+
+  // Clamp so ball never exceeds the last dot
   const clampedZ = Math.max(totalEnd, Math.min(totalStart, zPosition));
-  
-  // Calculate progress as percentage (0 to 1)
+
+  // Calculate progress as percentage (0 to 100)
   const progress = Math.abs(clampedZ - totalStart) / totalRange;
-  
-  // Update progress ball position (0% to 100% of timeline width)
+
   const progressBall = document.getElementById('timeline-progress');
   if (progressBall) {
     progressBall.style.left = `${progress * 100}%`;

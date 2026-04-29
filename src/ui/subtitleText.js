@@ -26,7 +26,7 @@ export const subtitles = {
     },
     {
       trigger: -73,
-      text: "Refusal, here, does not mean a single dramatic act. It means the ongoing insistence on existing as yourself, on your own terms, on your own land, within a structure that has spent centuries declaring that existence finished."
+      text: "Refusal, here, does not mean a single dramatic act. It means the ongoing insistence on existing as oneself, on one's own terms, on one's own land, within a structure that has spent centuries declaring that existence finished."
     }
   ],
 
@@ -41,7 +41,7 @@ export const subtitles = {
     },
     {
       trigger: -25,
-      text: "What they share is not a single identity but a common orientation, one that Vine Deloria Jr. described as existing within a web of relations extending beyond the human, bound to the land, the water, and the non-human elders who inhabited those territories alongside them."
+      text: "What they share is not a single identity but a common orientation. Vine Deloria Jr. described it as existing within a web of relations extending beyond the human, bound to the land, the water, and the non-human elders who inhabited those territories alongside them."
     },
     {
       trigger: -40,
@@ -53,7 +53,7 @@ export const subtitles = {
     },
     {
       trigger: -72,
-      text: "As Patrick Wolfe argued, settler colonialism is not an event. It is a structure, one whose logic is the elimination of Indigenous peoples from their lands in order to replace them with a settler society that then naturalizes itself as inevitable. That structure is ongoing. It has not concluded. And it has never fully succeeded."
+      text: "Settler colonialism is not an event. It is a structure, one whose logic, as Patrick Wolfe identified it, is the elimination of Indigenous peoples from their lands in order to replace them with a settler society that then naturalizes itself as inevitable, a structure that is ongoing, that has not concluded, and that has never fully succeeded."
     }
   ],
 
@@ -72,7 +72,7 @@ export const subtitles = {
     },
     {
       trigger: -150,
-      text: "As Glen Sean Coulthard has argued, colonial domination has always been structurally committed to maintaining access to Indigenous land and resources, whether through force, fraud, or the more conciliatory politics of recognition. The mechanisms changed. The underlying logic did not."
+      text: "Colonial domination has always been structurally committed to maintaining access to Indigenous land and resources, whether through force, fraud, or the more conciliatory politics of recognition. Glen Sean Coulthard calls this the underlying logic: however the mechanisms change, the commitment to access never does."
     },
     {
       trigger: -163,
@@ -80,7 +80,7 @@ export const subtitles = {
     },
     {
       trigger: -187,
-      text: "This persistence was not incidental. It was, in itself, a form of refusal: the ongoing insistence on existence that settler colonialism requires you to abandon. The colonial record is full of that refusal, in its quietest forms and its loudest ones, if you know how to read it."
+      text: "This persistence was not incidental. It was, in itself, a form of refusal: the ongoing insistence on existence that settler colonialism requires Indigenous peoples to abandon. The colonial record is full of that refusal, in its quietest forms and its loudest ones, if you know how to read it."
     }
   ],
 
@@ -98,49 +98,53 @@ export const subtitles = {
       text: "What settler colonialism could not tolerate was not any single tactic but the premise underlying all of them: that Indigenous peoples retained authority over their own lands, their own governance, and their own relations to the non-human world, regardless of what any colonial state had declared."
     },
     {
-      trigger: -295,
-      text: "As Nick Estes argues in Our History is the Future, these were not spontaneous uprisings. They were a tradition, each generation inheriting and adapting the forms of those who came before."
+      trigger: -290,
+      text: "This is what Jodi Byrd calls grounded relationality: the insistence on a relationship to land, to non-human life, and to one another that settler colonialism has consistently tried to sever and consistently failed to destroy entirely. It is what the Ghost Dance was enacting. It is what the Alcatraz occupation was enacting. It is what every act of refusal in these histories has been enacting."
     },
     {
       trigger: -315,
+      text: "These were not spontaneous uprisings. They were a tradition, each generation inheriting and adapting the forms of those who came before. Nick Estes makes this argument in Our History is the Future, reading Lakota resistance not as reaction but as continuity."
+    },
+    {
+      trigger: -330,
       text: "And alongside the marches and the occupations and the legal briefs, people were also raising children, practicing ceremony, speaking their languages, fishing the rivers, planting, singing. None of that was separate from the political. All of it was refusal."
     }
   ],
 
   scene4: [
     {
-      trigger: -345,
+      trigger: -355,
       text: "That refusal has never been confined to a single form, or a single nation, or a single century. Across Abya Yala, Indigenous peoples have carried it into international forums and into encampments, into courtrooms and into ceremony, into legislation and into the land itself."
     },
     {
-      trigger: -365,
+      trigger: -375,
       text: "In 1977, Indigenous delegates from across the Americas traveled to Geneva to address the United Nations for the first time. The Declaration on the Rights of Indigenous Peoples passed thirty years later. At Standing Rock in 2016, water protectors from more than 200 tribes held powwows and ran a school while fighting a pipeline in court. The form changed. The orientation did not."
     },
     {
-      trigger: -390,
-      text: "Sometimes that meant decades of legal challenge. Sometimes it meant building a school inside an occupation. Sometimes it meant simply continuing to exist, on the land, in the language, in relation, despite everything that had been done to make that existence impossible."
+      trigger: -400,
+      text: "The colonial record has consistently tried to frame these acts as exceptional, as moments of crisis or disruption, or rendered Indigenous peoples as primitive, savage, figures whose only legible relationship to power is destruction. They are not exceptional. They are the ongoing texture of Indigenous life under settler colonialism, the persistent refusal to accept the terms of elimination."
     },
     {
-      trigger: -415,
-      text: "The colonial record has consistently tried to frame these acts as exceptional, as moments of crisis or disruption. They are not exceptional at all. They are the ongoing texture of Indigenous life under settler colonialism, the persistent refusal to accept the terms of elimination."
+      trigger: -422,
+      text: "Sometimes refusal meant decades of legal challenge. Sometimes it meant building a school inside an occupation. Sometimes it meant simply continuing to exist, on the land, in the language, in relation, despite everything that had been done to make that existence impossible."
     },
     {
-      trigger: -438,
-      text: "That refusal is hemispheric. It has never stopped. And it has taken as many forms as there are peoples and places and moments in which it has been necessary."
+      trigger: -445,
+      text: "That refusal is hemispheric, and it has never stopped, taking as many forms as there are peoples and places and moments in which it has been necessary."
     }
   ],
 
   scene5: [
     {
-      trigger: -460,
+      trigger: -462,
       text: "On the shores of Lake Izabal in northeast Guatemala, the Maya Q'eqchi' people had been living inside that same structure for decades. The Fenix nickel mine had been operating on their territory since the 1960s, when a Canadian company lobbied the military government to suspend the Guatemalan constitution to make open-pit mining on Indigenous land legal."
     },
     {
-      trigger: -478,
+      trigger: -480,
       text: "Between 1970 and 1980, around 3,000 people were killed in the El Estor region, many of them because they opposed the mine. On May 29, 1978, approximately 700 Maya Q'eqchi' people marched to Panzós to demand their land title be respected. They were unarmed. Guatemalan Army soldiers opened fire, killing at least 140 people."
     },
     {
-      trigger: -500,
+      trigger: -502,
       text: "Through each iteration of ownership, each reopening of the mine, Maya Q'eqchi' communities organized through community assemblies, legal challenges, and international solidarity networks. They recentred their own practices and ceremonies as forms of continuity, connecting the violence of the mine to the genocidal massacres of the civil war, refusing to let either be treated as history."
     },
     {
@@ -195,18 +199,18 @@ export const subtitles = {
     },
     {
       trigger: -748,
-      text: "Not to argue that all Indigenous struggles are the same, or that a network breach and a Ghost Dance are equivalent acts, but to make legible what connects them: centuries of distinct peoples, within their own nations and on their own lands, refusing the terms of their elimination."
+      text: "The histories traced here are not offered as a unified account of Indigenous struggle. They are distinct peoples, distinct nations, distinct histories of dispossession and refusal. What connects them is not interchangeability but a common orientation: the insistence on existing in relation to the land, to non-human life, and to one another, on terms that no colonial state has ever had the authority to extinguish. Vine Deloria Jr. named it a web of relations. Jodi Byrd calls it grounded relationality. The peoples who have practiced it have not needed a name for it."
     },
     {
-      trigger: -770,
-      text: "What settler colonialism has always required is that Indigenous peoples disappear, from the land, from language, from governance, from relation. What these histories trace is the persistent, varied, costly refusal of that requirement, expressed differently by different peoples in different moments, but oriented always toward the same thing."
+      trigger: -775,
+      text: "What settler colonialism has always required is that Indigenous peoples disappear, from the land, from language, from governance, from relation. What these histories make visible is the persistent, varied, costly refusal of that requirement, expressed differently by different peoples in different moments, but oriented always toward the same thing."
     },
     {
-      trigger: -792,
+      trigger: -800,
       text: "The land. The water. The non-human relations that make life possible. The peoples whose lives and identities are bound to them. That kinship has never been fully severed. It is still being defended. Guacamaya is one of the latest in a long line of people who have said so."
     },
     {
-      trigger: -815,
+      trigger: -820,
       text: "Our victory is life. — Guacamaya, RESISTENCIA"
     }
   ]

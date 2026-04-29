@@ -279,6 +279,12 @@ function showArchivePhotoOverlay(imageConfig) {
   if (archivePhotoImage) {
     archivePhotoImage.src = imageConfig.src;
     archivePhotoImage.alt = imageConfig.alt || imageConfig.title || 'Archive photo';
+    archivePhotoImage.onload = () => {
+      const photoWindow = archivePhotoOverlay.querySelector('.archive-photo-window');
+      if (photoWindow) {
+        photoWindow.classList.toggle('is-portrait', archivePhotoImage.naturalHeight > archivePhotoImage.naturalWidth);
+      }
+    };
   }
 
   if (archivePhotoKicker) {
@@ -334,6 +340,7 @@ function hideArchivePhotoOverlay() {
 
   if (archivePhotoImage) {
     archivePhotoImage.removeAttribute('src');
+    archivePhotoOverlay.querySelector('.archive-photo-window')?.classList.remove('is-portrait');
   }
 
   if (archivePhotoCitation && archivePhotoCitationLink) {

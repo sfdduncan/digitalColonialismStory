@@ -160,18 +160,6 @@ export const archiveImages = {
       description: 'The Ghost Dance as vision and renewal, a movement the US government feared enough to answer with massacre.'
     },
     {
-      trigger: -240,
-      src: './imgs/archive_imgs/ghostDanceDrum_1890s.jpg',
-      side: 'left',
-      verticalOffset: '25%',
-      alt: 'Ghost Dance Drum',
-      title: 'Ghost Dance Drum',
-      artist: 'George Beaver',
-      medium: 'Artifact photograph',
-      source: 'https://www.worldhistory.org/image/18059/ghost-dance-drum/',
-      description: 'a rare artifact from the Ghost Dance movement made by George Beaver (Chahiksichahiks).'
-    },
-    {
       trigger: -253,
       src: './imgs/archive_imgs/alcatraz.jpg',
       side: 'left',

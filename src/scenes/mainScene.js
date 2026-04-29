@@ -300,14 +300,18 @@ export class MainScene extends SceneBase {
     stoneTexture.repeat.set(10, 10);
     stoneTexture.anisotropy = 10;
 
+    // Extend 15 units past z=-200 to overlap Scene 3 and hide the seam
+    const scene2GroundLength = this.areaLength + 15; // 115 units total
+    const scene2GroundZ = scene2Z - 7.5; // shift center toward Scene 3
+
     const ground2 = new THREE.Mesh(
-      new THREE.PlaneGeometry(this.areaWidth, this.areaLength),
+      new THREE.PlaneGeometry(this.areaWidth, scene2GroundLength),
       new THREE.MeshStandardMaterial({
         map: stoneTexture
      })
     );
     ground2.rotation.x = -Math.PI / 2;
-    ground2.position.set(0, -0.01, scene2Z);
+    ground2.position.set(0, -0.01, scene2GroundZ);
     this.add(ground2);
     this.scene2Objects.push(ground2);
 
@@ -414,9 +418,19 @@ export class MainScene extends SceneBase {
 
     const scene3Z = -250; // Center of Scene 3
 
+    // Apply yellow grass texture to the hilly terrain
+    const textureLoader3 = new THREE.TextureLoader();
+    const yellowGrassTexture = textureLoader3.load('./models/brownDirt.jpg');
+    yellowGrassTexture.wrapS = yellowGrassTexture.wrapT = THREE.RepeatWrapping;
+    yellowGrassTexture.repeat.set(8, 8);
+    yellowGrassTexture.anisotropy = 16;
+
     // Create hilly grassland with shader grass
     this.hillyShaderGrass = new HillyShaderGrass(this.areaWidth, this.areaLength, scene3Z);
     const terrain = this.hillyShaderGrass.getTerrain();
+    terrain.material.map = yellowGrassTexture;
+    terrain.material.color.set(0x7a5c3a); // Brown dirt tint over the texture
+    terrain.material.needsUpdate = true;
     const grassMesh = this.hillyShaderGrass.getMesh();
     this.add(terrain);
     this.add(grassMesh);
@@ -436,14 +450,18 @@ export class MainScene extends SceneBase {
     dirtTexture.repeat.set(10, 10);
     dirtTexture.anisotropy = 16;
 
+    // Extend 15 units past z=-300 to overlap Scene 3 and hide the seam
+    const scene4GroundLength = this.areaLength + 15; // 115 units total
+    const scene4GroundZ = scene4Z + 7.5; // shift center toward Scene 3
+
     const ground4 = new THREE.Mesh(
-      new THREE.PlaneGeometry(this.areaWidth, this.areaLength),
+      new THREE.PlaneGeometry(this.areaWidth, scene4GroundLength),
       new THREE.MeshStandardMaterial({
         map: dirtTexture
       })
     );
     ground4.rotation.x = -Math.PI / 2;
-    ground4.position.set(0, -0.01, scene4Z);
+    ground4.position.set(0, -0.01, scene4GroundZ);
     this.add(ground4);
     this.scene4Objects.push(ground4);
 
@@ -832,7 +850,7 @@ export class MainScene extends SceneBase {
     const boxWidth = 30;
     const boxHeight = 20;
     const corridorStart = -600;
-    const corridorEnd = -720;
+    const corridorEnd = -700;
     const boxLength = corridorStart - corridorEnd;
     const boxCenterZ = (corridorStart + corridorEnd) / 2;
 
@@ -985,7 +1003,7 @@ export class MainScene extends SceneBase {
   createScene7FloatingImage(texture, x, y, z, rotX, rotY, rotZ) {
     if (!texture) return;
 
-    const sizeMultiplier = 0.4 + Math.random() * 0.8;
+    const sizeMultiplier = 0.78 + Math.random() * 1.2;
     const randomHeight = 5 * sizeMultiplier;
 
     const aspectRatio =
@@ -1014,7 +1032,7 @@ export class MainScene extends SceneBase {
   createScene7ImageWall(texture, xPosition, zPosition, side, baseHeight) {
     if (!texture) return;
 
-    const sizeMultiplier = 0.4 + Math.random() * 0.8;
+    const sizeMultiplier = 0.78 + Math.random() * 1.2;
     const randomHeight = baseHeight * sizeMultiplier;
 
     const aspectRatio =

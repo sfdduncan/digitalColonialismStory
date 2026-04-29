@@ -213,8 +213,8 @@ export class HillyShaderGrass {
     this.time = 0;
     
     // Grass configuration
-    this.grassCount = 60000; // Number of grass blades (increased for complete coverage)
-    this.grassHeight = 1.0; // Taller grass for better visibility
+    this.grassCount = 90000; // Number of grass blades (increased for complete coverage)
+    this.grassHeight = 1.2; // Taller grass for better visibility
     this.grassWidth = 0.12; // Wider blades for better coverage
     
     // Hill configuration
