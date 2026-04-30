@@ -209,7 +209,7 @@ export const scholarAudioTriggers = [
   // After the "what settler colonialism has always required" card (subtitle trigger z=-678)
   // Pierce on speculation before the narration applies kinstillation to Guacamaya
   {
-    z: -676,
+    z: -656,
     audioSrc: 'scholars_audios/Indigenomicon and Speculative Relations： Indigenous Worlding and Repair_clips/onSpeculation_Pierce.mp3',
     volume: 0.85,
     fadeInDuration: 0.8,
