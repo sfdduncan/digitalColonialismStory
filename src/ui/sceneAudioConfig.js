@@ -16,6 +16,7 @@ export const mainSceneAudioZones = [
     volume: 0.01
   },
 
+
   // ── Scene 2: Forest / European Colonisation begins (z=-100 → -200) ─────────
   // Sara Curruchich is Maya Kaqchikel (Guatemala); "Kixampe" means "stand up"
   // in a Mayan language — directly mirrors the Maya Q'eqchi' narrative
@@ -26,7 +27,6 @@ export const mainSceneAudioZones = [
     zEnd: -200,
     volume: 0.1
   },
-
   // ── Scene 3: Grassland / Historical Resistance — AIM, Wounded Knee (z=-200 → -300)
   // "Somos Sur" (We Are the South) — Ana Tijoux ft. Shadia Mansour
   // Pan-South solidarity anthem connecting Latin American and Palestinian struggles
@@ -37,7 +37,6 @@ export const mainSceneAudioZones = [
     zEnd: -300,
     volume: 0.1
   },
-
   // ── Scene 4: Mountain Pass / International Struggle — Standing Rock, UN (z=-300 → -400)
   // "Lucha Eterna" (Eternal Struggle) — multi-collective featuring Taki Amaru
   // (referencing Túpac Amaru II) and Black Mama, M. Ankayli, DJ Mic
@@ -46,9 +45,8 @@ export const mainSceneAudioZones = [
     audioSrc: 'audio/desert_sanddunes.mp3',
     zStart: -300,
     zEnd: -400,
-    volume: 0.4
+    volume: 0.1
   },
-
   // ── Scene 5: Ocean / Fenix Mine / Panzós Massacre (z=-400 → -500) ──────────
   {
     id: 'scene5_nature',
@@ -64,7 +62,7 @@ export const mainSceneAudioZones = [
     audioSrc: 'audio_hacktivista/Guatemala no se vende - intro - Guatemala no se vende interpretada por Aurora Nohemí Autor： Isaías Perez.mp3',
     zStart: -400,
     zEnd: -500,
-    volume: 0.45
+    volume: 0.4
   },
 
   // ── Scene 6: Tropical Rainforest / Guacamaya breach (z=-500 → -600) ────────
@@ -82,7 +80,7 @@ export const mainSceneAudioZones = [
     audioSrc: 'audio_hacktivista/Extractivismo - Grone Aukan - Extractivismo.mp3',
     zStart: -500,
     zEnd: -600,
-    volume: 0.45
+    volume: 0.3
   },
 
   // ── Scene 7: Hack Corridor / Finale (z=-600 → -700) ────────────────────────
@@ -92,7 +90,7 @@ export const mainSceneAudioZones = [
     audioSrc: 'audio_hacktivista/Lo que somos - Niñx debacle  Lo que somos.mp3',
     zStart: -600,
     zEnd: -700,
-    volume: 0.6
+    volume: 0.4
   }
 
 ];
@@ -127,11 +125,11 @@ export const scholarAudioTriggers = [
   // After Deloria's "web of relations" card (subtitle trigger z=0)
   // Names the scale of what settler colonialism systematically did
   {
-    z: -7,
+    z: -15,
     audioSrc: 'scholars_audios/Vine Deloria on Native Americans (1972)_clips/settler_colonialism_process.mp3',
-    volume: 0.85,
-    fadeInDuration: .25,
-    fadeOutDuration: .25,
+    volume: 0.55,
+    fadeInDuration: 0.8,
+    fadeOutDuration: 1.2,
   },
 
   // ── Scene 2 ───────────────────────────────────────────────────────────────
@@ -141,8 +139,8 @@ export const scholarAudioTriggers = [
     z: -92,
     audioSrc: 'scholars_audios/YTDown_YouTube_Learn-about-settler-colonialism-with-Pat_Media_xrEBcQLd4Vc_007_128k_clips/settlerColonialism_LogicOfElimination_Wolfe.mp3',
     volume: 0.85,
-    fadeInDuration: .25,
-    fadeOutDuration: .25,
+    fadeInDuration: 0.8,
+    fadeOutDuration: 1.2,
   },
 
   // ── Scene 3 ───────────────────────────────────────────────────────────────
@@ -151,18 +149,28 @@ export const scholarAudioTriggers = [
   {
     z: -216,
     audioSrc: 'scholars_audios/Vine Deloria on Native Americans (1972)_clips/onDefenseofLand_Deloria.mp3',
-    volume: 0.85,
-    fadeInDuration: .25,
-    fadeOutDuration: .25,
+    volume: 0.65,
+    fadeInDuration: 0.8,
+    fadeOutDuration: 1.2,
   },
   // After the Alcatraz occupation card (subtitle trigger z=-232)
   // Deloria reflecting on the moment before the narration moves to Zapatistas
   {
     z: -240,
     audioSrc: 'scholars_audios/Vine Deloria on Native Americans (1972)_clips/alcatraz_Deloria.mp3',
+    volume: 0.65,
+    fadeInDuration: 0.8,
+    fadeOutDuration: 1.2,
+  },
+  // After the Nick Estes "tradition" card (subtitle trigger z=-270)
+  // Leanne Betasamosake Simpson (Mississauga Nishnaabeg) on the international
+  // and cross-cultural dimensions of Indigenous resistance
+  {
+    z: -278,
+    audioSrc: 'scholars_audios/YTDown_YouTube_Distinguished-Faculty-Lecture-with-Leann_Media_duidxcdBqw0_001_1080p_clips/leanne_International.mp3',
     volume: 0.85,
-    fadeInDuration: .25,
-    fadeOutDuration: .25,
+    fadeInDuration: 0.8,
+    fadeOutDuration: 1.2,
   },
 
   // ── Scene 4 ───────────────────────────────────────────────────────────────
@@ -171,29 +179,41 @@ export const scholarAudioTriggers = [
   {
     z: -326,
     audioSrc: 'scholars_audios/Simpson_Mohawk_Interruptus_IGOV_clips/refusal_audra.mp3',
-    volume: 0.85,
-    fadeInDuration: .25,
-    fadeOutDuration: .25,
+    volume: 0.65,
+    fadeInDuration: 0.8,
+    fadeOutDuration: 1.2,
   },
   // After the grounded normativity card (subtitle trigger z=-338)
   // Coulthard naming the hemispheric, connected nature of Indigenous resistance
   {
     z: -346,
     audioSrc: 'scholars_audios/Coulthard_Fanonian_Antinomies_SFU_2017_clips/panIndianism_Coulthard.mp3',
+    volume: 0.75,
+    fadeInDuration: 0.8,
+    fadeOutDuration: 1.2,
+  },
+
+  // ── Scene 6 ───────────────────────────────────────────────────────────────
+  // After the "breach as anticolonial practice" card (subtitle trigger z=-540)
+  // Leanne Betasamosake Simpson (Mississauga Nishnaabeg) on the nature and
+  // continuity of anticolonial struggle
+  {
+    z: -548,
+    audioSrc: 'scholars_audios/YTDown_YouTube_Distinguished-Faculty-Lecture-with-Leann_Media_duidxcdBqw0_001_1080p_clips/anticolonialStruggle_Leanne.mp3',
     volume: 0.85,
-    fadeInDuration: .25,
-    fadeOutDuration: .25,
+    fadeInDuration: 0.8,
+    fadeOutDuration: 1.2,
   },
 
   // ── Scene 7 ───────────────────────────────────────────────────────────────
   // After the "what settler colonialism has always required" card (subtitle trigger z=-678)
   // Pierce on speculation before the narration applies kinstillation to Guacamaya
   {
-    z: -686,
+    z: -676,
     audioSrc: 'scholars_audios/Indigenomicon and Speculative Relations： Indigenous Worlding and Repair_clips/onSpeculation_Pierce.mp3',
     volume: 0.85,
-    fadeInDuration: .25,
-    fadeOutDuration: .25,
+    fadeInDuration: 0.8,
+    fadeOutDuration: 1.2,
   },
 
 ];

@@ -63,7 +63,10 @@ export function initializeHelpUI() {
   helpButton.addEventListener('click', toggleHelp);
   
   const closeButton = document.getElementById('help-close');
-  closeButton.addEventListener('click', toggleHelp);
+  closeButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleHelp();
+  });
 
   // Close when clicking anywhere on the overlay (backdrop or content)
   helpOverlay.addEventListener('click', (e) => {

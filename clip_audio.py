@@ -17,9 +17,13 @@ def check_ffmpeg():
 
 
 def parse_timestamp(ts):
-    """Accept HH:MM:SS or MM:SS format."""
-    parts = ts.strip().split(":")
-    if len(parts) == 2:
+    """Accept HH:MM:SS, MM:SS, or plain seconds — all support decimals (e.g. 18:17.5)."""
+    ts = ts.strip()
+    parts = ts.split(":")
+    if len(parts) == 1:
+        # Plain seconds, e.g. 90.5
+        return float(parts[0])
+    elif len(parts) == 2:
         return int(parts[0]) * 60 + float(parts[1])
     elif len(parts) == 3:
         return int(parts[0]) * 3600 + int(parts[1]) * 60 + float(parts[2])
@@ -62,7 +66,7 @@ def main():
 
     clip_count = 1
     print(f"\nClips will be saved to: {output_dir}")
-    print("Enter timestamps as MM:SS or HH:MM:SS (e.g. 18:17-18:38)")
+    print("Enter timestamps as MM:SS, HH:MM:SS, or plain seconds — decimals OK (e.g. 18:17.5-18:38 or 90.5-120)")
     print("Type N to finish.\n")
 
     while True:

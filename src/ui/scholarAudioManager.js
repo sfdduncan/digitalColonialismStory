@@ -3,6 +3,10 @@
 // the ambient SceneAudioManager zones.  Each clip fades in at the start and
 // fades out before it ends so it never pops in or out abruptly.
 
+import { sceneAudioManager } from './sceneAudioManager.js';
+
+const DUCK_LEVEL = 0.12; // how quiet background drops while scholar speaks
+
 export class ScholarAudioManager {
   constructor() {
     this.triggers      = [];          // array of trigger config objects
@@ -35,6 +39,10 @@ export class ScholarAudioManager {
     this.activeClips = this.activeClips.filter(clip =>
       this._tickClip(clip, deltaTime)
     );
+
+    // Duck background music while any scholar clip is active
+    const anyActive = this.activeClips.length > 0;
+    sceneAudioManager.setDuckTarget(anyActive ? DUCK_LEVEL : 1.0);
   }
 
   // ─── Playback ─────────────────────────────────────────────────────────────────

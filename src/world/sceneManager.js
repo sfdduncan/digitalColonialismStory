@@ -103,13 +103,12 @@ export class SceneManager {
         window.triggerFlashTransition();
       }
       
-      // Clear hackScene subtitles immediately
-      if (window.subtitleManager) {
-        window.subtitleManager.clear();
-      }
-      
       // Wait briefly before switching (switch during flash)
       setTimeout(() => {
+        // Clear hackScene subtitles now that we're switching
+        if (window.subtitleManager) {
+          window.subtitleManager.clear();
+        }
         if (this.currentScene.exit) {
           this.currentScene.exit();
         }

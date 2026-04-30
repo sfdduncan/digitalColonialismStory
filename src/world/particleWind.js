@@ -5,8 +5,9 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.m
  * Particles drift right-to-left with subtle vertical drift to simulate windblown sand.
  */
 export class ParticleWind {
-  constructor(centerZ = -350) {
+  constructor(centerZ = -350, zMin = -Infinity) {
     this.centerZ = centerZ;
+    this.zMin = zMin;
 
     // Bounding volume around which particles are spawned and recycled
     this.spreadX = 60;   // half-width on each side of player
@@ -109,12 +110,16 @@ export class ParticleWind {
       if (
         dx < -halfX || dx > halfX ||
         dy < minY   || dy > maxY  ||
-        dz < -halfZ || dz > halfZ
+        dz < -halfZ || dz > halfZ ||
+        positions[i3 + 2] < this.zMin
       ) {
         // Re-spawn on the right side of the player so it sweeps through
         positions[i3]     = px + halfX * (0.8 + Math.random() * 0.2);
         positions[i3 + 1] = minY + Math.random() * this.spreadY;
-        positions[i3 + 2] = pz  + (Math.random() - 0.5) * halfZ * 2;
+        positions[i3 + 2] = Math.max(
+          pz + (Math.random() - 0.5) * halfZ * 2,
+          this.zMin
+        );
 
         // Re-randomise velocity slightly
         velocities[i3]     = -(Math.random() * 6 + 3);

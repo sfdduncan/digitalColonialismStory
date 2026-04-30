@@ -9,26 +9,26 @@ export const subtitles = {
       text: "Over the following months they would breach military institutions, law enforcement agencies, and extractive industries across nine Latin American countries, sharing everything publicly through whistleblower platforms and rejecting the legitimacy of the legal systems that criminalized them."
     },
     {
-      trigger: -5,
+      trigger: -10,
       text: "They acted first in defense of the Maya Q'eqchi', an Indigenous Maya people whose territories in northeast Guatemala have been subject to mining extraction for decades, and more broadly in defense of all Indigenous peoples of Abya Yala, the Kuna term for the Americas meaning land in full maturity."
     },
     {
-      trigger: -22,
+      trigger: -30,
       text: "Colonial governments called it cyberterrorism. Guacamaya called it something else: one more tool of what Indigenous peoples across Abya Yala have been doing for more than five centuries. A defense of the land. A defense of the people. The same inseparable act."
     },
     {
-      trigger: -40,
+      trigger: -50,
       text: "That claim opens a door. If the breach is one more tool, then what came before it? What tradition is Guacamaya situating themselves within, and how do we follow it without flattening the distinct histories of the peoples who have lived it?"
     },
     {
-      trigger: -58,
-      text: "Joseph M. Pierce (Cherokee Nation) offers a way through. He calls it speculative relations: linking moments of Indigenous resistance across time and space not to claim they are the same struggle, but to make visible what makes such resistance possible across centuries and across nations."
+      trigger: -70,
+      text: "Scholars such as Joseph M. Pierce (Cherokee Nation) offer a way through. A practice of speculative relations: linking moments of Indigenous resistance across time and space not to claim they are the same struggle, but to make visible what makes such resistance possible across centuries and across nations."
     }
   ],
 
   scene1: [
     {
-      trigger: 0,
+      trigger: -3,
       text: "Vine Deloria Jr. (Standing Rock Sioux) described Indigenous peoples as existing within a web of relations extending beyond the human, bound to the land, the water, and the non-human elders who inhabited those territories alongside them."
     },
     // *** AUDIO: Vine Deloria Jr. — settler_colonialism_process.mp3 ***
@@ -174,26 +174,19 @@ export const subtitles = {
       text: "It was also an act of witness, of making visible what the infrastructure had been designed to hide: the surveillance of land defenders, the coordination of violence, the gap between what extractive industries said publicly and what their own documents showed."
     },
     {
-      trigger: -562,
-      text: "Joanne Barker theorizes the colonial construction of the Murderable Indian: the figure whose defense of the land is criminalized in advance, whose resistance is framed as threat, whose death the law sanctions before it happens. Land defenders across the Americas have lived inside that construction for centuries."
-    },
-    {
-      trigger: -585,
+      trigger: -555,
       text: "This form of resistance is just one more tool of what we have been doing for more than five centuries. It is a tool of this time. Haven't Indigenous peoples' leaders been stigmatized for defending their territory for ages? Imprisonments, shootings, disappearances. It's always those who defend life, those who do not fit into their canons of normality and submission, who are stigmatized. — Guacamaya, 2023"
     },
     {
-      trigger: -612,
-      text: "We crossed their corruptible networks and dirtied their clean image so we could see what they are really like. — Guacamaya, RESISTENCIA"
-    }
+      trigger: -580,
+      text: "Guacamaya went on to breach the servers of military institutions across nine Latin American countries, leaking more than 25 terabytes of data exposing state surveillance of Indigenous and environmental activists and the ongoing militarization of Indigenous territories across Abya Yala."
+    },
   ],
 
   scene7: [
+
     {
-      trigger: -635,
-      text: "Guacamaya went on to breach the servers of military institutions across nine Latin American countries, leaking more than 25 terabytes of data exposing state surveillance of Indigenous and environmental activists and the ongoing militarization of Indigenous territories across Abya Yala."
-    },
-    {
-      trigger: -655,
+      trigger: -605,
       text: "To cut the rivers is to cut our veins. To poison the land is to poison our stomachs. To contaminate the air is to contaminate our lungs. — Guacamaya"
     },
     // *** AUDIO: Joseph M. Pierce — onSpeculation.mp3 ***
@@ -202,23 +195,20 @@ export const subtitles = {
     //  with thinking beyond and thinking inside."
     // Plays after this card. Pierce on speculation before the closing argument.
     {
-      trigger: -678,
+      trigger: -618,
       text: "Pierce calls this kinstillation: the enacting of ancestral knowledge in the present, linking acts of land defense across time and space as a living relation rather than a linear history. Guacamaya's breach is one such kinstillation."
     },
+    
     {
-      trigger: -700,
-      text: "And it reopens a dialogue that the Pan-Indian movements of the 20th century began: a hemispheric conversation about decolonial resistance across the Americas. What speculative relations makes possible is holding distinct histories in constellation without flattening them, honoring the specific land, language, and political context from which each movement emerged while making visible what they share."
-    },
-    {
-      trigger: -725,
+      trigger: -640,
       text: "Across Abya Yala, Indigenous peoples have continued to exist, to practice, to defend, to refuse. Not as a historical phenomenon. Now. In every act of presence on territory that settler colonialism has declared its own."
     },
     {
-      trigger: -748,
+      trigger: -660,
       text: "Indigenous peoples across the Americas are still defending these lands. That defense has taken every form imaginable. It has never stopped."
     },
     {
-      trigger: -768,
+      trigger: -680,
       text: "Our victory is life. — Guacamaya, RESISTENCIA"
     }
   ]

@@ -7,6 +7,10 @@ export class SceneAudioManager {
     this.currentZoneId = null;
     this.fadeDistance = 15;
     this.fadeCurve = 'cosine';
+    // Duck multiplier — reduced while scholar/voice clips are playing
+    this.duckFactor = 1.0;
+    this.duckTarget = 1.0;
+    this.duckSpeed  = 1.5; // units per second toward target
   }
   
   loadAudioZones(zonesConfig) {
@@ -34,8 +38,22 @@ export class SceneAudioManager {
     });
   }
   
-  update(cameraZ) {
+  // Set the target duck level (0 = silent, 1 = full volume)
+  setDuckTarget(target) {
+    this.duckTarget = Math.max(0, Math.min(1, target));
+  }
+
+  update(cameraZ, deltaTime = 0.016) {
     if (this.audioZones.length === 0) return;
+
+    // Smoothly move duckFactor toward duckTarget
+    const diff = this.duckTarget - this.duckFactor;
+    const step = this.duckSpeed * deltaTime;
+    if (Math.abs(diff) <= step) {
+      this.duckFactor = this.duckTarget;
+    } else {
+      this.duckFactor += Math.sign(diff) * step;
+    }
     
     // Find which zone(s) we're in or near
     const activeZones = [];
@@ -59,7 +77,7 @@ export class SceneAudioManager {
       
       if (activeZone) {
         // This zone should be playing
-        const targetVolume = activeZone.fadeAmount * zone.volume;
+        const targetVolume = activeZone.fadeAmount * zone.volume * this.duckFactor;
         this.setAudioVolume(audio, targetVolume);
         
         // Start playback if not already playing

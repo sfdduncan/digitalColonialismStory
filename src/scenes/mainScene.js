@@ -49,6 +49,7 @@ export class MainScene extends SceneBase {
     this.polarBearTriggered = false; // Track if bear family has been triggered
     
     // Scene 7 (hack corridor) tracking
+    this.corridorCascadeStarted = false;
     this.scene7ImageWalls = [];
     this.scene7ImageTextures = [];
     this.scene7VideoElements = []; // Track all video elements for cleanup
@@ -163,13 +164,33 @@ export class MainScene extends SceneBase {
     const ambient = new THREE.AmbientLight(0xffffff, 0.7);
     this.add(ambient);
 
-    // Sun (persistent across all areas)
+    // Sun (visible in scenes 1-4; repositioned every frame in update())
+    // Core sphere
     this.sun = new THREE.Mesh(
-      new THREE.SphereGeometry(5, 32, 32),
-      new THREE.MeshBasicMaterial({ color: 0xffffff, fog: false })
+      new THREE.SphereGeometry(8, 32, 32),
+      new THREE.MeshBasicMaterial({ color: 0xFFFAD0, fog: false })
     );
-    this.sun.position.set(50, 50, -50);
+    this.sun.position.set(50, 55, -50);
     this.add(this.sun);
+
+    // Outer glow halo — a larger transparent sprite that gives the sun its shine
+    const glowCanvas = document.createElement('canvas');
+    glowCanvas.width = 256;
+    glowCanvas.height = 256;
+    const glowCtx = glowCanvas.getContext('2d');
+    const grad = glowCtx.createRadialGradient(128, 128, 0, 128, 128, 128);
+    grad.addColorStop(0,    'rgba(255, 252, 210, 1.0)');
+    grad.addColorStop(0.15, 'rgba(255, 250, 190, 0.85)');
+    grad.addColorStop(0.45, 'rgba(255, 245, 160, 0.3)');
+    grad.addColorStop(1.0,  'rgba(255, 240, 120, 0.0)');
+    glowCtx.fillStyle = grad;
+    glowCtx.fillRect(0, 0, 256, 256);
+    const glowTexture = new THREE.CanvasTexture(glowCanvas);
+    this.sunGlow = new THREE.Sprite(
+      new THREE.SpriteMaterial({ map: glowTexture, transparent: true, depthWrite: false, fog: false })
+    );
+    this.sunGlow.scale.set(120, 120, 1);
+    this.add(this.sunGlow);
 
     // Only build Scene 1 initially
     this.buildScene1();
@@ -492,7 +513,7 @@ export class MainScene extends SceneBase {
     });
     
     // Sand wind particle effect
-    this.particleWind4 = new ParticleWind(-350);
+    this.particleWind4 = new ParticleWind(-350, -400);
     this.add(this.particleWind4.getMesh());
     this.scene4Objects.push(this.particleWind4.getMesh());
 
@@ -831,8 +852,6 @@ export class MainScene extends SceneBase {
     // Generate image walls
     this.generateScene7ImageWalls(scene7Start, corridorLength, wallDistance, imageSpacing, imageHeight);
 
-    // Cascade-reveal images from nearest to farthest
-    startCorridorCascade(this.scene7ImageWalls);
   }
 
   async createScene7BackgroundVideoWalls() {
@@ -885,17 +904,6 @@ export class MainScene extends SceneBase {
     rightWall.rotation.y = -Math.PI / 2;
     this.add(rightWall);
     this.scene7Objects.push(rightWall);
-
-    // FRONT WALL (at corridor start)
-    const frontWallGeo = new THREE.PlaneGeometry(boxWidth, boxHeight);
-    const frontWallMat = new THREE.MeshBasicMaterial({
-      map: bgVideoTexture.clone(),
-      side: THREE.DoubleSide
-    });
-    const frontWall = new THREE.Mesh(frontWallGeo, frontWallMat);
-    frontWall.position.set(0, boxHeight / 2, corridorStart);
-    this.add(frontWall);
-    this.scene7Objects.push(frontWall);
 
     // CEILING
     const ceilingGeo = new THREE.PlaneGeometry(boxWidth, boxLength);
@@ -1281,11 +1289,37 @@ export class MainScene extends SceneBase {
     // Update sky colors based on position
     this.updateSkyColors(userPosition.z);
 
+    // Black void ending: as the user moves past the corridor end,
+    // tighten fog until the world dissolves into pure darkness
+    if (userPosition.z < -680) {
+      const voidProgress = Math.min((userPosition.z + 680) / -120, 1.0); // 0 at -680, 1 at -800
+      const smoothed = voidProgress * voidProgress * (3 - 2 * voidProgress); // smooth-step
+      this.fog.near = THREE.MathUtils.lerp(20, 0, smoothed);
+      this.fog.far  = THREE.MathUtils.lerp(60, 1, smoothed);
+      const brightness = THREE.MathUtils.lerp(0.02, 0, smoothed);
+      this.background.setRGB(brightness, brightness, brightness);
+    }
+
+    // Keep sun ahead of camera in scenes 1-4; hide in scenes 5-7
+    if (this.sun) {
+      if (userPosition.z > -400) {
+        this.sun.visible = true;
+        if (this.sunGlow) this.sunGlow.visible = true;
+        // Scene 3 has a sunset sky — lower the sun toward the horizon
+        const sunY = (userPosition.z < -200 && userPosition.z > -300) ? 22 : 58;
+        this.sun.position.set(userPosition.x + 45, sunY, userPosition.z - 70);
+        if (this.sunGlow) this.sunGlow.position.copy(this.sun.position);
+      } else {
+        this.sun.visible = false;
+        if (this.sunGlow) this.sunGlow.visible = false;
+      }
+    }
+
     // Update subtitles based on camera position while moving through MainScene.
     subtitleManager.update(userPosition.z);
     
     // Update ambient zone audio based on camera position
-    sceneAudioManager.update(userPosition.z);
+    sceneAudioManager.update(userPosition.z, deltaTime);
 
     // Update scholar / hacktivista triggered clips (fade in/out)
     scholarAudioManager.update(userPosition.z, deltaTime);
@@ -1374,6 +1408,14 @@ export class MainScene extends SceneBase {
       this.buildScene7();
       // Load Scene 7 subtitles
       subtitleManager.loadSubtitles(subtitles.scene7);
+      // Clear floating archive images — the corridor imagery takes over
+      archiveImagesManager.clear();
+    }
+
+    // Cascade-reveal scene 7 image walls once user actually enters the corridor
+    if (!this.corridorCascadeStarted && userPosition.z <= -600 && this.scene7ImageWalls.length > 0) {
+      this.corridorCascadeStarted = true;
+      startCorridorCascade(this.scene7ImageWalls);
     }
 
     // Procedural tree batch generation for Scene 2
@@ -1431,7 +1473,7 @@ export class MainScene extends SceneBase {
     }
     
     // Update sand wind particles (Scene 4)
-    if (this.particleWind4 && userPosition.z < -280 && userPosition.z > -420) {
+    if (this.particleWind4 && userPosition.z < -280 && userPosition.z > -400) {
       this.particleWind4.update(deltaTime, userPosition);
     }
 
@@ -1517,7 +1559,7 @@ export class MainScene extends SceneBase {
       });
     }
 
-    if (!this.endCreditsShown && userPosition.z < -700) {
+    if (!this.endCreditsShown && userPosition.z < -810) {
       this.endCreditsShown = true;
 
       if (window.showCreditsOverlay) {
