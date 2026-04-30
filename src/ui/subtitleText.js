@@ -38,7 +38,7 @@ export const subtitles = {
     },
     {
       trigger: -35,
-      text: "Patrick Wolfe argued that settler colonialism is not a historical event but an ongoing structure, one whose logic is the elimination of Indigenous peoples from their lands in order to replace them with a settler society that then naturalizes itself as inevitable."
+      text: "Settler colonialism is not a historical event but an ongoing structure, one whose logic is the elimination of Indigenous peoples from their lands in order to replace them with a settler society that then naturalizes itself as inevitable."
     },
     {
       trigger: -55,
@@ -66,7 +66,7 @@ export const subtitles = {
     },
     {
       trigger: -140,
-      text: "Glen Sean Coulthard (Yellowknives Dene) calls this the underlying logic of colonial domination: however the mechanisms change, whether force, fraud, or the politics of recognition, the structural commitment to maintaining access to Indigenous land and resources never does."
+      text: "This, according to Glen Sean Coulthard (Yellowknives Dene), is the underlying logic of colonial domination: however the mechanisms change, whether force, fraud, or the politics of recognition, the structural commitment to maintaining access to Indigenous land and resources never does."
     },
     {
       trigger: -162,
@@ -81,7 +81,7 @@ export const subtitles = {
     },
     {
       trigger: -208,
-      text: "The US government feared it enough to massacre 300 Lakota at Wounded Knee in 1890 to suppress it. A ceremony was that threatening."
+      text: "The US government feared it enough to massacre 300 Lakota at Wounded Knee in 1890 to suppress it. A ceremony, an act of cultural resurgence, was that threatening."
     },
     // *** AUDIO: Vine Deloria Jr. — onDefenseofLand.mp3 ***
     // "Now, if you look at the events of those three activist years,
@@ -101,7 +101,7 @@ export const subtitles = {
     },
     {
       trigger: -270,
-      text: "None of these is the same struggle. Nick Estes (Lower Brule Sioux) writes that they are a tradition: each generation inheriting and adapting the forms of those who came before, in defense of the same relations settler colonialism has always tried to sever."
+      text: "None of these are the same struggle. Nick Estes (Lower Brule Sioux) writes that they are a tradition: each generation inheriting and adapting the forms of those who came before, in defense of the same relations settler colonialism has always tried to sever."
     },
     {
       trigger: -290,
@@ -112,7 +112,7 @@ export const subtitles = {
   scene4: [
     {
       trigger: -315,
-      text: "Audra Simpson (Mohawk) calls this refusal: not simply resistance to colonial demands but the ongoing insistence on existing as a people, on one's own terms, on one's own land."
+      text: "What's occurring in these histories is what can only be described as an act of refusal: not simply resistance to colonial demands but the ongoing insistence on existing as a people, on one's own terms, on one's own land."
     },
     // *** AUDIO: Audra Simpson — refusal_audra.mp3 ***
     // "Refusal comes with the requirement of having one's political sovereignty
@@ -120,7 +120,7 @@ export const subtitles = {
     // Plays after this card. Simpson extends the definition.
     {
       trigger: -335,
-      text: "Coulthard and Leanne Betasamosake Simpson (Michi Saagiig Nishnaabeg) name what grounds that refusal: grounded normativity. The ethical and political relationships that emerge from sustained, reciprocal relations with the land, whose legitimacy does not depend on the recognition of any colonial state."
+      text: "The ethical and political relationships that emerge from sustained, reciprocal relations with the land, whose legitimacy does not depend on the recognition of any colonial state. This is a practice of grounded normativity."
     },
     // *** AUDIO: Glen Sean Coulthard — panIndianism.mp3 ***
     // "We were immersed in a global anti-colonial conversation, which included
@@ -152,7 +152,7 @@ export const subtitles = {
     },
     {
       trigger: -458,
-      text: "In 2010, community members brought three lawsuits against Hudbay Minerals in Canadian courts: for the gang rape of eleven women, the paralysis of German Chub, and the murder of Adolfo Ich, a community leader and teacher killed in front of his family."
+      text: "In 2010, community members brought three lawsuits against Hudbay Minerals in Canadian courts: for the extreme violence enacted against Indigenous women, the paralysis of German Chub, and the murder of Adolfo Ich, a community leader and teacher murdered in front of his family."
     },
     {
       trigger: -478,
