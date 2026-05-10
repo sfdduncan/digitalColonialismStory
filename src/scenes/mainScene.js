@@ -1305,8 +1305,14 @@ export class MainScene extends SceneBase {
       if (userPosition.z > -400) {
         this.sun.visible = true;
         if (this.sunGlow) this.sunGlow.visible = true;
-        // Scene 3 has a sunset sky — lower the sun toward the horizon
-        const sunY = (userPosition.z < -200 && userPosition.z > -300) ? 22 : 58;
+        // Scene 3 has a sunset sky — gradually lower the sun across the full scene range
+        let sunY = 58;
+        if (userPosition.z <= -200) {
+          // t = 0 at z=-200 (scene 3 entry), t = 1 at z=-300 (scene 3 exit)
+          const t = Math.min(Math.max((userPosition.z - (-200)) / (-300 - (-200)), 0), 1);
+          const smoothT = t * t * (3 - 2 * t); // smooth-step easing
+          sunY = THREE.MathUtils.lerp(58, 22, smoothT);
+        }
         this.sun.position.set(userPosition.x + 45, sunY, userPosition.z - 70);
         if (this.sunGlow) this.sunGlow.position.copy(this.sun.position);
       } else {

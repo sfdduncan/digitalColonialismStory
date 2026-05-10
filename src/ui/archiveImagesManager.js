@@ -9,8 +9,9 @@ export class ArchiveImagesManager {
     this.activeImageMeshes = [];
     this.scene = null;
     this.camera = null;
-    this.imageHeight = 2.0; // Base height for images
-    this.wallDistance = 4; // Distance from center path
+    this.imageHeight = 1.0; // Base height for images (smaller for orbital display)
+    this.orbitRadius = 3.5; // Distance from camera for circular orbit
+    this.globalOrbitTime = 0; // Slowly advances to gently rotate all images
     this.raycaster = new THREE.Raycaster();
     this.pointer = new THREE.Vector2(2, 2);
     this.focusedMesh = null;
@@ -157,7 +158,7 @@ export class ArchiveImagesManager {
       ? texture.image.width / texture.image.height
       : 1.6;
     
-    const height = this.imageHeight * (0.6 + Math.random() * 0.8); // Varied sizes
+    const height = this.imageHeight * (0.6 + Math.random() * 0.5); // Varied sizes
     const width = height * aspectRatio;
     
     // Create plane geometry
@@ -176,36 +177,31 @@ export class ArchiveImagesManager {
     
     const mesh = new THREE.Mesh(geometry, material);
     
-    // Position based on configuration
-    const side = imageConfig.side;
-    const xPosition = side === 'left' 
-      ? -(this.wallDistance + Math.random() * 2) 
-      : (this.wallDistance + Math.random() * 2);
+    // Assign a slot on the orbit circle, distributed evenly among active images
+    // Each new image gets the next slot, with a small random nudge to prevent
+    // perfect stacking if many images are added at once.
+    const slotCount = 8;
+    const slotIndex = this.activeImageMeshes.length % slotCount;
+    const orbitAngle = (slotIndex / slotCount) * Math.PI * 2 + (Math.random() * 0.4 - 0.2);
     
-    // Convert verticalOffset percentage to y position
-    const verticalOffsetPercent = parseFloat(imageConfig.verticalOffset) / 100;
-    const yPosition = height / 2 + (verticalOffsetPercent * 10 - 2) + 2; // +3 makes images higher in scene (ADJUST THIS NUMBER to change height)
+    // Eye-level height with a bit of per-image variation
+    const yPosition = 1.5 + Math.random() * 1.2;
     
-    // Calculate z offset from camera (how far ahead of camera this should stay).
-    // Camera moves in -Z direction, so a NEGATIVE offset places images ahead of the player.
-    const zOffsetFromCamera = imageConfig.trigger - cameraZ - 3;
+    // Start the image at its orbit position relative to the camera
+    const camPos = this.camera.position;
     mesh.position.set(
-      xPosition,
+      camPos.x + this.orbitRadius * Math.cos(orbitAngle),
       yPosition,
-      cameraZ + zOffsetFromCamera // Position relative to current camera
+      camPos.z + this.orbitRadius * Math.sin(orbitAngle)
     );
-    
-    // Rotate to face the player path
-    mesh.rotation.y = side === 'left' ? Math.PI / 2 : -Math.PI / 2;
+    mesh.lookAt(camPos);
     
     // Store metadata for updates
     mesh.userData = {
       imageConfig,
       trigger: imageConfig.trigger,
-      side: side,
+      orbitAngle: orbitAngle, // Fixed slot angle; global drift is added in update
       baseY: yPosition,
-      baseX: xPosition,
-      zOffsetFromCamera: zOffsetFromCamera, // Store offset to follow camera
       time: 0,
       fadeInProgress: 0, // Track fade-in animation (0 to 1)
       videoElement: videoElement, // Store video element if it's a video
@@ -219,6 +215,11 @@ export class ArchiveImagesManager {
   
   // Update positions of all active images to follow camera
   updateImagePositions(cameraZ) {
+    // Slowly advance the global orbit so images gently drift around the viewer
+    this.globalOrbitTime += 0.0015;
+
+    const camPos = this.camera.position;
+
     this.activeImageMeshes.forEach((mesh) => {
       const userData = mesh.userData;
       
@@ -232,19 +233,17 @@ export class ArchiveImagesManager {
         mesh.material.opacity = userData.fadeInProgress;
       }
       
-      // Apply subtle floating animation
-      const verticalDrift = Math.sin(userData.time * 2) * 0.3; // Gentle up/down float
-      const horizontalSway = Math.sin(userData.time * 1.5) * 0.2; // Subtle sway
+      // Gentle vertical bob
+      const verticalDrift = Math.sin(userData.time * 1.5) * 0.15;
       
-      // Update position - images follow the camera with their stored offset
-      mesh.position.z = cameraZ + userData.zOffsetFromCamera;
+      // Orbit the camera: each image keeps its slot angle plus the slow global rotation
+      const currentAngle = userData.orbitAngle + this.globalOrbitTime;
+      mesh.position.x = camPos.x + this.orbitRadius * Math.cos(currentAngle);
+      mesh.position.z = camPos.z + this.orbitRadius * Math.sin(currentAngle);
       mesh.position.y = userData.baseY + verticalDrift;
       
-      if (userData.side === 'left') {
-        mesh.position.x = userData.baseX - horizontalSway;
-      } else {
-        mesh.position.x = userData.baseX + horizontalSway;
-      }
+      // Always face the camera so the image is legible from any position
+      mesh.lookAt(camPos);
 
       const isFocused = this.focusedMesh === mesh;
       userData.focusAmount += ((isFocused ? 1 : 0) - userData.focusAmount) * 0.12;

@@ -2,7 +2,7 @@ export const subtitles = {
   hackScene: [
     {
       trigger: 30,
-      text: "In March of 2022, a hacktivist collective calling itself Guacamaya, the Maya word for the macaw parrot, breached the networks of mining companies operating in Guatemala's Fenix nickel project, leaking four terabytes of data exposing working conditions, environmental damage, gender-based violence, and the corporate messaging that had coordinated it all."
+      text: "In September of 2022, a hacktivist collective calling itself Guacamaya, the Maya word for the macaw parrot, breached the networks of mining companies operating in Guatemala's Fenix nickel project, leaking four terabytes of data exposing working conditions, environmental damage, gender-based violence, and the corporate messaging that had coordinated it all."
     },
     {
       trigger: 10,
