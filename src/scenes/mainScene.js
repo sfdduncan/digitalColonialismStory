@@ -168,7 +168,7 @@ export class MainScene extends SceneBase {
     // Core sphere
     this.sun = new THREE.Mesh(
       new THREE.SphereGeometry(8, 32, 32),
-      new THREE.MeshBasicMaterial({ color: 0xFFFAD0, fog: false })
+      new THREE.MeshBasicMaterial({ color: 0xFFFFF0, fog: false })
     );
     this.sun.position.set(50, 55, -50);
     this.add(this.sun);
@@ -179,10 +179,10 @@ export class MainScene extends SceneBase {
     glowCanvas.height = 256;
     const glowCtx = glowCanvas.getContext('2d');
     const grad = glowCtx.createRadialGradient(128, 128, 0, 128, 128, 128);
-    grad.addColorStop(0,    'rgba(255, 252, 210, 1.0)');
-    grad.addColorStop(0.15, 'rgba(255, 250, 190, 0.85)');
-    grad.addColorStop(0.45, 'rgba(255, 245, 160, 0.3)');
-    grad.addColorStop(1.0,  'rgba(255, 240, 120, 0.0)');
+    grad.addColorStop(0,    'rgba(255, 255, 248, 1.0)');
+    grad.addColorStop(0.15, 'rgba(255, 255, 235, 0.85)');
+    grad.addColorStop(0.45, 'rgba(255, 252, 210, 0.3)');
+    grad.addColorStop(1.0,  'rgba(255, 248, 180, 0.0)');
     glowCtx.fillStyle = grad;
     glowCtx.fillRect(0, 0, 256, 256);
     const glowTexture = new THREE.CanvasTexture(glowCanvas);
